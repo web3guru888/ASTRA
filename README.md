@@ -16,11 +16,15 @@ ASTRA combines advanced AI techniques including:
 
 ## Quick Start
 
+### Paper and Documentation
+
+**Full Paper**: See `RASTI_AI/draft_paper_complete_v9.md` and `RASTI_AI/ASTRA_paper_complete.pdf` for the complete scientific paper describing ASTRA's capabilities with 15 comprehensive test cases using real astronomical data.
+
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/ASTRA.git
+git clone https://github.com/Tilanthi/ASTRA.git
 cd ASTRA
 
 # Install dependencies
