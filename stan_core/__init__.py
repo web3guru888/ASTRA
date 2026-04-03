@@ -321,3 +321,67 @@ except ImportError:
     create_publication_pdf_from_markdown = None
     REPORTLAB_AVAILABLE = False
     FPDF_AVAILABLE = False
+
+# =============================================================================
+# V6.0 Theoretical Discovery System (NEW)
+# =============================================================================
+# Major enhancement: Theoretical discovery capabilities beyond empirical analysis
+try:
+    from .theoretical_discovery import (
+        # Main theoretical discovery system
+        V6TheoreticalDiscovery,
+        create_v6_theoretical_system,
+        DiscoveryMode,
+        DiscoveryResult,
+        TheoreticalProblem,
+        # Component modules
+        SymbolicTheoreticEngine,
+        TheorySpaceMapper,
+        TheoryRefutationEngine,
+        LiteratureTheorySynthesizer,
+        ComputationalTheoreticalBridge,
+        # Supporting classes
+        PhysicsDomain,
+        PhysicalConstraint,
+        ScalingRelation,
+        TheoryFramework,
+        TheoryConnection,
+        TheoryType,
+        TheoryRelation,
+        Equation,
+        TheoreticalInsight,
+        InsightType,
+        SimulationDesign,
+        SimulationResult,
+        SimulationInsight,
+        InsightCategory,
+        ConstraintViolation,
+        Severity,
+    )
+except ImportError:
+    V6TheoreticalDiscovery = None
+    create_v6_theoretical_system = None
+    DiscoveryMode = None
+    DiscoveryResult = None
+    TheoreticalProblem = None
+    SymbolicTheoreticEngine = None
+    TheorySpaceMapper = None
+    TheoryRefutationEngine = None
+    LiteratureTheorySynthesizer = None
+    ComputationalTheoreticalBridge = None
+    PhysicsDomain = None
+    PhysicalConstraint = None
+    ScalingRelation = None
+    TheoryFramework = None
+    TheoryConnection = None
+    TheoryType = None
+    TheoryRelation = None
+    Equation = None
+    TheoreticalInsight = None
+    InsightType = None
+    SimulationDesign = None
+    SimulationResult = None
+    SimulationInsight = None
+    InsightCategory = None
+    ConstraintViolation = None
+    Severity = None
