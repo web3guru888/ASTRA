@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**ASTRA** (Autonomous System for Scientific Discovery in Astrophysics) is a unified AGI-inspired framework for autonomous hypothesis generation and validation in astronomy and astrophysics. The system integrates ~303,000 lines of clean, functional code across modular cognitive capabilities.
+**ASTRA** (Autonomous Scientific Discovery in Astrophysics) is a unified AGI-inspired framework for autonomous hypothesis generation and validation in astronomy and astrophysics. The system integrates ~303,000 lines of clean, functional code across modular cognitive capabilities.
 
 **Version**: 4.7
 **AGI Capability Estimate**: 70-75%
@@ -19,7 +19,7 @@ The system was previously known as "STAN-XI-ASTRO" or "STAN". **It must now be r
 
 The internal codebase (module names, file paths, function names) retains the original "stan" naming for backward compatibility, but all external references should use "ASTRA".
 
-**Full name**: ASTRA: Autonomous System for Scientific Discovery in Astrophysics
+**Full name**: ASTRA: Autonomous Scientific Discovery in Astrophysics
 **Subtitle**: An AGI-inspired framework for autonomous hypothesis generation and validation
 
 ---

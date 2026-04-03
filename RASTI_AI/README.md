@@ -1,4 +1,4 @@
-# ASTRA: Autonomous System for Scientific Discovery in Astrophysics
+# ASTRA: Autonomous Scientific Discovery in Astrophysics
 
 This repository contains all materials necessary to recreate the paper **"ASTRA: A Physics-Aware AI System for Scientific Discovery in Astrophysics"** and reproduce the 15 comprehensive test cases demonstrating ASTRA's unique capabilities.
 

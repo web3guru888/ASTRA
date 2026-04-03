@@ -1,4 +1,4 @@
-# ASTRA: Autonomous System for Scientific Discovery in Astrophysics
+# ASTRA: Autonomous Scientific Discovery in Astrophysics
 
 **Version**: 5.0
 **AGI Capability Estimate**: 80-85%
@@ -215,7 +215,7 @@ If you use ASTRA in your research, please cite:
 
 ```bibtex
 @software{astra_2024,
-  title={ASTRA: Autonomous System for Scientific Discovery in Astrophysics},
+  title={ASTRA: Autonomous Scientific Discovery in Astrophysics},
   author={[Author Names]},
   year={2024},
   version={5.0},

@@ -1,5 +1,5 @@
 # ASTRA User Manual
-## Autonomous System for Scientific Discovery in Astrophysics
+## Autonomous Scientific Discovery in Astrophysics
 
 **Version**: 5.0
 **Date**: April 2026
@@ -30,7 +30,7 @@
 
 ### 1.1 What is ASTRA?
 
-ASTRA (Autonomous System for Scientific Discovery in Astrophysics) is an integrated computational framework that combines numerical data analysis, causal reasoning, physical validation, and statistical inference to enable automated scientific discovery in astrophysics. Unlike traditional machine learning systems that detect patterns without understanding their physical meaning, or large language models that can explain concepts but cannot process numerical data, ASTRA integrates multiple analytical approaches to provide physically interpretable, validated scientific insights.
+ASTRA (Autonomous Scientific Discovery in Astrophysics) is an integrated computational framework that combines numerical data analysis, causal reasoning, physical validation, and statistical inference to enable automated scientific discovery in astrophysics. Unlike traditional machine learning systems that detect patterns without understanding their physical meaning, or large language models that can explain concepts but cannot process numerical data, ASTRA integrates multiple analytical approaches to provide physically interpretable, validated scientific insights.
 
 ### 1.2 Key Design Principles
 
