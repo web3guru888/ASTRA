@@ -1200,7 +1200,24 @@ class DiscoveryEngine:
             self._propose_from_unexplored_pairs(existing_names)
             return
 
+        # Filter semantic duplicates before adding
+        existing_hypotheses = [
+            {"variables": h.variables if hasattr(h, 'variables') else [],
+             "finding_type": h.finding_type if hasattr(h, 'finding_type') else "",
+             "data_source": h.data_source if hasattr(h, 'data_source') else ""}
+            for h in self.store.all()
+        ]
+        filtered = []
         for c in candidates:
+            if not self.hypothesis_generator._is_semantic_duplicate(c, existing_hypotheses):
+                filtered.append(c)
+                existing_hypotheses.append({
+                    "variables": c.get("variables", []),
+                    "finding_type": c.get("finding_type", ""),
+                    "data_source": c.get("data_source", ""),
+                })
+
+        for c in filtered:
             h = self.store.add(
                 c["name"], c["domain"], c["description"],
                 confidence=c["confidence"]

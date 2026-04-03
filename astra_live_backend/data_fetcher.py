@@ -484,7 +484,7 @@ def search_arxiv(query: str, max_results: int = 10) -> List[Dict]:
             id_el = entry.find('atom:id', ns)
 
             title = title_el.text.strip().replace('\n', ' ') if title_el is not None and title_el.text else ''
-            abstract = summary_el.text.strip().replace('\n', ' ')[:200] if summary_el is not None and summary_el.text else ''
+            abstract = summary_el.text.strip().replace('\n', ' ')[:500] if summary_el is not None and summary_el.text else ''
             published = published_el.text[:10] if published_el is not None and published_el.text else ''
             arxiv_id = id_el.text.split('/abs/')[-1] if id_el is not None and id_el.text else ''
 

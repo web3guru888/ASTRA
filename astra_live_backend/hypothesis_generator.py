@@ -259,3 +259,24 @@ class HypothesisGenerator:
             if candidate not in existing:
                 return i
         return 2
+
+    def _is_semantic_duplicate(self, candidate: Dict, existing_hypotheses: List[Dict]) -> bool:
+        """
+        Check if a candidate hypothesis is semantically too similar to existing ones.
+        Prevents the v1-v12 duplication problem by checking variable overlap + finding_type.
+        """
+        c_vars = set(candidate.get("variables", []))
+        c_ft = candidate.get("finding_type", "")
+        c_src = candidate.get("data_source", "")
+
+        for existing in existing_hypotheses:
+            e_vars = set(existing.get("variables", []))
+            e_ft = existing.get("finding_type", "")
+            e_src = existing.get("data_source", "")
+
+            # Same finding type + same data source + >50% variable overlap = duplicate
+            if c_ft == e_ft and c_src == e_src and c_vars and e_vars:
+                overlap = len(c_vars & e_vars) / max(len(c_vars | e_vars), 1)
+                if overlap >= 0.5:
+                    return True
+        return False
