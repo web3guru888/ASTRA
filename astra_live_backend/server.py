@@ -1171,6 +1171,88 @@ async def api_paper_regenerate(hypothesis_id: str):
         )
 
 
+# ── Phase 11.1+11.2: Provenance & Export ─────────────────────
+from astra_live_backend.exporter import ASTRAExporter
+
+_exporter = ASTRAExporter(engine)
+
+
+@app.get("/api/provenance")
+async def api_provenance():
+    """List all provenance records."""
+    records = engine.provenance_tracker.get_all()
+    return {
+        "records": records,
+        "count": len(records),
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/provenance/{discovery_id}")
+async def api_provenance_detail(discovery_id: str):
+    """Get provenance records for a specific discovery/hypothesis."""
+    from dataclasses import asdict
+    records = engine.provenance_tracker.get_by_discovery(discovery_id)
+    return {
+        "discovery_id": discovery_id,
+        "records": [asdict(r) for r in records],
+        "count": len(records),
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/provenance/{discovery_id}/lineage")
+async def api_provenance_lineage(discovery_id: str):
+    """Get full lineage chain for a discovery."""
+    from dataclasses import asdict
+    lineage = engine.provenance_tracker.get_lineage(discovery_id)
+    return {
+        "discovery_id": discovery_id,
+        "lineage": [asdict(r) for r in lineage],
+        "chain_length": len(lineage),
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/export/discoveries.json")
+async def api_export_discoveries_json(domain: str = None):
+    """Export all discoveries as JSON with provenance."""
+    return JSONResponse(
+        content=json.loads(_exporter.export_discoveries_json(filter_domain=domain)),
+        media_type="application/json",
+    )
+
+
+@app.get("/api/export/discoveries.csv")
+async def api_export_discoveries_csv(domain: str = None):
+    """Export all discoveries as CSV."""
+    from fastapi.responses import PlainTextResponse
+    csv_text = _exporter.export_discoveries_csv(filter_domain=domain)
+    return PlainTextResponse(content=csv_text, media_type="text/csv")
+
+
+@app.get("/api/export/hypothesis/{hypothesis_id}.tex")
+async def api_export_hypothesis_latex(hypothesis_id: str):
+    """Export a hypothesis as LaTeX for paper supplement."""
+    from fastapi.responses import PlainTextResponse
+    latex = _exporter.export_hypothesis_latex(hypothesis_id)
+    if latex is None:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Hypothesis '{hypothesis_id}' not found"},
+        )
+    return PlainTextResponse(content=latex, media_type="application/x-tex")
+
+
+@app.get("/api/export/full-report.json")
+async def api_export_full_report():
+    """Export complete ASTRA report — hypotheses, discoveries, provenance, engine state."""
+    return JSONResponse(
+        content=json.loads(_exporter.export_full_report_json()),
+        media_type="application/json",
+    )
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

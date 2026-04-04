@@ -44,6 +44,7 @@ from .hypothesis_generator import HypothesisGenerator
 from .adaptive_strategist import AdaptiveStrategist
 from .degradation import DegradationDetector
 from .paper_generator import get_paper_generator
+from .provenance import ProvenanceTracker
 
 
 @dataclass
@@ -138,6 +139,9 @@ class DiscoveryEngine:
 
         # Paper draft generator — Phase 9.5
         self.paper_generator = get_paper_generator()
+
+        # Provenance tracker — Phase 11.1
+        self.provenance_tracker = ProvenanceTracker()
 
         # Exploration schedule — Phase 10.6: force domain round-robin
         self._forced_domain: Optional[str] = None
@@ -469,6 +473,36 @@ class DiscoveryEngine:
                 confidence_delta=conf_delta,
                 success=h.data_points_used > 0,
             )
+
+            # Record provenance for data acquisition (Phase 11.1)
+            _source_map = {
+                "hubble": "Pantheon+ SN Ia Catalog",
+                "galaxy": "SDSS DR17",
+                "exoplanet": "NASA Exoplanet Archive",
+                "stellar": "Gaia DR3",
+                "star_formation": "Gaia DR3",
+                "gravitational_waves": "GWTC Catalog",
+                "cmb": "Planck 2018",
+                "transients": "ZTF / TESS",
+                "time_domain": "ZTF / TESS",
+                "crossdomain": "Multi-source",
+            }
+            if h.data_points_used > 0:
+                try:
+                    self.provenance_tracker.record(
+                        discovery_id=h.id,
+                        data_source=_source_map.get(category, "Unknown"),
+                        data_query=f"investigate_{category}(cycle={self.cycle_count})",
+                        test_method=f"investigate_{category}",
+                        test_inputs={
+                            "methods": methods[:3],
+                            "data_points": h.data_points_used,
+                            "cycle": self.cycle_count,
+                        },
+                        parent_hypothesis_id=None,
+                    )
+                except Exception:
+                    pass  # Provenance is best-effort, never block discovery
 
         self.total_scripts += len(targets)
 
@@ -1083,6 +1117,26 @@ class DiscoveryEngine:
                 confidence_delta=conf_delta,
                 success=len(new_tests) > 0,
             )
+
+            # Record provenance for statistical tests (Phase 11.1)
+            for test in new_tests:
+                if isinstance(test, dict):
+                    try:
+                        self.provenance_tracker.record(
+                            discovery_id=h.id,
+                            data_source=f"evaluate_{category}",
+                            data_query=f"evaluate(cycle={self.cycle_count}, hypothesis={h.id})",
+                            test_method=test.get('test_name', 'unknown'),
+                            test_inputs={
+                                "sample_size": h.data_points_used,
+                                "p_value": test.get('p_value'),
+                                "statistic": test.get('statistic'),
+                                "significance_level": 0.05,
+                            },
+                            parent_hypothesis_id=h.id,
+                        )
+                    except Exception:
+                        pass  # Best-effort provenance
 
             # FDR correction on all p-values from this hypothesis
             all_p_values = [t.get('p_value', 1.0) for t in h.test_results
