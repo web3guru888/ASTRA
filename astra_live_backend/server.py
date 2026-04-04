@@ -1103,6 +1103,74 @@ async def api_confounder_analysis(request: Request):
                 "cause": cause, "effect": effect, "data_source": data_source}
 
 
+# ── Paper Draft Endpoints (Phase 9.5) ─────────────────────────
+
+@app.get("/api/papers")
+async def api_papers():
+    """List all generated paper drafts."""
+    return {
+        "drafts": engine.paper_generator.get_all_drafts(),
+        "count": engine.paper_generator.draft_count,
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/papers/{hypothesis_id}")
+async def api_paper_detail(hypothesis_id: str):
+    """Get a full paper draft for a specific hypothesis."""
+    draft = engine.paper_generator.get_draft(hypothesis_id)
+    if draft is None:
+        # Check if hypothesis exists at all
+        h = engine.store.get(hypothesis_id)
+        if h is None:
+            return JSONResponse(
+                status_code=404,
+                content={"error": f"Hypothesis '{hypothesis_id}' not found"},
+            )
+        return JSONResponse(
+            status_code=404,
+            content={
+                "error": f"No paper draft exists for hypothesis '{hypothesis_id}'",
+                "hypothesis_phase": h.phase.value,
+                "confidence": h.confidence,
+                "hint": "Paper drafts are auto-generated for hypotheses validated with confidence > 0.95. "
+                        "You can also POST to /api/papers/{id}/regenerate to force generation.",
+            },
+        )
+    return {
+        "draft": draft.to_dict(),
+        "full_text": draft.full_text(),
+        "timestamp": time.time(),
+    }
+
+
+@app.post("/api/papers/{hypothesis_id}/regenerate")
+async def api_paper_regenerate(hypothesis_id: str):
+    """Force regenerate a paper draft for a hypothesis."""
+    h = engine.store.get(hypothesis_id)
+    if h is None:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Hypothesis '{hypothesis_id}' not found"},
+        )
+    try:
+        draft = engine.paper_generator.generate_full_draft(h)
+        engine.papers_drafted = engine.paper_generator.draft_count
+        return {
+            "status": "regenerated",
+            "draft": draft.to_dict(),
+            "full_text": draft.full_text(),
+            "version": draft.version,
+            "timestamp": time.time(),
+        }
+    except Exception as e:
+        import traceback
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "traceback": traceback.format_exc()},
+        )
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

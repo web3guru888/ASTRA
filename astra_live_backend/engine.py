@@ -43,6 +43,7 @@ from .discovery_memory import DiscoveryMemory
 from .hypothesis_generator import HypothesisGenerator
 from .adaptive_strategist import AdaptiveStrategist
 from .degradation import DegradationDetector
+from .paper_generator import get_paper_generator
 
 
 @dataclass
@@ -134,6 +135,9 @@ class DiscoveryEngine:
 
         # Degradation detector — Phase 10.3
         self.degradation_detector = DegradationDetector()
+
+        # Paper draft generator — Phase 9.5
+        self.paper_generator = get_paper_generator()
 
         # Exploration schedule — Phase 10.6: force domain round-robin
         self._forced_domain: Optional[str] = None
@@ -1652,6 +1656,18 @@ class DiscoveryEngine:
                     self._decide("confirm",
                                  f"Auto-promoted {h.id} to VALIDATED (confidence {h.confidence:.2f})",
                                  "VALIDATED", h.id)
+
+                    # Phase 9.5: Auto-generate paper draft for high-confidence validated hypotheses
+                    if h.confidence > 0.95:
+                        try:
+                            draft = self.paper_generator.generate_full_draft(h)
+                            self.papers_drafted += 1
+                            self._log("PAPER", "ENGINE",
+                                      f"Auto-generated paper draft v{draft.version} for {h.id}: "
+                                      f"{draft.title}", h.id)
+                        except Exception as e:
+                            self._log("PAPER", "ENGINE",
+                                      f"Failed to generate paper draft for {h.id}: {e}", h.id)
 
         # Prune the queue: if queue_depth > 15, archive lowest-confidence SCREENING hypotheses
         screening = self.store.by_phase(Phase.SCREENING)
