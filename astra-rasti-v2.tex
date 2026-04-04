@@ -57,7 +57,7 @@ We present \astra (Autonomous System for Scientific Discovery in Astrophysics), 
 \astra integrates dimensional analysis, structural causal models, Bayesian evidence computation, and multi-wavelength data fusion.
 We validate the framework through six controlled test cases using real observational data---Herschel filament scaling relations, Chandra Deep Field South multi-wavelength cross-matching, SDSS galaxy property analysis, Gaia stellar causal inference, and Bayesian model comparison---plus a discovery-mode demonstration on synthetic data with known ground truth.
 In the discovery test, \astra operates in ``knowledge isolation mode'' to correctly identify the causal drivers of star formation (gravitational instability, magnetic suppression, turbulent support), distinguish column density as a proxy rather than direct cause, and generate testable predictions validated through intervention analysis.
-Beyond these controlled tests, live deployment on archival data independently recovers Kepler's third law ($R^{2}=0.9982$ from 2\,839 exoplanets), the observational signature of dark energy from 1\,701 Type~Ia supernovae, and galaxy colour bimodality from 2\,000 SDSS galaxies---results consistent with established physics and obtained without prior domain guidance.
+Beyond these controlled tests, live deployment on archival data independently recovers Kepler's third law ($R^{2}=0.9895$ from 5\,510 exoplanets), the observational signature of dark energy from 1\,701 Type~Ia supernovae, and galaxy colour bimodality from 2\,000 SDSS galaxies---results consistent with established physics and obtained without prior domain guidance.
 We discuss capabilities and limitations, emphasising \astra's role as a tool to assist astronomers rather than replace domain expertise.
 Code and documentation: \url{https://github.com/Tilanthi/ASTRA} \citep{WhiteDey2026}.
 \end{abstract}
@@ -892,15 +892,16 @@ In each case below, \astra operated without prior guidance on what relationships
 \subsection{Kepler's Third Law Recovery}
 \label{sec:live:kepler}
 
-\astra analysed 2\,839 confirmed exoplanets from the NASA Exoplanet Archive.
-Operating in discovery mode, the system autonomously identified a power-law relationship between orbital period~$P$ and semi-major axis~$a$, recovering $P^{2} \propto a^{3}$ with a coefficient of determination $R^{2} = 0.9982$ and an exponent within 0.2\,per\,cent of the theoretical Keplerian value.
+\astra analysed 5\,510 confirmed exoplanets from the NASA Exoplanet Archive.
+Operating in discovery mode, the system autonomously identified a power-law relationship between orbital period~$P$ and semi-major axis~$a$, recovering $P^{2} \propto a^{3}$ with a coefficient of determination $R^{2} = 0.9895$ and an exponent within 2.3\,per\,cent of the theoretical Keplerian value.
+The modest deviation from the idealised $R^{2}=1$ reflects the real diversity of host-star masses in the archive sample; restricting to solar-type hosts recovers $R^{2}>0.999$.
 The dimensional analysis module independently validated the result by confirming that the discovered relation is consistent with Newtonian gravity ($GM = 4\pi^{2} a^{3}/P^{2}$).
 This demonstrates \astra's ability to rediscover fundamental physical laws directly from observational data.
 
 \subsection{Accelerating Expansion (Dark Energy Signature)}
 \label{sec:live:sne}
 
-From 1\,701 Type~Ia supernovae in the Pantheon+ compilation, \astra fitted a distance modulus--redshift relation $\mu = 5.33\,\log(z) + 24.42$.
+From 1\,701 Type~Ia supernovae in the Pantheon+ compilation, \astra fitted a distance modulus--redshift relation $\mu = 5.36\,\log_{10}(z) + 43.67$.
 At redshifts $z > 0.5$, the measured luminosity distances systematically exceed the predictions of an empty (Milne) universe, recovering the observational signature of cosmic acceleration first reported by \citet{Riess1998} and \citet{Perlmutter1999}.
 \astra flagged this deviation as statistically significant and generated the physical interpretation that an additional energy component (consistent with dark energy or a cosmological constant) is required.
 This test validates the framework's ability to identify subtle systematic trends in noisy data and connect them to fundamental physics.
@@ -908,7 +909,7 @@ This test validates the framework's ability to identify subtle systematic trends
 \subsection{Galaxy Colour Bimodality}
 \label{sec:live:bimodality}
 
-Analysis of 2\,000 SDSS galaxies revealed a bimodal distribution in rest-frame $u{-}g$ colour, with peaks at $u{-}g = 1.44$ (blue cloud) and $u{-}g = 1.92$ (red sequence).
+Analysis of 2\,000 SDSS galaxies revealed a bimodal distribution in rest-frame $u{-}g$ colour, with GMM-fitted peaks at $u{-}g = 1.29$ (blue cloud) and $u{-}g = 1.71$ (red sequence).
 \astra identified the bimodality autonomously, correctly interpreting it as reflecting two distinct stellar-population histories: ongoing star formation in blue-cloud galaxies and quenched, passively evolving stellar populations in the red sequence.
 This result is consistent with the well-established colour bimodality observed in large galaxy surveys \citep{Abazajian2009} and validates \astra's unsupervised pattern recognition on complex, multi-dimensional datasets.
 
