@@ -34,6 +34,66 @@ engine = DiscoveryEngine()
 # Start the engine on import (5s delay before first cycle)
 engine.start(interval=25.0)
 
+# ── Scheduled Dashboard Snapshots (Phase 10.2) ────────────────
+import threading
+import logging
+
+_snap_logger = logging.getLogger(__name__ + ".snapshot")
+
+_snapshot_lock = threading.Lock()
+_snapshot_status = {
+    "last_refresh": None,
+    "last_refresh_iso": None,
+    "auto_enabled": True,
+    "refresh_count": 0,
+    "last_error": None,
+}
+
+
+def _do_snapshot_refresh():
+    """Generate dashboard snapshot by calling generate_dashboard."""
+    try:
+        from astra_live_backend.generate_dashboard import fetch_all_data, build_dashboard_html, OUTPUT_PATH
+        data = fetch_all_data()
+        html = build_dashboard_html(data)
+        with open(OUTPUT_PATH, 'w') as f:
+            f.write(html)
+        with _snapshot_lock:
+            _snapshot_status["last_refresh"] = time.time()
+            _snapshot_status["last_refresh_iso"] = time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
+            )
+            _snapshot_status["refresh_count"] += 1
+            _snapshot_status["last_error"] = None
+        _snap_logger.info(
+            f"Dashboard snapshot #{_snapshot_status['refresh_count']} written ({len(html)} bytes)"
+        )
+    except Exception as e:
+        with _snapshot_lock:
+            _snapshot_status["last_error"] = str(e)
+        _snap_logger.error(f"Snapshot refresh failed: {e}")
+
+
+def _snapshot_thread_fn(interval=120):
+    """Background thread: refresh dashboard every `interval` seconds."""
+    time.sleep(30)  # Initial delay to let server fully start
+    while True:
+        with _snapshot_lock:
+            if not _snapshot_status["auto_enabled"]:
+                time.sleep(10)
+                continue
+        try:
+            _do_snapshot_refresh()
+        except Exception as e:
+            _snap_logger.error(f"Snapshot thread error: {e}")
+        time.sleep(interval)
+
+
+_snapshot_thread = threading.Thread(
+    target=_snapshot_thread_fn, args=(120,), daemon=True, name="snapshot-refresh"
+)
+_snapshot_thread.start()
+
 
 # ── API Endpoints ────────────────────────────────────────────────
 
@@ -533,6 +593,58 @@ def api_literature_novelty(hid: str):
     report["hypothesis_name"] = h.name
     report["timestamp"] = time.time()
     return report
+
+
+# ── Citation Network (Phase 9.4) ─────────────────────────────────
+
+@app.get("/api/literature/citation-graph")
+def api_citation_graph():
+    """Return the citation graph as {nodes, edges} for visualization."""
+    from astra_live_backend.literature import get_citation_graph, get_literature_store
+    graph = get_citation_graph()
+    graph.build_from_literature_store(get_literature_store())
+    return graph.to_graph_json()
+
+
+@app.get("/api/literature/citation-metrics")
+def api_citation_metrics():
+    """Return citation metrics: most cited papers, network stats, h-index."""
+    from astra_live_backend.literature import get_citation_graph, get_literature_store
+    graph = get_citation_graph()
+    graph.build_from_literature_store(get_literature_store())
+    store = get_literature_store()
+    most_cited = graph.most_cited(10)
+    enriched = []
+    for pid, count in most_cited:
+        paper = store._papers.get(pid)
+        enriched.append({
+            "paper_id": pid,
+            "title": paper.title if paper else pid,
+            "citation_count": count,
+        })
+    return {
+        "most_cited": enriched,
+        "network_stats": graph.network_stats(),
+        "h_index": graph.h_index(),
+        "timestamp": time.time(),
+    }
+
+
+# ── Dashboard Snapshots (Phase 10.2) ─────────────────────────────
+
+@app.get("/api/system/snapshot-status")
+def api_snapshot_status():
+    """Return the current snapshot status."""
+    with _snapshot_lock:
+        return {**_snapshot_status, "timestamp": time.time()}
+
+
+@app.post("/api/system/snapshot-refresh")
+def api_snapshot_refresh():
+    """Trigger an immediate dashboard snapshot refresh."""
+    t = threading.Thread(target=_do_snapshot_refresh, daemon=True)
+    t.start()
+    return {"status": "refresh_triggered", "timestamp": time.time()}
 
 
 # ── ASTRA Core Scientific Capabilities (White & Dey 2026) ───────

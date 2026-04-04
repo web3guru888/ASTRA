@@ -341,7 +341,181 @@ def _interpret_novelty(score: float) -> str:
 
 
 # ═══════════════════════════════════════════════════════════════
-# Singleton instance for the backend
+# Citation Network (Phase 9.4)
+# ═══════════════════════════════════════════════════════════════
+
+# Regex patterns for arXiv IDs and DOIs
+_ARXIV_ID_RE = re.compile(r'(?:arXiv:)?(\d{4}\.\d{4,5}(?:v\d+)?)')
+_ARXIV_OLD_RE = re.compile(r'(?:arXiv:)?((?:astro-ph|hep-[a-z]+|cond-mat|gr-qc|quant-ph|math|cs|nucl-[a-z]+|physics)/\d{7}(?:v\d+)?)')
+_DOI_RE = re.compile(r'(10\.\d{4,9}/[^\s,;}\]]+)')
+
+
+class CitationGraph:
+    """
+    Directed citation graph: paper_A → cites → paper_B.
+    Stores edges as dict-of-sets for O(1) lookups.
+    """
+
+    def __init__(self):
+        # forward[A] = {B, C} means A cites B and C
+        self._forward: Dict[str, set] = {}
+        # reverse[B] = {A} means B is cited by A
+        self._reverse: Dict[str, set] = {}
+        self._nodes: set = set()
+
+    def add_citation(self, from_id: str, to_id: str):
+        """Add a directed citation edge (from_id cites to_id). Self-citations are ignored."""
+        if from_id == to_id:
+            return
+        self._nodes.add(from_id)
+        self._nodes.add(to_id)
+        self._forward.setdefault(from_id, set()).add(to_id)
+        self._reverse.setdefault(to_id, set()).add(from_id)
+
+    def add_citations_from_arxiv_response(self, xml_text: str):
+        """
+        Parse arXiv Atom XML and extract cross-references between entries.
+        Looks for arXiv IDs mentioned in abstracts/links of other entries.
+        """
+        # Extract entries: (id, abstract_text)
+        entries: List[Tuple[str, str]] = []
+        # Simple XML parsing — extract <id> and <summary> from each <entry>
+        entry_blocks = re.findall(r'<entry>(.*?)</entry>', xml_text, re.DOTALL)
+        for block in entry_blocks:
+            # Extract arXiv ID from <id> tag
+            id_match = re.search(r'<id>(?:https?://arxiv\.org/abs/)?(.+?)</id>', block)
+            summary = re.search(r'<summary>(.*?)</summary>', block, re.DOTALL)
+            if id_match:
+                entry_id = id_match.group(1).strip()
+                abstract_text = summary.group(1).strip() if summary else ""
+                entries.append((entry_id, abstract_text))
+
+        # Collect all known entry IDs
+        known_ids = {eid for eid, _ in entries}
+
+        # Cross-reference: look for mentions of other entry IDs in abstracts
+        for entry_id, abstract in entries:
+            # Find arXiv IDs mentioned in abstract
+            for pattern in (_ARXIV_ID_RE, _ARXIV_OLD_RE):
+                for match in pattern.finditer(abstract):
+                    ref_id = match.group(1)
+                    if ref_id in known_ids and ref_id != entry_id:
+                        self.add_citation(entry_id, ref_id)
+
+    def build_from_literature_store(self, store: 'LiteratureStore'):
+        """
+        Scan paper abstracts for arXiv ID and DOI patterns to find
+        cross-references between papers already in the store.
+        """
+        papers = store._papers
+        # Build lookup: all known IDs (arxiv_id keys + normalized)
+        known_ids: Dict[str, str] = {}  # normalized_ref -> paper_key
+        for key, paper in papers.items():
+            known_ids[key] = key
+            if paper.arxiv_id:
+                # Store both with and without version suffix
+                known_ids[paper.arxiv_id] = key
+                base = re.sub(r'v\d+$', '', paper.arxiv_id)
+                known_ids[base] = key
+
+        # Scan abstracts for references to other papers
+        for key, paper in papers.items():
+            text = f"{paper.title} {paper.abstract}"
+            # Look for arXiv IDs
+            for pattern in (_ARXIV_ID_RE, _ARXIV_OLD_RE):
+                for match in pattern.finditer(text):
+                    ref_id = match.group(1)
+                    ref_base = re.sub(r'v\d+$', '', ref_id)
+                    target_key = known_ids.get(ref_id) or known_ids.get(ref_base)
+                    if target_key and target_key != key:
+                        self.add_citation(key, target_key)
+            # Look for DOIs (less common in abstracts but possible)
+            for match in _DOI_RE.finditer(text):
+                doi = match.group(1)
+                if doi in known_ids and known_ids[doi] != key:
+                    self.add_citation(key, known_ids[doi])
+
+    def citation_count(self, paper_id: str) -> int:
+        """How many papers cite this paper."""
+        return len(self._reverse.get(paper_id, set()))
+
+    def cited_by(self, paper_id: str) -> List[str]:
+        """Which papers cite this paper."""
+        return sorted(self._reverse.get(paper_id, set()))
+
+    def references(self, paper_id: str) -> List[str]:
+        """Which papers this paper cites."""
+        return sorted(self._forward.get(paper_id, set()))
+
+    def most_cited(self, top_k: int = 10) -> List[Tuple[str, int]]:
+        """Most cited papers, descending by citation count."""
+        counts = [(pid, len(citers)) for pid, citers in self._reverse.items()]
+        counts.sort(key=lambda x: x[1], reverse=True)
+        return counts[:top_k]
+
+    def network_stats(self) -> dict:
+        """Node count, edge count, avg citations, max citations."""
+        edge_count = sum(len(targets) for targets in self._forward.values())
+        citation_counts = [len(citers) for citers in self._reverse.values()] if self._reverse else [0]
+        return {
+            "node_count": len(self._nodes),
+            "edge_count": edge_count,
+            "avg_citations": round(sum(citation_counts) / max(len(citation_counts), 1), 2),
+            "max_citations": max(citation_counts) if citation_counts else 0,
+        }
+
+    def h_index(self) -> int:
+        """H-index of the collection (h papers each cited >= h times)."""
+        counts = sorted(
+            [len(citers) for citers in self._reverse.values()],
+            reverse=True
+        )
+        h = 0
+        for i, c in enumerate(counts):
+            if c >= i + 1:
+                h = i + 1
+            else:
+                break
+        return h
+
+    def find_citation_chains(self, paper_id: str, max_depth: int = 3) -> List[List[str]]:
+        """BFS chains through the forward citation graph from paper_id."""
+        chains: List[List[str]] = []
+        queue: List[List[str]] = [[paper_id]]
+        visited: set = {paper_id}
+
+        while queue:
+            path = queue.pop(0)
+            if len(path) > 1:
+                chains.append(path)
+            if len(path) > max_depth:
+                continue
+            current = path[-1]
+            for ref in sorted(self._forward.get(current, set())):
+                if ref not in visited:
+                    visited.add(ref)
+                    queue.append(path + [ref])
+
+        return chains
+
+    def to_graph_json(self) -> dict:
+        """Return {nodes, edges} for visualization."""
+        nodes = []
+        for nid in sorted(self._nodes):
+            nodes.append({
+                "id": nid,
+                "label": nid,
+                "citations": self.citation_count(nid),
+            })
+        edges = []
+        for src, targets in sorted(self._forward.items()):
+            for tgt in sorted(targets):
+                edges.append({"source": src, "target": tgt})
+        return {"nodes": nodes, "edges": edges}
+
+
+# ═══════════════════════════════════════════════════════════════
+# Singleton instances for the backend
 # ═══════════════════════════════════════════════════════════════
 
 _store: Optional[LiteratureStore] = None
@@ -353,3 +527,14 @@ def get_literature_store() -> LiteratureStore:
     if _store is None:
         _store = LiteratureStore()
     return _store
+
+
+_citation_graph: Optional[CitationGraph] = None
+
+
+def get_citation_graph() -> CitationGraph:
+    """Get or create the singleton CitationGraph."""
+    global _citation_graph
+    if _citation_graph is None:
+        _citation_graph = CitationGraph()
+    return _citation_graph

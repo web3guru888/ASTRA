@@ -219,3 +219,85 @@ class TestSingleton:
         s1 = get_literature_store()
         s2 = get_literature_store()
         assert s1 is s2
+
+
+# ═══════════════════════════════════════════════════════════════
+# Citation Graph (Phase 9.4)
+# ═══════════════════════════════════════════════════════════════
+
+from astra_live_backend.literature import CitationGraph, get_citation_graph
+
+
+class TestCitationGraph:
+    @pytest.fixture
+    def graph(self):
+        g = CitationGraph()
+        g.add_citation("paper-A", "paper-B")
+        g.add_citation("paper-A", "paper-C")
+        g.add_citation("paper-B", "paper-C")
+        g.add_citation("paper-D", "paper-C")
+        return g
+
+    def test_add_citation(self, graph):
+        assert "paper-B" in graph.references("paper-A")
+        assert "paper-A" in graph.cited_by("paper-B")
+
+    def test_citation_count(self, graph):
+        assert graph.citation_count("paper-C") == 3  # cited by A, B, D
+        assert graph.citation_count("paper-B") == 1  # cited by A only
+
+    def test_most_cited(self, graph):
+        top = graph.most_cited(2)
+        assert top[0] == ("paper-C", 3)
+
+    def test_network_stats(self, graph):
+        stats = graph.network_stats()
+        assert stats["node_count"] == 4
+        assert stats["edge_count"] == 4
+
+    def test_h_index(self, graph):
+        h = graph.h_index()
+        assert isinstance(h, int)
+        assert h >= 0
+
+    def test_citation_chains(self, graph):
+        chains = graph.find_citation_chains("paper-A", max_depth=3)
+        assert isinstance(chains, list)
+        assert len(chains) > 0
+
+    def test_to_graph_json(self, graph):
+        gj = graph.to_graph_json()
+        assert "nodes" in gj
+        assert "edges" in gj
+        assert len(gj["nodes"]) == 4
+        assert len(gj["edges"]) == 4
+
+    def test_build_from_store(self):
+        store = LiteratureStore()
+        # Add papers that reference each other via arXiv IDs in abstracts
+        store.add_paper(
+            title="Paper Alpha",
+            abstract="We extend the results of astro-ph/9805201 to higher redshifts.",
+            arxiv_id="2301.00001",
+        )
+        store.add_paper(
+            title="Paper Beta",
+            abstract="Original dark energy observations.",
+            arxiv_id="astro-ph/9805201",
+        )
+        g = CitationGraph()
+        g.build_from_literature_store(store)
+        stats = g.network_stats()
+        assert stats["node_count"] >= 2
+        assert stats["edge_count"] >= 1
+        assert "astro-ph/9805201" in g.references("2301.00001")
+
+    def test_self_citation_ignored(self):
+        g = CitationGraph()
+        g.add_citation("paper-A", "paper-A")
+        assert g.citation_count("paper-A") == 0
+
+    def test_get_citation_graph_singleton(self):
+        g1 = get_citation_graph()
+        g2 = get_citation_graph()
+        assert g1 is g2
