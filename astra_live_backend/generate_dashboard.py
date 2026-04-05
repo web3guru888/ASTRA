@@ -16,7 +16,7 @@ OUTPUT_PATH = "/shared/public/astra-live/index.html"
 
 def fetch_all_data():
     data = {}
-    for ep in ['status', 'state', 'hypotheses', 'activity', 'decisions', 'charts', 'metrics', 'engine/safety-status', 'engine/state-space', 'engine/alignment', 'engine/anomalies', 'engine/pending', 'system/health', 'literature/papers', 'literature/citation-graph', 'literature/citation-metrics']:
+    for ep in ['status', 'state', 'hypotheses', 'activity', 'decisions', 'charts', 'metrics', 'engine/safety-status', 'engine/state-space', 'engine/alignment', 'engine/anomalies', 'engine/pending', 'system/health', 'literature/papers', 'literature/citation-graph', 'literature/citation-metrics', 'pheromones/status', 'pheromones/ab-test', 'stigmergy/gaps', 'stigmergy/exploration', 'swarm/status']:
         try:
             r = requests.get(f"{API_BASE}/api/{ep}", timeout=15)
             data[ep] = r.json()
@@ -101,6 +101,11 @@ def build_dashboard_html(snapshot_data):
     if (path.includes('/literature/papers')) return s["literature/papers"];
     if (path.includes('/literature/citation-graph')) return s["literature/citation-graph"];
     if (path.includes('/literature/citation-metrics')) return s["literature/citation-metrics"];
+    if (path.includes('/pheromones/status')) return s["pheromones/status"];
+    if (path.includes('/pheromones/ab-test')) return s["pheromones/ab-test"];
+    if (path.includes('/stigmergy/gaps')) return s["stigmergy/gaps"];
+    if (path.includes('/stigmergy/exploration')) return s["stigmergy/exploration"];
+    if (path.includes('/swarm/status')) return s["swarm/status"];
     return null;
   }
 
