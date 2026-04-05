@@ -19,7 +19,7 @@
 - **Autonomous OODA research cycle** — Orient → Select → Investigate → Evaluate → Update
 - **9 real data sources** (27,430+ data points): Pantheon+ SNe Ia, NASA Exoplanet Archive, Gaia DR3, SDSS DR18, LIGO gravitational waves, Planck CMB, ZTF transients, TESS, SDSS galaxy clusters
 - **40+ validated hypotheses** across 5 scientific domains
-- **Self-improving discovery memory** — SQLite-backed with 770+ discoveries and 3,500+ method outcomes
+- **Self-improving discovery memory** — SQLite-backed with 780+ discoveries and 3,500+ method outcomes
 - **Safety architecture** — 5-state controller, arbiter, circuit breakers, phased autonomy, ethics reasoning
 - **Live dashboard** with 8 interactive tabs (glassmorphism UI, 95/100 design critic score)
 - **RASTI paper** with 6 reproducible worked examples and publication-quality figures
@@ -213,6 +213,21 @@ curl -X POST http://localhost:8787/api/engine/cycle | python3 -m json.tool
 # Check discovery memory
 curl http://localhost:8787/api/discovery-memory | python3 -m json.tool
 ```
+
+### Live Dashboard
+
+ASTRA includes a real-time mission control dashboard with 8 interactive tabs:
+
+- **Overview** — Neural topology, activity log, hypothesis funnel, domain activity
+- **Safety** — State-space visualization, anomaly detection, drift monitor
+- **Control** — Engine controls (pause/safe/e-stop), supervisor, approvals
+- **Health** — System metrics, persistence stats, method success rates
+- **Phase 4** — Operational readiness protocol, ceremonies, rollback procedures
+- **Discoveries** — Hypothesis pipeline, 6 verified discoveries with full statistics
+- **Self-Improve** — Discovery timeline, method performance table, learning metrics
+- **Literature** — Citation metrics, arXiv paper integration, novelty scores
+
+Dashboard score: **95/100** (professional design critic audit).
 
 ---
 
@@ -490,7 +505,7 @@ ASTRA includes a self-improvement loop that learns from its own research history
 5. **Exploration Balance** — Epsilon-greedy strategy ensures novel hypothesis spaces are explored
 
 Current statistics:
-- 770+ discoveries recorded
+- 780+ discoveries recorded
 - 3,500+ method outcomes tracked
 - 5 active scientific domains
 
@@ -536,7 +551,7 @@ The live dashboard is a single-file HTML application with embedded CSS/JS.
 ```bash
 # Regenerate with latest data snapshot
 python3 astra_live_backend/generate_dashboard.py
-# Output: astra_live_dashboard.html
+# Output: /shared/public/astra-live/index.html
 ```
 
 ### Generating Figures
