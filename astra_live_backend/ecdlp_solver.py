@@ -286,10 +286,18 @@ class PollardRhoSolver:
             self._walk_R.append(Rj)
 
     def _partition(self, R: ECPoint) -> int:
-        """Map a point to a partition index in [0, L)."""
+        """Map a point to a partition index in [0, L).
+
+        Uses a multiplicative hash of the x-coordinate to decorrelate the
+        partition from the additive structure of the group, reducing the
+        probability of short cycles (cf. Bernstein-Lange-Schwabe 2013).
+        """
         if R is INF:
             return 0
-        return R[0] % self.L
+        # Multiplicative hash: avoids correlation between R and R+R_j that
+        # causes 2-cycle traps when using plain x mod L.
+        h = (R[0] * 0x9E3779B97F4A7C15 + 0x6A09E667F3BCC908) & 0xFFFFFFFFFFFFFFFF
+        return h % self.L
 
     def _is_distinguished(self, R: ECPoint) -> bool:
         """Check if R is a distinguished point (dp_bits leading zeros in x)."""
@@ -297,13 +305,21 @@ class PollardRhoSolver:
             return False
         return (R[0] & self.dp_mask) == 0
 
-    def _step(self, R: ECPoint, a: int, b: int) -> Tuple[ECPoint, int, int]:
+    def _step(self, R: ECPoint, a: int, b: int,
+              R_prev: ECPoint = None) -> Tuple[ECPoint, int, int]:
         """
-        One step of the r-adding walk with negation map.
+        One step of the r-adding walk with negation map and 2-cycle escape.
+
+        When the walk detects it would return to R_prev (forming a 2-cycle
+        with the negation map), it perturbs the partition index to escape.
+        This is the standard mitigation from Bernstein-Lange-Schwabe 2013.
 
         Returns new (R', a', b') where R' = normalized(R + R_j).
         """
         j = self._partition(R)
+
+        # 2-cycle escape: if R + R_j would land on ±R_prev, try next partition
+        # We detect this cheaply by checking if the normalized result equals R_prev
         R_new = self.curve.add(R, self._walk_R[j])
         a_new = (a + self._walk_a[j]) % self.n
         b_new = (b + self._walk_b[j]) % self.n
@@ -315,6 +331,19 @@ class PollardRhoSolver:
                 R_new = (x, (-y) % self.curve.q)
                 a_new = (-a_new) % self.n
                 b_new = (-b_new) % self.n
+
+        # 2-cycle detection: if we'd return to R_prev, perturb
+        if R_prev is not None and R_new == R_prev:
+            j2 = (j + 1) % self.L
+            R_new = self.curve.add(R, self._walk_R[j2])
+            a_new = (a + self._walk_a[j2]) % self.n
+            b_new = (b + self._walk_b[j2]) % self.n
+            if R_new is not INF:
+                x, y = R_new
+                if y > self.curve.q // 2:
+                    R_new = (x, (-y) % self.curve.q)
+                    a_new = (-a_new) % self.n
+                    b_new = (-b_new) % self.n
 
         return R_new, a_new, b_new
 
@@ -365,6 +394,7 @@ class PollardRhoSolver:
         # tortoise = (R_t, a_t, b_t), hare = (R_h, a_h, b_h)
         R_t, a_t, b_t = R0, a0, b0
         R_h, a_h, b_h = R0, a0, b0
+        R_h_prev = None  # track previous hare position for 2-cycle escape
 
         power = 1
         lam = 1
@@ -372,8 +402,10 @@ class PollardRhoSolver:
         t0 = time.time()
 
         while True:
-            # Move hare one step
-            R_h, a_h, b_h = self._step(R_h, a_h, b_h)
+            # Move hare one step (pass R_prev for 2-cycle escape)
+            R_h_old = R_h
+            R_h, a_h, b_h = self._step(R_h, a_h, b_h, R_prev=R_h_prev)
+            R_h_prev = R_h_old
             iters += 1
 
             if R_h == R_t:
@@ -402,6 +434,7 @@ class PollardRhoSolver:
                         b0 = (-b0) % self.n
                 R_t, a_t, b_t = R0, a0, b0
                 R_h, a_h, b_h = R0, a0, b0
+                R_h_prev = None
                 power = 1
                 lam = 1
                 continue
@@ -477,12 +510,15 @@ class PollardRhoSolver:
                     b0 = (-b0) % self.n
 
             a_cur, b_cur = a0, b0
+            R_prev = None
             walks_started += 1
 
             # Walk until distinguished point or max steps per walk
             walk_limit = 10 * (1 << self.dp_bits)  # expected steps to find DP
             for _ in range(walk_limit):
-                R, a_cur, b_cur = self._step(R, a_cur, b_cur)
+                R_old = R
+                R, a_cur, b_cur = self._step(R, a_cur, b_cur, R_prev=R_prev)
+                R_prev = R_old
                 total_iters += 1
 
                 if self._is_distinguished(R):
