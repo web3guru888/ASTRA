@@ -49,6 +49,19 @@ from .stigmergy_bridge import StigmergyBridge, get_stigmergy_bridge
 from .swarm_agents import SwarmCoordinator
 from .theory_engine import get_theory_engine
 
+# Advanced theory discovery modules
+try:
+    from .conceptual_blending import ConceptualBlender
+    from .information_physics import InformationTheoreticPhysics
+    from .paradox_generator import ParadoxGenerator
+    from .math_discoverer import MathematicalStructureDiscoverer
+    from .constraint_transfer import ConstraintTransferEngine
+    from .unsupervised_discovery import UnsupervisedStructureDiscoverer
+    from .tree_search_discovery import TreeSearchDiscoveryEngine
+    THEORY_MODULES_AVAILABLE = True
+except ImportError:
+    THEORY_MODULES_AVAILABLE = False
+
 
 @dataclass
 class ActivityLogEntry:
@@ -153,6 +166,24 @@ class DiscoveryEngine:
         # Theory Engine — Phases 1-3 theoretical framework infrastructure
         self.theory_engine = get_theory_engine(cycle_interval=5)
 
+        # Advanced theory discovery modules (Phase 12: Theoretical Innovation)
+        # These run periodically (every 10 cycles) to generate novel theoretical insights
+        if THEORY_MODULES_AVAILABLE:
+            self.conceptual_blender = ConceptualBlender()
+            self.info_physicist = InformationTheoreticPhysics()
+            self.paradox_generator = ParadoxGenerator()
+            self.math_discoverer = MathematicalStructureDiscoverer()
+            self.constraint_transfer = ConstraintTransferEngine()
+            self.unsupervised_discoverer = UnsupervisedStructureDiscoverer()
+            self.tree_search_engine = TreeSearchDiscoveryEngine()
+            self._theory_discovery_enabled = True
+        else:
+            self._theory_discovery_enabled = False
+
+        # Theory discovery runs every N cycles (default: 10)
+        self._theory_discovery_interval = 10
+        self._last_theory_discovery_cycle = 0
+
         # Exploration schedule — Phase 10.6: force domain round-robin
         self._forced_domain: Optional[str] = None
         self._domain_rotation_index = 0
@@ -191,6 +222,161 @@ class DiscoveryEngine:
         )
         self.decision_log.append(entry)
         self.total_decisions += 1
+
+    def _run_theoretical_discovery(self) -> int:
+        """
+        Run advanced theoretical discovery modules to generate novel insights.
+
+        Returns: Number of new hypotheses generated.
+        """
+        if not self._theory_discovery_enabled:
+            return 0
+
+        hypotheses_generated = 0
+        existing_names = {h.name for h in self.store.all()}
+
+        # 1. Information-Theoretic Physics (30% chance)
+        try:
+            if np.random.random() < 0.3:
+                result = self.info_physicist.test_entropic_force_prediction(
+                    system="galaxy",
+                    parameters={"mass": 1e11, "radius": 10}
+                )
+                h = self.store.add(
+                    f"Theoretical: Entropic Gravity {result['regime']}",
+                    "Astrophysics",
+                    f"Information-theoretic prediction: {result['prediction']}. "
+                    f"Newtonian a={result['newtonian_acceleration']:.3e} m/s², "
+                    f"Entropic a={result['entropic_acceleration']:.3e} m/s².",
+                    confidence=0.30
+                )
+                h.phase = Phase.PROPOSED
+                hypotheses_generated += 1
+                self._log("UPDATE", "INFO_PHYSICS",
+                          f"Generated entropic gravity prediction", h.id)
+        except Exception as e:
+            self._log("UPDATE", "INFO_PHYSICS", f"Error: {e}")
+
+        # 2. Paradox Generator (20% chance)
+        try:
+            if np.random.random() < 0.2:
+                paradox = self.paradox_generator.generate_black_hole_information_paradox()
+                h = self.store.add(
+                    f"Theoretical: Black Hole Information Paradox",
+                    "Astrophysics",
+                    f"Paradox analysis: {paradox.description}. "
+                    f"Implications: {paradox.implications[:2]}",
+                    confidence=0.25
+                )
+                h.phase = Phase.PROPOSED
+                hypotheses_generated += 1
+                self._log("UPDATE", "PARADOX_GEN",
+                          f"Generated paradox analysis", h.id)
+        except Exception as e:
+            self._log("UPDATE", "PARADOX_GEN", f"Error: {e}")
+
+        # 3. Mathematical Discovery (uses real data)
+        try:
+            exo_data = data_cache.get("exoplanets")
+            if exo_data and hasattr(exo_data, 'data') and len(exo_data.data) > 0:
+                df = exo_data.data.select_dtypes(include=[np.number])
+                if len(df.columns) >= 2:
+                    x = df.iloc[:, 0].values[:100]
+                    y = df.iloc[:, 1].values[:100]
+                    equation = self.math_discoverer.discover_equation(
+                        x, y, list(df.columns[:2]), max_complexity=2
+                    )
+                    if equation and equation.goodness_of_fit < 0.1:
+                        h = self.store.add(
+                            f"Theoretical: {equation.equation}",
+                            "Astrophysics",
+                            f"Discovered: {equation.equation}. "
+                            f"Goodness of fit: {equation.goodness_of_fit:.4f}",
+                            confidence=equation.confidence * 0.5
+                        )
+                        h.phase = Phase.PROPOSED
+                        hypotheses_generated += 1
+                        self._log("UPDATE", "MATH_DISCOVER",
+                                  f"Discovered equation: {equation.equation}", h.id)
+        except Exception as e:
+            self._log("UPDATE", "MATH_DISCOVER", f"Error: {e}")
+
+        # 4. Constraint Transfer (25% chance)
+        try:
+            if np.random.random() < 0.25:
+                qm_constraints = self.constraint_transfer.constraint_database.get("quantum_mechanics", [])
+                for constraint in qm_constraints:
+                    if 'Unitarity' in constraint.name:
+                        result = self.constraint_transfer.transfer_constraint(constraint, "black_holes")
+                        h = self.store.add(
+                            f"Theoretical: {result.transferred_constraint}",
+                            "Astrophysics",
+                            f"Constraint transfer: {result.transferred_constraint}. "
+                            f"Implications: {result.implications[:2] if result.implications else []}",
+                            confidence=result.confidence * 0.6
+                        )
+                        h.phase = Phase.PROPOSED
+                        hypotheses_generated += 1
+                        self._log("UPDATE", "CONSTRAINT_TRANSFER",
+                                  f"Transferred constraint: {constraint.name}", h.id)
+                        break
+        except Exception as e:
+            self._log("UPDATE", "CONSTRAINT_TRANSFER", f"Error: {e}")
+
+        # 5. Unsupervised Discovery (30% chance)
+        try:
+            if np.random.random() < 0.3:
+                for source in ["exoplanets", "gaia", "sdss"]:
+                    cached = data_cache.get(source)
+                    if cached and hasattr(cached, 'data') and len(cached.data) > 0:
+                        df = cached.data.select_dtypes(include=[np.number])
+                        if len(df.columns) >= 3:
+                            data_subset = df.dropna().iloc[:200].values
+                            results = self.unsupervised_discoverer.discover_latent_structure(
+                                data_subset, list(df.columns[:data_subset.shape[1]])
+                            )
+                            if results.get('invariants'):
+                                for inv in results['invariants'][:2]:
+                                    h = self.store.add(
+                                        f"Theoretical: Conserved {inv.name}",
+                                        "Astrophysics",
+                                        f"Unsupervised discovery: {inv.mathematical_form}. "
+                                        f"Strength: {inv.strength:.2f}",
+                                        confidence=min(0.5, inv.strength * 0.3)
+                                    )
+                                    h.phase = Phase.PROPOSED
+                                    hypotheses_generated += 1
+                                    self._log("UPDATE", "UNSUPERVISED_DISCOVER",
+                                              f"Found conserved quantity: {inv.name}", h.id)
+                                break
+        except Exception as e:
+            self._log("UPDATE", "UNSUPERVISED_DISCOVER", f"Error: {e}")
+
+        # 6. Tree Search (20% chance)
+        try:
+            if np.random.random() < 0.2:
+                problem = {
+                    'description': 'Find scaling relation',
+                    'variables': ['mass', 'luminosity'],
+                    'data': np.array([1, 2, 3])
+                }
+                search_results = self.tree_search_engine.search_theoretical_space(problem)
+                if search_results['best_solution']:
+                    h = self.store.add(
+                        f"Theoretical: Multi-Method Analysis",
+                        "Astrophysics",
+                        f"Tree search found {len(search_results['all_solutions'])} methods. "
+                        f"Best score: {search_results['best_score']:.3f}",
+                        confidence=search_results['best_score'] * 0.4
+                    )
+                    h.phase = Phase.PROPOSED
+                    hypotheses_generated += 1
+                    self._log("UPDATE", "TREE_SEARCH",
+                              f"Tree search completed", h.id)
+        except Exception as e:
+            self._log("UPDATE", "TREE_SEARCH", f"Error: {e}")
+
+        return hypotheses_generated
 
     def _recalculate_system_confidence(self):
         active = self.store.active()
@@ -2052,6 +2238,15 @@ class DiscoveryEngine:
 
         # Discovery-guided hypothesis generation (replaces random hardcoded list)
         self._generate_discovery_guided_hypotheses()
+
+        # Advanced theory discovery: runs every N cycles (default: every 10 cycles)
+        # This is where ASTRA generates genuinely novel theoretical concepts
+        if self._theory_discovery_enabled and (self.cycle_count - self._last_theory_discovery_cycle >= self._theory_discovery_interval):
+            theory_hypotheses = self._run_theoretical_discovery()
+            self._last_theory_discovery_cycle = self.cycle_count
+            self._log("UPDATE", "THEORY_DISCOVERY",
+                      f"Completed theoretical discovery cycle #{self.cycle_count // self._theory_discovery_interval}. "
+                      f"Generated {theory_hypotheses} novel theoretical hypotheses.")
 
         self._recalculate_system_confidence()
         self._log("UPDATE", "UPDATE",
