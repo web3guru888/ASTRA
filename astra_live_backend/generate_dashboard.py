@@ -11,7 +11,7 @@ import time
 import requests
 
 API_BASE = "http://localhost:8787"
-OUTPUT_PATH = "/shared/public/astra-live/index.html"
+OUTPUT_PATH = "astra-live/index.html"
 
 
 def fetch_all_data():
