@@ -2069,6 +2069,19 @@ class DiscoveryEngine:
         self._check_novelty(h, ks_result.test_name, ks_result.statistic, ks_result.p_value,
                            {"chi2_planck": chi2_planck, "chi2_shoes": chi2_shoes})
 
+        # Record discovery if significant
+        if ks_result.p_value < 0.1:
+            self.discovery_memory.record_discovery(
+                hypothesis_id=h.id, domain=h.domain,
+                finding_type="model_comparison",
+                variables=["distance_modulus", "redshift"],
+                statistic=abs(chi2_planck - chi2_shoes),
+                p_value=ks_result.p_value,
+                description=f"Hubble tension: Planck vs SH0ES residual comparison",
+                data_source="pantheon",
+                sample_size=len(z),
+            )
+
         # Test 2: Residual normality — are ΛCDM residuals consistent with zero?
         residuals = mb - mu_planck
         t_result = bayesian_t_test(residuals, popmean=0.0)
@@ -2076,6 +2089,19 @@ class DiscoveryEngine:
                   f"t-test on ΛCDM residuals for {h.id}: {t_result.details}, p={t_result.p_value:.4f}", h.id)
         h.test_results.append(asdict(t_result))
         h.update_from_pvalue(t_result.p_value)
+
+        # Record discovery if significant
+        if t_result.p_value < 0.1:
+            self.discovery_memory.record_discovery(
+                hypothesis_id=h.id, domain=h.domain,
+                finding_type="anomaly",
+                variables=["distance_modulus", "redshift"],
+                statistic=abs(t_result.statistic),
+                p_value=t_result.p_value,
+                description=f"ΛCDM residual analysis: {t_result.details}",
+                data_source="pantheon",
+                sample_size=len(residuals),
+            )
 
         # Test 3: Binned residuals — redshift-dependent systematics?
         z_bins = [0, 0.1, 0.3, 0.6, 1.0, 2.5]
@@ -2102,9 +2128,27 @@ class DiscoveryEngine:
         g_r = sdss.data['g_r']
         ks_result = kolmogorov_smirnov_test(g_r)
         self._log("EVALUATE", "EVALUATE",
-                  f"KS test on g-r colors for {h.id}: {ks_result.details}, p = {ks_result.p_value:.4f}", h.id)
+                  f"Galaxy color distribution KS test for {h.id}: {ks_result.details}, p={ks_result.p_value:.4f}", h.id)
         h.test_results.append(asdict(ks_result))
         h.update_from_pvalue(ks_result.p_value)
+
+        # Record discovery if significant
+        if ks_result.p_value < 0.1:
+            self.discovery_memory.record_discovery(
+                hypothesis_id=h.id, domain=h.domain,
+                finding_type="bimodality",
+                variables=["g_r_color"],
+                statistic=ks_result.statistic,
+                p_value=ks_result.p_value,
+                description=f"Galaxy color bimodality in SDSS: {ks_result.details}",
+                data_source="sdss",
+                sample_size=len(g_r),
+            )
+
+        # Additional test: Fit Gaussian mixture to detect bimodality
+        from scipy.stats import norm as scipy_norm
+        from scipy.optimize import curve_fit
+
         self._check_novelty(h, ks_result.test_name, ks_result.statistic, ks_result.p_value,
                            {"g_r_mean": float(np.mean(g_r)), "g_r_std": float(np.std(g_r))})
 
@@ -2143,6 +2187,19 @@ class DiscoveryEngine:
                       f"Correlation (log P vs log M) for {h.id}: {corr_result.details}, p = {corr_result.p_value:.4f}", h.id)
             h.test_results.append(asdict(corr_result))
             h.update_from_pvalue(corr_result.p_value)
+
+            # Record discovery if significant
+            if corr_result.p_value < 0.1:
+                self.discovery_memory.record_discovery(
+                    hypothesis_id=h.id, domain=h.domain,
+                    finding_type="correlation",
+                    variables=["log_period", "log_mass"],
+                    statistic=abs(corr_result.statistic),
+                    p_value=corr_result.p_value,
+                    description=f"Exoplanet mass-period correlation: {corr_result.details}",
+                    data_source="exoplanets",
+                    sample_size=len(log_mass),
+                )
 
     def _evaluate_crossdomain(self, h: Hypothesis):
         """Evaluate cross-domain hypothesis."""
@@ -2516,27 +2573,36 @@ class DiscoveryEngine:
                   f"{metrics['total_outcomes']} outcomes recorded")
 
     def _propose_from_unexplored_pairs(self, existing_names: set):
-        """Fallback: propose hypothesis from unexplored variable pairs."""
-        for source in ["exoplanets", "sdss", "gaia"]:
+        """Fallback: propose hypotheses from unexplored variable pairs. Generate 3-5 to maintain queue."""
+        proposed_count = 0
+        for source in ["exoplanets", "sdss", "gaia", "pantheon", "ligo"]:
+            if proposed_count >= 5:
+                break
             untested = self.discovery_memory.get_unexplored_variable_pairs(source)
             if untested:
-                v1, v2 = untested[0]
-                name = f"{source.upper()} {v1.title()}-{v2.title()} Probe"
-                if name not in existing_names:
-                    h = self.store.add(
-                        name, "Astrophysics",
-                        f"Novel exploration of {v1}–{v2} relation in {source} data. "
-                        f"Untested variable pair — first measurement.",
-                        confidence=0.15
-                    )
-                    h.phase = Phase.PROPOSED
-                    self.discovery_memory.generation_count += 1
-                    self._log("ORIENT", "DISCOVERY_MEMORY",
-                              f"New hypothesis from unexplored pair: {h.id} ({name})", h.id)
-                    self._decide("expand",
-                                 f"Proposed {h.id}: {name} (unexplored variable pair)",
-                                 "QUEUED", h.id)
-                    return
+                # Generate up to 2 hypotheses per source
+                for i, (v1, v2) in enumerate(untested[:2]):
+                    if proposed_count >= 5:
+                        break
+                    name = f"{source.upper()} {v1.title()}-{v2.title()} Probe"
+                    if name not in existing_names:
+                        h = self.store.add(
+                            name, "Astrophysics",
+                            f"Novel exploration of {v1}–{v2} relation in {source} data. "
+                            f"Untested variable pair — first measurement.",
+                            confidence=0.15
+                        )
+                        h.phase = Phase.PROPOSED
+                        self.discovery_memory.generation_count += 1
+                        self._log("ORIENT", "DISCOVERY_MEMORY",
+                                  f"New hypothesis from unexplored pair: {h.id} ({name})", h.id)
+                        self._decide("expand",
+                                     f"Proposed {h.id}: {name} (unexplored variable pair)",
+                                     "QUEUED", h.id)
+                        proposed_count += 1
+        if proposed_count == 0:
+            self._log("ORIENT", "DISCOVERY_MEMORY",
+                      "No unexplored variable pairs found — all combinations tested")
 
     def _propose_new_hypothesis(self):
         """Legacy fallback — kept for API compatibility. Prefer _generate_discovery_guided_hypotheses."""
