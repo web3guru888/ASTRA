@@ -73,3 +73,7 @@ data/
 paper/*.pdf
 paper/figures/*.pdf
 paper/figures/*.png
+*.db
+*.db-shm
+*.db-wal
+astra-live/index.html
