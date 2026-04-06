@@ -450,7 +450,7 @@ def _get_safety_action(name: str):
 
 # ── Serve the Dashboard ──────────────────────────────────────────
 
-DASHBOARD_DIR = Path("/shared/public/astra-live")
+DASHBOARD_DIR = Path("astra-live")
 
 
 @app.get("/")
@@ -918,7 +918,7 @@ def api_generate_hypotheses():
 
 # ── Serve the Dashboard ──────────────────────────────────────────
 
-DASHBOARD_DIR = Path("/shared/public/astra-live")
+DASHBOARD_DIR = Path("astra-live")
 
 
 @app.get("/")
