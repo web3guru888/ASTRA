@@ -379,6 +379,13 @@ class DiscoveryEngine:
         self.current_phase = "SELECT"
         active = self.store.active()
 
+        # Auto-promote PROPOSED hypotheses with sufficient confidence to SCREENING
+        for h in active:
+            if h.phase == Phase.PROPOSED and h.confidence >= 0.3:
+                h.phase = Phase.SCREENING
+                self._log("SELECT", "SELECT",
+                          f"Auto-promoted {h.id} ({h.name}) from PROPOSED → SCREENING", h.id)
+
         # Phase 10.6: Check forced domain for exploration diversification
         forced_domain = self._get_forced_domain()
         if forced_domain:
@@ -399,9 +406,12 @@ class DiscoveryEngine:
             # Boost fresh hypotheses in SCREENING that haven't been tested yet
             if h.phase == Phase.SCREENING and len(h.test_results) == 0:
                 score += 0.15  # Give untested hypotheses a chance to reach TESTING
+            # Penalize validated hypotheses — they've been proven, deprioritize re-investigation
+            if h.phase == Phase.VALIDATED:
+                score -= 0.3
             # Phase 10.6: Boost score for hypotheses in forced domain
             if forced_domain and h.domain == forced_domain:
-                score += 0.5
+                score += 1.0
             scored.append((h, score))
 
         scored.sort(key=lambda x: x[1], reverse=True)
@@ -453,8 +463,12 @@ class DiscoveryEngine:
         validated = self.store.by_phase(Phase.VALIDATED)
 
         screening = self.store.by_phase(Phase.SCREENING)
-        # Focus on testing + 1 validated + 2 screening (to gather initial data)
-        targets = testing[:3] + validated[:1] + screening[:2]
+        # Include PROPOSED hypotheses — they need initial investigation to advance
+        proposed = self.store.by_phase(Phase.PROPOSED)
+        # Prioritize: testing first, then proposed (new exploration), then screening, then 1 validated for monitoring
+        targets = testing[:3] + proposed[:2] + screening[:2] + validated[:1]
+        # Cap at 6 per cycle to avoid overload
+        targets = targets[:6]
 
         for h in targets:
             # Use strategist to select methods
