@@ -2139,6 +2139,301 @@ async def api_cognitive_dashboard():
     }
 
 
+# ── V9.0: Multi-Agent Scientific Collaboration ─────────────────────
+
+@app.get("/api/agents/status")
+async def api_agents_status():
+    """
+    Get status of multi-agent collaboration system (V9.0).
+    """
+    if not engine.multi_agent_orchestrator:
+        return {"enabled": False, "message": "Multi-agent system not initialized"}
+
+    orchestrator = engine.multi_agent_orchestrator
+    metrics = orchestrator.metrics.get_summary() if hasattr(orchestrator, 'metrics') else {}
+
+    return {
+        "enabled": True,
+        "registered_agents": len(orchestrator.agent_registry),
+        "active_debates": len(orchestrator.active_debates),
+        "debate_history": len(orchestrator.debate_history),
+        "metrics": metrics
+    }
+
+
+@app.post("/api/agents/create")
+async def api_agents_create(request: Request):
+    """
+    Create specialized agents for collaboration (V9.0).
+
+    Body:
+        roles: List[str] - Agent roles to create (theorist, empiricist, etc.)
+        count: int - Number of agents per role
+    """
+    if not engine.multi_agent_orchestrator:
+        return {"success": False, "error": "Multi-agent system not initialized"}
+
+    data = await request.json()
+    roles = data.get("roles", ["theorist", "empiricist", "synthesizer"])
+    count = data.get("count", 1)
+
+    from astra_live_backend.multi_agent import AgentFactory, AgentRole
+
+    role_map = {
+        "theorist": AgentRole.THEORIST,
+        "empiricist": AgentRole.EMPIRICIST,
+        "experimentalist": AgentRole.EXPERIMENTALIST,
+        "mathematician": AgentRole.MATHEMATICIAN,
+        "skeptic": AgentRole.SKEPTIC,
+        "synthesizer": AgentRole.SYNTHESIZER
+    }
+
+    created_agents = []
+    for role_name in roles:
+        role = role_map.get(role_name)
+        if role:
+            for _ in range(count):
+                agent = AgentFactory.create_agent(role)
+                engine.multi_agent_orchestrator.register_agent(agent)
+                created_agents.append({
+                    "id": agent.id,
+                    "role": role.value,
+                    "domains": agent.expertise.domains
+                })
+
+    return {
+        "success": True,
+        "created_agents": created_agents,
+        "total_agents": len(engine.multi_agent_orchestrator.agent_registry)
+    }
+
+
+@app.get("/api/agents/consensus")
+async def api_agents_consensus(question: str = None):
+    """
+    Get consensus from multi-agent system on a question (V9.0).
+
+    Query parameters:
+        question: The scientific question to analyze
+        method: Consensus method (majority_vote, weighted_vote, etc.)
+    """
+    if not engine.multi_agent_orchestrator:
+        return {"consensus": None, "error": "Multi-agent system not initialized"}
+
+    if not question:
+        return {"consensus": None, "error": "Question parameter required"}
+
+    # Get all agents
+    agents = list(engine.multi_agent_orchestrator.agent_registry.values())
+    if not agents:
+        return {"consensus": None, "error": "No agents available"}
+
+    # Collect opinions
+    opinions = []
+    for agent in agents:
+        try:
+            opinion = agent.analyze(question, {})
+            opinions.append(opinion)
+        except Exception as e:
+            # Continue with other agents
+            pass
+
+    # Compute consensus
+    from astra_live_backend.multi_agent import ConsensusEngine
+
+    consensus_engine = ConsensusEngine()
+    consensus = consensus_engine.compute_consensus(opinions)
+
+    return {
+        "question": question,
+        "consensus": consensus.to_dict(),
+        "opinions_count": len(opinions),
+        "agents_participated": len(opinions)
+    }
+
+
+@app.post("/api/agents/debate")
+async def api_agents_debate(request: Request):
+    """
+    Start or advance a structured scientific debate (V9.0).
+
+    Body:
+        question: str - Research question to debate
+        participants: List[str] - Agent IDs to participate
+        action: str - "start", "advance", or "conclude"
+        debate_id: str - Required for advance/conclude
+    """
+    if not engine.multi_agent_orchestrator:
+        return {"success": False, "error": "Multi-agent system not initialized"}
+
+    data = await request.json()
+    action = data.get("action", "start")
+
+    if action == "start":
+        question = data.get("question")
+        participants = data.get("participants", [])
+
+        if not question:
+            return {"success": False, "error": "Question required"}
+
+        # Use all agents if no participants specified
+        if not participants:
+            participants = list(engine.multi_agent_orchestrator.agent_registry.keys())
+
+        debate_id = engine.multi_agent_orchestrator.start_debate(question, participants)
+
+        return {
+            "success": True,
+            "debate_id": debate_id,
+            "question": question,
+            "participants": participants
+        }
+
+    elif action == "advance":
+        debate_id = data.get("debate_id")
+        if not debate_id:
+            return {"success": False, "error": "debate_id required"}
+
+        new_phase = engine.multi_agent_orchestrator.advance_debate(debate_id)
+
+        return {
+            "success": True,
+            "debate_id": debate_id,
+            "current_phase": new_phase
+        }
+
+    elif action == "conclude":
+        debate_id = data.get("debate_id")
+        if not debate_id:
+            return {"success": False, "error": "debate_id required"}
+
+        result = engine.multi_agent_orchestrator.conclude_debate(debate_id)
+
+        if result:
+            return {
+                "success": True,
+                "debate_id": debate_id,
+                "result": {
+                    "consensus_reached": result.final_consensus.consensus_reached,
+                    "consensus_position": result.final_consensus.consensus_position,
+                    "agreement_level": result.final_consensus.agreement_level,
+                    "recommendation": result.recommendation,
+                    "key_insights": result.key_insights
+                }
+            }
+        else:
+            return {"success": False, "error": "Debate not found"}
+
+    else:
+        return {"success": False, "error": f"Unknown action: {action}"}
+
+
+# ── V9.0: Autonomous Scientific Agenda ───────────────────────────────
+
+@app.get("/api/agenda/status")
+async def api_agenda_status():
+    """
+    Get status of autonomous scientific agenda (V9.0).
+    """
+    if not engine.autonomous_agenda:
+        return {"enabled": False, "message": "Autonomous agenda not initialized"}
+
+    summary = engine.autonomous_agenda.get_agenda_summary()
+
+    return {
+        "enabled": True,
+        "mode": engine.autonomous_agenda.mode,
+        **summary
+    }
+
+
+@app.get("/api/agenda/goals")
+async def api_agenda_goals():
+    """
+    Get current research goals.
+    """
+    if not engine.autonomous_agenda:
+        return {"goals": [], "error": "Autonomous agenda not initialized"}
+
+    goals = engine.autonomous_agenda.current_goals
+
+    return {
+        "goals": [g.to_dict() for g in goals],
+        "total": len(goals)
+    }
+
+
+@app.post("/api/agenda/generate")
+async def api_agenda_generate(request: Request):
+    """
+    Generate new research goals based on knowledge gaps (V9.0).
+
+    Body:
+        num_goals: int - Number of goals to generate (default: 5)
+        time_horizon: str - "short", "medium", or "long"
+    """
+    if not engine.autonomous_agenda:
+        return {"success": False, "error": "Autonomous agenda not initialized"}
+
+    data = await request.json()
+    num_goals = data.get("num_goals", 5)
+    time_horizon = data.get("time_horizon", "medium")
+
+    goals = engine.autonomous_agenda.generate_research_agenda(
+        num_goals=num_goals,
+        time_horizon=time_horizon
+    )
+
+    return {
+        "success": True,
+        "goals_generated": len(goals),
+        "goals": [g.to_dict() for g in goals]
+    }
+
+
+@app.post("/api/agenda/approve")
+async def api_agenda_approve(request: Request):
+    """
+    Approve or reject a proposed research goal (V9.0).
+
+    Body:
+        goal_id: str - ID of goal to approve/reject
+        approved: bool - True to approve, False to reject
+        feedback: str - Optional feedback for rejection
+    """
+    if not engine.autonomous_agenda:
+        return {"success": False, "error": "Autonomous agenda not initialized"}
+
+    data = await request.json()
+    goal_id = data.get("goal_id")
+    approved = data.get("approved", False)
+    feedback = data.get("feedback", "")
+
+    # Find goal
+    goal = None
+    for g in engine.autonomous_agenda.current_goals:
+        if g.id == goal_id:
+            goal = g
+            break
+
+    if not goal:
+        return {"success": False, "error": f"Goal {goal_id} not found"}
+
+    # Update goal status
+    if approved:
+        goal.status = "approved"  # String to match JSON serialization
+        goal.approved_by = "human"
+    else:
+        goal.status = "cancelled"
+
+    return {
+        "success": True,
+        "goal_id": goal_id,
+        "new_status": goal.status,
+        "feedback_recorded": bool(feedback)
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

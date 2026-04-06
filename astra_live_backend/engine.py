@@ -70,6 +70,21 @@ try:
 except ImportError:
     COGNITIVE_ARCHITECTURE_AVAILABLE = False
 
+# Phase 16: V9.0 Multi-Agent Scientific Collaboration
+try:
+    from .multi_agent import DebateOrchestrator, ExpertiseTracker
+    from .multi_agent.agent_factory import AgentRole, TaskPerformance
+    MULTI_AGENT_AVAILABLE = True
+except ImportError:
+    MULTI_AGENT_AVAILABLE = False
+
+# Phase 16: V9.0 Autonomous Scientific Agenda
+try:
+    from .autonomous_agenda import AutonomousAgenda, create_autonomous_agenda, GoalStatus
+    AUTONOMOUS_AGENDA_AVAILABLE = True
+except ImportError:
+    AUTONOMOUS_AGENDA_AVAILABLE = False
+
 
 @dataclass
 class ActivityLogEntry:
@@ -217,6 +232,61 @@ class DiscoveryEngine:
             self._last_cognitive_discovery_cycle = 0
             self._state_save_interval = 50
             self._last_state_save_cycle = 0
+
+        # Phase 16: V9.0 Multi-Agent Scientific Collaboration
+        # Specialized agents with collective intelligence
+        try:
+            from .multi_agent import DebateOrchestrator, ExpertiseTracker, create_debate
+            from .multi_agent.agent_factory import AgentFactory
+
+            self.multi_agent_orchestrator = DebateOrchestrator()
+            self.expertise_tracker = ExpertiseTracker()
+
+            # Create initial agent team
+            agents = AgentFactory.create_minimal_team()
+            for agent in agents:
+                self.multi_agent_orchestrator.register_agent(agent)
+                self.expertise_tracker.register_agent(agent)
+
+            self._multi_agent_enabled = True
+            self._debate_interval = 20  # Run debates every 20 cycles
+            self._last_debate_cycle = 0
+
+            self._log("INIT", "V9_MULTI_AGENT",
+                      f"Initialized {len(agents)} specialized agents for collaboration")
+        except ImportError:
+            self.multi_agent_orchestrator = None
+            self.expertise_tracker = None
+            self._multi_agent_enabled = False
+            self._debate_interval = 20
+            self._last_debate_cycle = 0
+
+        # Phase 16: V9.0 Autonomous Scientific Agenda
+        # Self-generated research goals through curiosity metrics
+        try:
+            from .autonomous_agenda import AutonomousAgenda, create_autonomous_agenda
+
+            # Use existing cognitive components if available
+            kg = self.cognitive_core.knowledge_graph if self.cognitive_core else None
+            dm = self.discovery_memory
+
+            self.autonomous_agenda = create_autonomous_agenda(
+                knowledge_graph=kg,
+                discovery_memory=dm,
+                mode="semi_autonomous"  # Human approval required for goals
+            )
+
+            self._autonomous_agenda_enabled = True
+            self._agenda_generation_interval = 25  # Generate agenda every 25 cycles
+            self._last_agenda_generation_cycle = 0
+
+            self._log("INIT", "V9_AUTONOMOUS_AGENDA",
+                      f"Initialized autonomous agenda system (mode: semi_autonomous)")
+        except ImportError:
+            self.autonomous_agenda = None
+            self._autonomous_agenda_enabled = False
+            self._agenda_generation_interval = 25
+            self._last_agenda_generation_cycle = 0
 
         # Exploration schedule — Phase 10.6: force domain round-robin
         self._forced_domain: Optional[str] = None
@@ -556,6 +626,193 @@ class DiscoveryEngine:
             self._log("UPDATE", "COGNITIVE", f"Cognitive discovery error: {e}")
 
         return insights_generated
+
+    def _run_multi_agent_discovery(self) -> int:
+        """
+        Run multi-agent scientific discovery debates (V9.0).
+
+        Specialized agents (Theorist, Empiricist, Experimentalist, etc.) debate
+        research questions to reach consensus on promising directions.
+
+        Returns: Number of debates completed.
+        """
+        if not self._multi_agent_enabled or not self.multi_agent_orchestrator:
+            return 0
+
+        debates_completed = 0
+
+        try:
+            # Get top hypotheses for agent debate
+            active_hypotheses = self.store.active()[:5]  # Top 5 by priority
+
+            if not active_hypotheses:
+                return 0
+
+            for h in active_hypotheses[:3]:  # Debate top 3 hypotheses
+                # Form research question from hypothesis
+                question = f"Should we investigate: {h.name}?"
+
+                # Get available agents
+                agent_ids = list(self.multi_agent_orchestrator.agent_registry.keys())
+
+                if len(agent_ids) < 3:
+                    # Need at least 3 agents for productive debate
+                    break
+
+                try:
+                    # Start debate
+                    debate_id = self.multi_agent_orchestrator.start_debate(
+                        question,
+                        agent_ids[:6]  # Limit to 6 agents per debate
+                    )
+
+                    # Advance through debate phases
+                    max_phases = 4
+                    for _ in range(max_phases):
+                        phase = self.multi_agent_orchestrator.advance_debate(debate_id)
+
+                        if phase == "synthesis" or phase is None:
+                            break
+
+                        # Small delay between phases for "thinking"
+                        time.sleep(0.1)
+
+                    # Conclude debate
+                    result = self.multi_agent_orchestrator.conclude_debate(debate_id)
+
+                    if result and result.final_consensus.consensus_reached:
+                        # Log consensus result
+                        self._log("UPDATE", "V9_MULTI_AGENT",
+                                  f"Debate on '{h.name[:30]}...' "
+                                  f"→ {result.final_consensus.consensus_position.upper()} "
+                                  f"(agreement: {result.final_consensus.agreement_level:.2f})")
+
+                        # Update hypothesis based on consensus
+                        if result.final_consensus.consensus_position == "support":
+                            # Increase confidence
+                            h.confidence = min(0.95, h.confidence + 0.1)
+                        elif result.final_consensus.consensus_position == "oppose":
+                            # Decrease confidence
+                            h.confidence = max(0.05, h.confidence - 0.15)
+
+                        # Log key insights
+                        if result.key_insights:
+                            self._log("UPDATE", "V9_MULTI_AGENT",
+                                      f"Key insights from debate: {'; '.join(result.key_insights[:2])}")
+
+                        # Track agent performance
+                        for agent_id in result.participants:
+                            try:
+                                # Determine if agent contributed meaningfully
+                                debate = self.multi_agent_orchestrator.active_debates.get(debate_id)
+                                messages = debate.get_messages() if debate else []
+                                contributed = len([m for m in messages if m.sender_id == agent_id]) > 0
+
+                                # Record performance
+                                self.multi_agent_orchestrator.expertise_tracker.record_performance(
+                                    TaskPerformance(
+                                        task_id=debate_id,
+                                        agent_id=agent_id,
+                                        agent_role=AgentRole.THEORIST,  # Will be corrected by actual role
+                                        domain=h.domain,
+                                        method="multi_agent_debate",
+                                        success=result.final_consensus.consensus_reached,
+                                        confidence=result.final_consensus.agreement_level,
+                                        time_taken=result.duration_seconds / 60  # minutes
+                                    )
+                                )
+                            except Exception:
+                                pass  # Continue with other agents
+
+                        debates_completed += 1
+
+                except Exception as e:
+                    self._log("UPDATE", "V9_MULTI_AGENT_ERROR", f"Debate error: {e}")
+
+        except Exception as e:
+            self._log("UPDATE", "V9_MULTI_AGENT", f"Multi-agent discovery error: {e}")
+
+        return debates_completed
+
+    def _run_autonomous_agenda_generation(self) -> int:
+        """
+        Run autonomous research agenda generation (V9.0).
+
+        Generates research goals based on:
+        - Information gaps in knowledge graph
+        - Novelty potential
+        - Scientific importance
+        - Feasibility
+
+        Returns: Number of new goals generated.
+        """
+        if not self._autonomous_agenda_enabled or not self.autonomous_agenda:
+            return 0
+
+        goals_generated = 0
+
+        try:
+            # Identify knowledge gaps
+            knowledge_gaps = []
+
+            # Get gaps from knowledge graph
+            if self.cognitive_core and self.cognitive_core.knowledge_graph:
+                gaps = self.cognitive_core.knowledge_graph.find_knowledge_gaps()
+                for gap in gaps[:5]:  # Top 5 gaps
+                    knowledge_gaps.append({
+                        "description": f"Knowledge gap: {gap.description}",
+                        "domain": gap.domain if hasattr(gap, 'domain') else "astrophysics",
+                        "priority": gap.priority
+                    })
+
+            # Get gaps from discovery memory (unexplored variable pairs)
+            if self.discovery_memory:
+                for source in ["exoplanets", "sdss", "gaia"]:
+                    untested = self.discovery_memory.get_unexplored_variable_pairs(source)
+                    if untested:
+                        v1, v2 = untested[0]
+                        knowledge_gaps.append({
+                            "description": f"Explore {v1}-{v2} relation in {source}",
+                            "domain": source,
+                            "priority": 0.6
+                        })
+
+            # Generate goals from gaps
+            new_goals = self.autonomous_agenda.generate_research_agenda(
+                knowledge_gaps=knowledge_gaps,
+                max_goals=3,  # Generate 3 new goals per cycle
+                time_horizon="medium"
+            )
+
+            goals_generated = len(new_goals)
+
+            if goals_generated > 0:
+                # Log new goals
+                for goal in new_goals[:3]:  # Log top 3
+                    self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                              f"New goal: {goal.title[:60]}... "
+                              f"(curiosity: {goal.curiosity_score:.2f}, "
+                              f"priority: {goal.priority.value})")
+
+                # Create hypotheses from high-priority goals
+                for goal in new_goals:
+                    if goal.priority in [GoalPriority.CRITICAL, GoalPriority.HIGH]:
+                        # Create hypothesis from goal
+                        h = self.store.add(
+                            goal.title[:80],
+                            goal.domain,
+                            goal.description,
+                            confidence=goal.curiosity_score * 0.8
+                        )
+                        h.phase = Phase.PROPOSED
+
+                        self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                                      f"Hypothesis created from goal: {h.id} ({h.name[:40]}...)")
+
+        except Exception as e:
+            self._log("UPDATE", "V9_AUTONOMOUS_AGENDA", f"Agenda generation error: {e}")
+
+        return goals_generated
 
     def _recalculate_system_confidence(self):
         active = self.store.active()
@@ -2492,6 +2749,28 @@ class DiscoveryEngine:
             self._log("UPDATE", "COGNITIVE",
                       f"Completed cognitive discovery cycle #{self.cycle_count // self._cognitive_discovery_interval}. "
                       f"Generated {cognitive_discoveries} cognitive insights.")
+
+        # Phase 16: V9.0 Multi-Agent Scientific Collaboration runs every N cycles
+        # Specialized agents debate to reach consensus on research questions
+        if self._multi_agent_enabled and self.multi_agent_orchestrator and (self.cycle_count - self._last_debate_cycle >= self._debate_interval):
+            # Run multi-agent discovery debates
+            debates_completed = self._run_multi_agent_discovery()
+            self._last_debate_cycle = self.cycle_count
+            if debates_completed > 0:
+                self._log("UPDATE", "V9_MULTI_AGENT",
+                          f"Completed {debates_completed} multi-agent debates. "
+                          f"Agent expertise tracking updated.")
+
+        # Phase 16: V9.0 Autonomous Agenda Generation runs every N cycles
+        # ASTRA sets its own research goals based on curiosity metrics
+        if self._autonomous_agenda_enabled and self.autonomous_agenda and (self.cycle_count - self._last_agenda_generation_cycle >= self._agenda_generation_interval):
+            # Generate new research goals from knowledge gaps
+            goals_generated = self._run_autonomous_agenda_generation()
+            self._last_agenda_generation_cycle = self.cycle_count
+            if goals_generated > 0:
+                self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                          f"Generated {goals_generated} new research goals from curiosity analysis. "
+                          f"Total active goals: {len(self.autonomous_agenda.current_goals)}.")
 
         # State persistence: save state every N cycles (default: every 50 cycles)
         if self.cognitive_core and (self.cycle_count - self._last_state_save_cycle >= self._state_save_interval):

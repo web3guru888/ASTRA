@@ -3154,12 +3154,12 @@ body::after {
     "engine": {
       "running": true,
       "current_phase": "INVESTIGATE",
-      "cycle_count": 3,
-      "uptime_seconds": 90.64553427696228,
+      "cycle_count": 143,
+      "uptime_seconds": 3755.7297189235687,
       "system_confidence": 0.0,
-      "total_data_points": 6284,
+      "total_data_points": 5000,
       "total_scripts": 0,
-      "total_plots": 5,
+      "total_plots": 285,
       "total_decisions": 15,
       "hypotheses_tested": 0,
       "cross_domain_links": 0,
@@ -3190,8 +3190,8 @@ body::after {
           "hypotheses_generated_from_memory": 0,
           "metrics": {
             "success_rate": {
-              "early": 0.992,
-              "recent": 0.996,
+              "early": 0.996,
+              "recent": 1.0,
               "delta": 0.004,
               "improving": true
             },
@@ -3237,22 +3237,22 @@ body::after {
     },
     "stigmergy": {
       "pheromone_weight": 0.3,
-      "total_deposits": 3806,
+      "total_deposits": 4086,
       "success_deposits": 0,
-      "failure_deposits": 1975,
+      "failure_deposits": 2255,
       "novelty_deposits": 2905
     },
-    "timestamp": 1775497397.5958111
+    "timestamp": 1775501062.680008
   },
   "state": {
     "running": true,
     "current_phase": "INVESTIGATE",
-    "cycle_count": 3,
-    "uptime_seconds": 90.65135097503662,
+    "cycle_count": 143,
+    "uptime_seconds": 3755.735234975815,
     "system_confidence": 0.0,
-    "total_data_points": 6284,
+    "total_data_points": 5000,
     "total_scripts": 0,
-    "total_plots": 5,
+    "total_plots": 285,
     "total_decisions": 15,
     "hypotheses_tested": 0,
     "cross_domain_links": 0,
@@ -3283,8 +3283,8 @@ body::after {
         "hypotheses_generated_from_memory": 0,
         "metrics": {
           "success_rate": {
-            "early": 0.992,
-            "recent": 0.996,
+            "early": 0.996,
+            "recent": 1.0,
             "delta": 0.004,
             "improving": true
           },
@@ -3824,7 +3824,7 @@ body::after {
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 6284,
+      "data_points_used": 15553,
       "cross_domain_links": [],
       "requires_approval": false,
       "pending_approval_at": 0.0,
@@ -3857,350 +3857,350 @@ body::after {
   ],
   "activity": [
     {
-      "timestamp": 1775497321.1528692,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching Pantheon+ SNe Ia sample for H001",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775497321.245464,
+      "timestamp": 1775500984.584165,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
       "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775497321.2456589,
+      "timestamp": 1775500984.584533,
       "phase": "ERROR",
       "module": "ENGINE",
       "message": "Cycle error: module 'numpy' has no attribute 'trapz'",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.254695,
+      "timestamp": 1775501009.589867,
       "phase": "ORIENT",
       "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #2 starting \u2501\u2501\u2501",
+      "message": "\u2501\u2501\u2501 Discovery Cycle #142 starting \u2501\u2501\u2501",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.254713,
+      "timestamp": 1775501009.589876,
       "phase": "ORIENT",
       "module": "ORIENT",
       "message": "Scanning astronomical data feeds\u2026",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.2549949,
+      "timestamp": 1775501009.589953,
       "phase": "ORIENT",
       "module": "ORIENT",
       "message": "Registry: 9 sources across 8 domains, 29 cross-match pairs, 45 variables",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.2550058,
+      "timestamp": 1775501009.589955,
       "phase": "ORIENT",
       "module": "ORIENT",
-      "message": "Cached data: Exoplanets: 1284, SDSS galaxies: 5000",
+      "message": "Cached data: SDSS galaxies: 5000",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.2598348,
+      "timestamp": 1775501009.591433,
       "phase": "ORIENT",
       "module": "STIGMERGY",
       "message": "Pheromone scout: strategy=explore, C_k=0.90, recommended=Climate",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.581196,
+      "timestamp": 1775501009.90385,
       "phase": "SELECT",
       "module": "STIGMERGY",
       "message": "Pheromone re-ranking applied (weight=0.30)",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775497346.581221,
+      "timestamp": 1775501009.903868,
       "phase": "SELECT",
       "module": "SELECT",
       "message": "Rank #1: H001 (Hubble Tension Analysis) \u2014 score 0.659, confidence 0.55, priority HIGH",
       "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775497346.581228,
+      "timestamp": 1775501009.903871,
       "phase": "SELECT",
       "module": "SELECT",
-      "message": "Rank #2: CD-001 (Econ-Astro Funding Correlation) \u2014 score 0.591, confidence 0.25, priority MEDIUM",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497346.5812328,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #3: H006 (Exoplanet Period Distribution) \u2014 score 0.506, confidence 0.52, priority NORMAL",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775497346.886264,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for CD-002 (Survey Design Optimization) \u2014 strategy: generic, methods: ['_investigate_generic', 'run_scaling_discovery']",
+      "message": "Rank #2: CD-002 (Survey Design Optimization) \u2014 score 0.604, confidence 0.30, priority MEDIUM",
       "hypothesis_id": "CD-002"
     },
     {
-      "timestamp": 1775497346.8862789,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running generic analysis for CD-002 (Survey Design Optimization) [domain=Epidemiology]",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497346.8863099,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Analyzing epidemiology data for CD-002 (Survey Design Optimization)",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497346.886414,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "\u26a0 No WHO data available \u2014 skipping CD-002",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497346.886421,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running cross-source analysis for CD-002",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497352.910594,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Pantheon+ SNe Ia via 'ra_dec' (1284 \u00d7 1701)",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497357.661551,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Gaia DR3 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497359.2238321,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 SDSS DR18 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497359.249759,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for CD-001 (Econ-Astro Funding Correlation) \u2014 strategy: crossdomain, methods: ['_investigate_generic', 'run_scaling_discovery']",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.249774,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Computing cross-domain metrics for CD-001",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.249815,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-domain comparison: 1284 exoplanet distances vs 5000 galaxy redshifts",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.249822,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running cross-source analysis for CD-001",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.24988,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Pantheon+ SNe Ia via 'ra_dec' (1284 \u00d7 1701)",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.249898,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Gaia DR3 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.2499049,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 SDSS DR18 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775497359.2655911,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H001 (Hubble Tension Analysis) \u2014 strategy: hubble, methods: ['_investigate_hubble', 'run_causal_discovery']",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775497359.265603,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching Pantheon+ SNe Ia sample for H001",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775497359.265742,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775497359.266021,
-      "phase": "ERROR",
-      "module": "ENGINE",
-      "message": "Cycle error: module 'numpy' has no attribute 'trapz'",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.272439,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #3 starting \u2501\u2501\u2501",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.272457,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Scanning astronomical data feeds\u2026",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.272668,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Registry: 9 sources across 8 domains, 29 cross-match pairs, 45 variables",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.2726789,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Cached data: Exoplanets: 1284, SDSS galaxies: 5000",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.587401,
-      "phase": "SELECT",
-      "module": "STIGMERGY",
-      "message": "Pheromone re-ranking applied (weight=0.30)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775497384.587414,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #1: H001 (Hubble Tension Analysis) \u2014 score 0.659, confidence 0.55, priority HIGH",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775497384.5874171,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #2: CD-002 (Survey Design Optimization) \u2014 score 0.603, confidence 0.30, priority MEDIUM",
-      "hypothesis_id": "CD-002"
-    },
-    {
-      "timestamp": 1775497384.5874188,
+      "timestamp": 1775501009.9038742,
       "phase": "SELECT",
       "module": "SELECT",
       "message": "Rank #3: CD-001 (Econ-Astro Funding Correlation) \u2014 score 0.593, confidence 0.25, priority NORMAL",
       "hypothesis_id": "CD-001"
     },
     {
-      "timestamp": 1775497384.893904,
+      "timestamp": 1775501010.209279,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Running experiment for CD-002 (Survey Design Optimization) \u2014 strategy: generic, methods: ['_investigate_generic', 'run_scaling_discovery']",
       "hypothesis_id": "CD-002"
     },
     {
-      "timestamp": 1775497384.893929,
+      "timestamp": 1775501010.209287,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Running generic analysis for CD-002 (Survey Design Optimization) [domain=Epidemiology]",
       "hypothesis_id": "CD-002"
     },
     {
-      "timestamp": 1775497384.893942,
+      "timestamp": 1775501010.209296,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Analyzing epidemiology data for CD-002 (Survey Design Optimization)",
       "hypothesis_id": "CD-002"
     },
     {
-      "timestamp": 1775497384.893994,
+      "timestamp": 1775501010.2093241,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "\u26a0 No WHO data available \u2014 skipping CD-002",
       "hypothesis_id": "CD-002"
     },
     {
-      "timestamp": 1775497384.913484,
+      "timestamp": 1775501010.2093272,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running cross-source analysis for CD-002",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501015.474017,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 Pantheon+ SNe Ia via 'ra_dec' (1284 \u00d7 1701)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501020.3189209,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 Gaia DR3 via 'ra_dec' (1284 \u00d7 5000)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501021.694771,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 SDSS DR18 via 'ra_dec' (1284 \u00d7 5000)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501021.7244558,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Running experiment for CD-001 (Econ-Astro Funding Correlation) \u2014 strategy: crossdomain, methods: ['_investigate_generic', 'run_scaling_discovery']",
       "hypothesis_id": "CD-001"
     },
     {
-      "timestamp": 1775497384.913497,
+      "timestamp": 1775501021.7244742,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Computing cross-domain metrics for CD-001",
       "hypothesis_id": "CD-001"
     },
     {
-      "timestamp": 1775497384.91353,
+      "timestamp": 1775501021.7245052,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
-      "message": "Cross-domain comparison: 1284 exoplanet distances vs 5000 galaxy redshifts",
+      "message": "Insufficient cross-domain data for CD-001",
       "hypothesis_id": "CD-001"
     },
     {
-      "timestamp": 1775497384.9372642,
+      "timestamp": 1775501021.724514,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running cross-source analysis for CD-001",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501021.7245781,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 Pantheon+ SNe Ia via 'ra_dec' (1284 \u00d7 1701)",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501021.724596,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 Gaia DR3 via 'ra_dec' (1284 \u00d7 5000)",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501021.724604,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Cross-match: NASA Exoplanet Archive \u2194 SDSS DR18 via 'ra_dec' (1284 \u00d7 5000)",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501021.749213,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Running experiment for H001 (Hubble Tension Analysis) \u2014 strategy: hubble, methods: ['_investigate_hubble', 'run_causal_discovery']",
       "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775497384.937278,
+      "timestamp": 1775501021.749233,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Fetching Pantheon+ SNe Ia sample for H001",
       "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775497384.937369,
+      "timestamp": 1775501021.7493188,
       "phase": "INVESTIGATE",
       "module": "INVESTIGATE",
       "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
       "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775497384.937552,
+      "timestamp": 1775501021.749553,
+      "phase": "ERROR",
+      "module": "ENGINE",
+      "message": "Cycle error: module 'numpy' has no attribute 'trapz'",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501046.7549162,
+      "phase": "ORIENT",
+      "module": "ENGINE",
+      "message": "\u2501\u2501\u2501 Discovery Cycle #143 starting \u2501\u2501\u2501",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501046.7549288,
+      "phase": "ORIENT",
+      "module": "ORIENT",
+      "message": "Scanning astronomical data feeds\u2026",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501046.755054,
+      "phase": "ORIENT",
+      "module": "ORIENT",
+      "message": "Registry: 9 sources across 8 domains, 29 cross-match pairs, 45 variables",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501046.7550569,
+      "phase": "ORIENT",
+      "module": "ORIENT",
+      "message": "Cached data: SDSS galaxies: 5000",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501046.7571788,
+      "phase": "ORIENT",
+      "module": "STIGMERGY",
+      "message": "Pheromone scout: strategy=explore, C_k=0.90, recommended=Climate",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501047.067623,
+      "phase": "SELECT",
+      "module": "STIGMERGY",
+      "message": "Pheromone re-ranking applied (weight=0.30)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775501047.0676532,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #1: H001 (Hubble Tension Analysis) \u2014 score 0.659, confidence 0.55, priority HIGH",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775501047.067659,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #2: CD-002 (Survey Design Optimization) \u2014 score 0.603, confidence 0.30, priority MEDIUM",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501047.067662,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #3: CD-001 (Econ-Astro Funding Correlation) \u2014 score 0.593, confidence 0.25, priority NORMAL",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501047.373142,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for CD-002 (Survey Design Optimization) \u2014 strategy: generic, methods: ['_investigate_generic', 'run_scaling_discovery']",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501047.373155,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running generic analysis for CD-002 (Survey Design Optimization) [domain=Epidemiology]",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501047.3731682,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Analyzing epidemiology data for CD-002 (Survey Design Optimization)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501047.3732328,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No WHO data available \u2014 skipping CD-002",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775501047.408434,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for CD-001 (Econ-Astro Funding Correlation) \u2014 strategy: crossdomain, methods: ['_investigate_generic', 'run_scaling_discovery']",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501047.408461,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Computing cross-domain metrics for CD-001",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501047.4085062,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Insufficient cross-domain data for CD-001",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775501047.440202,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H001 (Hubble Tension Analysis) \u2014 strategy: hubble, methods: ['_investigate_hubble', 'run_causal_discovery']",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775501047.440233,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching Pantheon+ SNe Ia sample for H001",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775501047.440373,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775501047.440801,
       "phase": "ERROR",
       "module": "ENGINE",
       "message": "Cycle error: module 'numpy' has no attribute 'trapz'",
@@ -4354,7 +4354,7 @@ body::after {
       ],
       "data": [
         0.362,
-        0.188,
+        0.262,
         0.0,
         0.0,
         1.0,
@@ -4364,10 +4364,10 @@ body::after {
     "system_confidence": 0.0
   },
   "metrics": {
-    "runtime_seconds": 90.6794981956482,
-    "data_points": 6284,
+    "runtime_seconds": 3755.75656914711,
+    "data_points": 5000,
     "scripts_written": 0,
-    "plots_generated": 5,
+    "plots_generated": 285,
     "hypotheses_tested": 0,
     "queue_depth": 19,
     "domains_active": 3,
@@ -4379,13 +4379,13 @@ body::after {
   },
   "engine/safety-status": {
     "state": "NOMINAL",
-    "uptime_seconds": 90.68321490287781,
+    "uptime_seconds": 3755.7597031593323,
     "can_advance_hypotheses": true,
     "can_run_cycle": true,
     "can_investigate": true,
     "can_modify_state": true,
     "audit_log_size": 2,
-    "timestamp": 1775497397.633302,
+    "timestamp": 1775501062.709791,
     "audit_log": [
       {
         "timestamp": 1775497306.950138,
@@ -4430,9 +4430,9 @@ body::after {
     "metadata": {
       "total_hypotheses": 25,
       "active_hypotheses": 25,
-      "cycle_count": 3,
-      "new_hypotheses_last_10": 25,
-      "timestamp": 1775497397.640576
+      "cycle_count": 143,
+      "new_hypotheses_last_10": 0,
+      "timestamp": 1775501062.716734
     }
   },
   "engine/anomalies": {
@@ -4443,7 +4443,7 @@ body::after {
       "reason": "Insufficient data"
     },
     "total_alerts": 0,
-    "timestamp": 1775497397.643771
+    "timestamp": 1775501062.719167
   },
   "engine/pending": {
     "count": 0,
@@ -4451,7 +4451,7 @@ body::after {
   },
   "system/health": {
     "status": "HEALTHY",
-    "uptime_seconds": 0.0008270740509033203,
+    "uptime_seconds": 0.000392913818359375,
     "components": [
       {
         "id": "c1",
@@ -4487,16 +4487,16 @@ body::after {
         "id": "c6",
         "name": "System Resources",
         "status": "nominal",
-        "message": "CPU: 0.0% MEM: 209.5MB"
+        "message": "CPU: 0.0% MEM: 406.3MB"
       }
     ],
-    "timestamp": 1775497397.650078
+    "timestamp": 1775501062.724072
   },
   "literature/papers": {
     "papers": [],
     "total": 0,
     "backend": "custom",
-    "timestamp": 1775497397.6535838
+    "timestamp": 1775501062.726937
   },
   "literature/citation-graph": {
     "nodes": [],
@@ -4511,10 +4511,10 @@ body::after {
       "max_citations": 0
     },
     "h_index": 0,
-    "timestamp": 1775497397.658303
+    "timestamp": 1775501062.734169
   }
 };
-  window.__SNAPSHOT_TIME__ = 1775497397.6645608;
+  window.__SNAPSHOT_TIME__ = 1775501062.7366312;
 
   async function api(path) {
     if (!apiConnected || API === null) return snapshotFor(path);
