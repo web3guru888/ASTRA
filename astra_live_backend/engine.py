@@ -1089,12 +1089,13 @@ class DiscoveryEngine:
         validated = self.store.by_phase(Phase.VALIDATED)
 
         screening = self.store.by_phase(Phase.SCREENING)
-        # Include PROPOSED hypotheses — they need initial investigation to advance
-        proposed = self.store.by_phase(Phase.PROPOSED)
+        # PROPOSED hypotheses are NOT auto-investigated — they must be explicitly promoted
+        # This allows users to review proposed hypotheses before they enter testing phase
+        # proposed = self.store.by_phase(Phase.PROPOSED)
 
         # Domain-diverse target selection: ensure non-Astro domains get investigated
         # Pick 1 hypothesis per non-Astro domain first, then fill with Astro
-        all_candidates = testing + proposed + screening
+        all_candidates = testing + screening  # Exclude proposed from auto-investigation
         targets = []
         seen_domains = set()
         # First pass: 1 per non-Astro domain (prioritize under-investigated)
