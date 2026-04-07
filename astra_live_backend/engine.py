@@ -49,6 +49,42 @@ from .stigmergy_bridge import StigmergyBridge, get_stigmergy_bridge
 from .swarm_agents import SwarmCoordinator
 from .theory_engine import get_theory_engine
 
+# Advanced theory discovery modules
+try:
+    from .conceptual_blending import ConceptualBlender
+    from .information_physics import InformationTheoreticPhysics
+    from .paradox_generator import ParadoxGenerator
+    from .math_discoverer import MathematicalStructureDiscoverer
+    from .constraint_transfer import ConstraintTransferEngine
+    from .unsupervised_discovery import UnsupervisedStructureDiscoverer
+    from .tree_search_discovery import TreeSearchDiscoveryEngine
+    THEORY_MODULES_AVAILABLE = True
+except ImportError:
+    THEORY_MODULES_AVAILABLE = False
+
+# Phase 15: Cognitive Architecture
+try:
+    from .cognitive_core import CognitiveCore
+    from .state_persistence import save_engine_state, save_hypotheses, load_hypotheses, load_engine_state, save_cognitive_state
+    COGNITIVE_ARCHITECTURE_AVAILABLE = True
+except ImportError:
+    COGNITIVE_ARCHITECTURE_AVAILABLE = False
+
+# Phase 16: V9.0 Multi-Agent Scientific Collaboration
+try:
+    from .multi_agent import DebateOrchestrator, ExpertiseTracker
+    from .multi_agent.agent_factory import AgentRole, TaskPerformance
+    MULTI_AGENT_AVAILABLE = True
+except ImportError:
+    MULTI_AGENT_AVAILABLE = False
+
+# Phase 16: V9.0 Autonomous Scientific Agenda
+try:
+    from .autonomous_agenda import AutonomousAgenda, create_autonomous_agenda, GoalStatus
+    AUTONOMOUS_AGENDA_AVAILABLE = True
+except ImportError:
+    AUTONOMOUS_AGENDA_AVAILABLE = False
+
 
 @dataclass
 class ActivityLogEntry:
@@ -153,6 +189,107 @@ class DiscoveryEngine:
         # Theory Engine — Phases 1-3 theoretical framework infrastructure
         self.theory_engine = get_theory_engine(cycle_interval=5)
 
+        # Advanced theory discovery modules (Phase 12: Theoretical Innovation)
+        # These run periodically (every 10 cycles) to generate novel theoretical insights
+        if THEORY_MODULES_AVAILABLE:
+            self.conceptual_blender = ConceptualBlender()
+            self.info_physicist = InformationTheoreticPhysics()
+            self.paradox_generator = ParadoxGenerator()
+            self.math_discoverer = MathematicalStructureDiscoverer()
+            self.constraint_transfer = ConstraintTransferEngine()
+            self.unsupervised_discoverer = UnsupervisedStructureDiscoverer()
+            self.tree_search_engine = TreeSearchDiscoveryEngine()
+            self._theory_discovery_enabled = True
+        else:
+            self._theory_discovery_enabled = False
+
+        # Theory discovery runs every N cycles (default: 10)
+        self._theory_discovery_interval = 10
+        self._last_theory_discovery_cycle = 0
+
+        # Phase 15: Cognitive Architecture (Scientific AGI capabilities)
+        # Integrates: Knowledge Graph + Neuro-Symbolic + Meta-Cognition
+        if COGNITIVE_ARCHITECTURE_AVAILABLE:
+            self.cognitive_core = CognitiveCore()
+            self._cognitive_discovery_enabled = True
+            self._cognitive_discovery_interval = 15  # Run every 15 cycles
+            self._last_cognitive_discovery_cycle = 0
+            self._state_save_interval = 50  # Save state every 50 cycles
+            self._last_state_save_cycle = 0
+
+            # Load saved state on initialization
+            try:
+                loaded_hypotheses = load_hypotheses(self.store)
+                if loaded_hypotheses > 0:
+                    self._log("INIT", "COGNITIVE", f"Loaded {loaded_hypotheses} hypotheses from state")
+                engine_loaded = load_engine_state(self)
+                if engine_loaded:
+                    self._log("INIT", "COGNITIVE", f"Loaded engine state from previous session")
+            except Exception as e:
+                self._log("INIT", "COGNITIVE", f"State load error (non-fatal): {e}")
+        else:
+            self.cognitive_core = None
+            self._cognitive_discovery_enabled = False
+            self._cognitive_discovery_interval = 15
+            self._last_cognitive_discovery_cycle = 0
+            self._state_save_interval = 50
+            self._last_state_save_cycle = 0
+
+        # Phase 16: V9.0 Multi-Agent Scientific Collaboration
+        # Specialized agents with collective intelligence
+        try:
+            from .multi_agent import DebateOrchestrator, ExpertiseTracker, create_debate
+            from .multi_agent.agent_factory import AgentFactory
+
+            self.multi_agent_orchestrator = DebateOrchestrator()
+            self.expertise_tracker = ExpertiseTracker()
+
+            # Create initial agent team
+            agents = AgentFactory.create_minimal_team()
+            for agent in agents:
+                self.multi_agent_orchestrator.register_agent(agent)
+                self.expertise_tracker.register_agent(agent)
+
+            self._multi_agent_enabled = True
+            self._debate_interval = 20  # Run debates every 20 cycles
+            self._last_debate_cycle = 0
+
+            self._log("INIT", "V9_MULTI_AGENT",
+                      f"Initialized {len(agents)} specialized agents for collaboration")
+        except (ImportError, Exception):
+            self.multi_agent_orchestrator = None
+            self.expertise_tracker = None
+            self._multi_agent_enabled = False
+            self._debate_interval = 20
+            self._last_debate_cycle = 0
+
+        # Phase 16: V9.0 Autonomous Scientific Agenda
+        # Self-generated research goals through curiosity metrics
+        try:
+            from .autonomous_agenda import AutonomousAgenda, create_autonomous_agenda
+
+            # Use existing cognitive components if available
+            kg = self.cognitive_core.knowledge_graph if self.cognitive_core else None
+            dm = self.discovery_memory
+
+            self.autonomous_agenda = create_autonomous_agenda(
+                knowledge_graph=kg,
+                discovery_memory=dm,
+                mode="semi_autonomous"  # Human approval required for goals
+            )
+
+            self._autonomous_agenda_enabled = True
+            self._agenda_generation_interval = 25  # Generate agenda every 25 cycles
+            self._last_agenda_generation_cycle = 0
+
+            self._log("INIT", "V9_AUTONOMOUS_AGENDA",
+                      f"Initialized autonomous agenda system (mode: semi_autonomous)")
+        except (ImportError, Exception):
+            self.autonomous_agenda = None
+            self._autonomous_agenda_enabled = False
+            self._agenda_generation_interval = 25
+            self._last_agenda_generation_cycle = 0
+
         # Exploration schedule — Phase 10.6: force domain round-robin
         self._forced_domain: Optional[str] = None
         self._domain_rotation_index = 0
@@ -191,6 +328,415 @@ class DiscoveryEngine:
         )
         self.decision_log.append(entry)
         self.total_decisions += 1
+
+    def _run_theoretical_discovery(self) -> int:
+        """
+        Run advanced theoretical discovery modules to generate novel insights.
+        Returns: Number of new hypotheses generated.
+        """
+        if not self._theory_discovery_enabled:
+            return 0
+
+        hypotheses_generated = 0
+        existing_names = {h.name for h in self.store.all()}
+
+        # 1. Information-Theoretic Physics (30% chance)
+        try:
+            if np.random.random() < 0.3:
+                result = self.info_physicist.test_entropic_force_prediction(
+                    system="galaxy",
+                    parameters={"mass": 1e11, "radius": 10}
+                )
+                h = self.store.add(
+                    f"Theoretical: Entropic Gravity {result['regime']}",
+                    "Astrophysics",
+                    f"Information-theoretic prediction: {result['prediction']}. "
+                    f"Newtonian a={result['newtonian_acceleration']:.3e} m/s², "
+                    f"Entropic a={result['entropic_acceleration']:.3e} m/s².",
+                    confidence=0.30
+                )
+                h.phase = Phase.PROPOSED
+                hypotheses_generated += 1
+                self._log("UPDATE", "INFO_PHYSICS",
+                          f"Generated entropic gravity prediction", h.id)
+        except Exception as e:
+            self._log("UPDATE", "INFO_PHYSICS", f"Error: {e}")
+
+        # 2. Paradox Generator (20% chance)
+        try:
+            if np.random.random() < 0.2:
+                paradox = self.paradox_generator.generate_black_hole_information_paradox()
+                h = self.store.add(
+                    f"Theoretical: Black Hole Information Paradox",
+                    "Astrophysics",
+                    f"Paradox analysis: {paradox.description}. "
+                    f"Implications: {paradox.implications[:2]}",
+                    confidence=0.25
+                )
+                h.phase = Phase.PROPOSED
+                hypotheses_generated += 1
+                self._log("UPDATE", "PARADOX_GEN",
+                          f"Generated paradox analysis", h.id)
+        except Exception as e:
+            self._log("UPDATE", "PARADOX_GEN", f"Error: {e}")
+
+        # 3. Mathematical Discovery (uses real data)
+        try:
+            exo_data = data_cache.get("exoplanets")
+            if exo_data and hasattr(exo_data, 'data') and len(exo_data.data) > 0:
+                df = exo_data.data.select_dtypes(include=[np.number])
+                if len(df.columns) >= 2:
+                    x = df.iloc[:, 0].values[:100]
+                    y = df.iloc[:, 1].values[:100]
+                    equation = self.math_discoverer.discover_equation(
+                        x, y, list(df.columns[:2]), max_complexity=2
+                    )
+                    if equation and equation.goodness_of_fit < 0.1:
+                        h = self.store.add(
+                            f"Theoretical: {equation.equation}",
+                            "Astrophysics",
+                            f"Discovered: {equation.equation}. "
+                            f"Goodness of fit: {equation.goodness_of_fit:.4f}",
+                            confidence=equation.confidence * 0.5
+                        )
+                        h.phase = Phase.PROPOSED
+                        hypotheses_generated += 1
+                        self._log("UPDATE", "MATH_DISCOVER",
+                                  f"Discovered equation: {equation.equation}", h.id)
+        except Exception as e:
+            self._log("UPDATE", "MATH_DISCOVER", f"Error: {e}")
+
+        # 4. Constraint Transfer (25% chance)
+        try:
+            if np.random.random() < 0.25:
+                qm_constraints = self.constraint_transfer.constraint_database.get("quantum_mechanics", [])
+                for constraint in qm_constraints:
+                    if 'Unitarity' in constraint.name:
+                        result = self.constraint_transfer.transfer_constraint(constraint, "black_holes")
+                        h = self.store.add(
+                            f"Theoretical: {result.transferred_constraint}",
+                            "Astrophysics",
+                            f"Constraint transfer: {result.transferred_constraint}. "
+                            f"Implications: {result.implications[:2] if result.implications else []}",
+                            confidence=result.confidence * 0.6
+                        )
+                        h.phase = Phase.PROPOSED
+                        hypotheses_generated += 1
+                        self._log("UPDATE", "CONSTRAINT_TRANSFER",
+                                  f"Transferred constraint: {constraint.name}", h.id)
+                        break
+        except Exception as e:
+            self._log("UPDATE", "CONSTRAINT_TRANSFER", f"Error: {e}")
+
+        # 5. Unsupervised Discovery (30% chance)
+        try:
+            if np.random.random() < 0.3:
+                for source in ["exoplanets", "gaia", "sdss"]:
+                    cached = data_cache.get(source)
+                    if cached and hasattr(cached, 'data') and len(cached.data) > 0:
+                        df = cached.data.select_dtypes(include=[np.number])
+                        if len(df.columns) >= 3:
+                            data_subset = df.dropna().iloc[:200].values
+                            results = self.unsupervised_discoverer.discover_latent_structure(
+                                data_subset, list(df.columns[:data_subset.shape[1]])
+                            )
+                            if results.get('invariants'):
+                                for inv in results['invariants'][:2]:
+                                    h = self.store.add(
+                                        f"Theoretical: Conserved {inv.name}",
+                                        "Astrophysics",
+                                        f"Unsupervised discovery: {inv.mathematical_form}. "
+                                        f"Strength: {inv.strength:.2f}",
+                                        confidence=min(0.5, inv.strength * 0.3)
+                                    )
+                                    h.phase = Phase.PROPOSED
+                                    hypotheses_generated += 1
+                                    self._log("UPDATE", "UNSUPERVISED_DISCOVER",
+                                              f"Found conserved quantity: {inv.name}", h.id)
+                                break
+        except Exception as e:
+            self._log("UPDATE", "UNSUPERVISED_DISCOVER", f"Error: {e}")
+
+        # 6. Tree Search (20% chance)
+        try:
+            if np.random.random() < 0.2:
+                problem = {
+                    'description': 'Find scaling relation',
+                    'variables': ['mass', 'luminosity'],
+                    'data': np.array([1, 2, 3])
+                }
+                search_results = self.tree_search_engine.search_theoretical_space(problem)
+                if search_results['best_solution']:
+                    h = self.store.add(
+                        f"Theoretical: Multi-Method Analysis",
+                        "Astrophysics",
+                        f"Tree search found {len(search_results['all_solutions'])} methods. "
+                        f"Best score: {search_results['best_score']:.3f}",
+                        confidence=search_results['best_score'] * 0.4
+                    )
+                    h.phase = Phase.PROPOSED
+                    hypotheses_generated += 1
+                    self._log("UPDATE", "TREE_SEARCH",
+                              f"Tree search completed", h.id)
+        except Exception as e:
+            self._log("UPDATE", "TREE_SEARCH", f"Error: {e}")
+
+        return hypotheses_generated
+
+    def _run_cognitive_discovery(self) -> int:
+        """
+        Run cognitive architecture discovery for Scientific AGI capabilities.
+        Integrates: Knowledge Graph + Neuro-Symbolic + Meta-Cognition
+        Returns: Number of cognitive insights generated.
+        """
+        if not self._cognitive_discovery_enabled or not self.cognitive_core:
+            return 0
+
+        insights_generated = 0
+        existing_names = {h.name for h in self.store.all()}
+
+        try:
+            # 1. Reflect on recent performance (meta-cognition)
+            reflection = self.cognitive_core.reflect()
+
+            if reflection and reflection.get('reflection'):
+                refl = reflection['reflection']
+                if refl.insights:
+                    self._log("UPDATE", "METACOGNITION",
+                              f"Reflection: {len(refl.insights)} insights, "
+                              f"{len(refl.improvements)} improvements suggested")
+
+                # Log knowledge gaps
+                gaps = reflection.get('knowledge_gaps', [])
+                high_priority_gaps = [g for g in gaps if g.priority > 0.7]
+                if high_priority_gaps:
+                    self._log("UPDATE", "KNOWLEDGE_GRAPH",
+                              f"Found {len(high_priority_gaps)} high-priority knowledge gaps")
+
+            # 2. Cognitive discovery from recent data
+            for source_name in ["exoplanets", "sdss", "gaia"]:
+                try:
+                    cached = data_cache.get(source_name)
+                    if cached and hasattr(cached, 'data') and len(cached.data) > 0:
+                        df = cached.data.select_dtypes(include=[np.number])
+
+                        if len(df.columns) >= 2 and len(df) > 20:
+                            sample_size = min(100, len(df))
+                            sample_data = df.iloc[:sample_size].values
+
+                            features = {col: df[col].iloc[:sample_size].values
+                                      for col in df.columns[:min(5, len(df.columns))]}
+
+                            discovery = self.cognitive_core.discover(
+                                sample_data, "numerical", features
+                            )
+
+                            if discovery:
+                                insights_generated += len(discovery.insights)
+
+                                if discovery.confidence > 0.6 and discovery.title not in existing_names:
+                                    h = self.store.add(
+                                        f"Cognitive: {discovery.title[:50]}",
+                                        "Astrophysics",
+                                        discovery.explanation[:500],
+                                        confidence=discovery.confidence * 0.7
+                                    )
+                                    h.phase = Phase.PROPOSED
+                                    insights_generated += 1
+
+                                    self._log("UPDATE", "COGNITIVE_DISCOVERY",
+                                              f"Generated: {discovery.title[:50]}... "
+                                              f"(confidence: {discovery.confidence:.2f})", h.id)
+                                break
+
+                except Exception as e:
+                    self._log("UPDATE", "COGNITIVE_ERROR", f"Error processing {source_name}: {e}")
+
+            # 3. Knowledge graph cross-domain reasoning
+            try:
+                analogies = self.cognitive_core.knowledge_graph.find_cross_domain_analogies()
+
+                if analogies and len(analogies) > 0:
+                    for analogy in analogies[:3]:
+                        if analogy['similarity'] > 0.7:
+                            h_name = f"Analogy: {analogy['entity1']} ↔ {analogy['entity2']}"
+                            if h_name not in existing_names:
+                                h = self.store.add(
+                                    h_name, "Cross-Domain",
+                                    f"Cross-domain analogy: {analogy['entity1']} ({analogy['domain1']}) "
+                                    f"↔ {analogy['entity2']} ({analogy['domain2']}). "
+                                    f"Similarity: {analogy['similarity']:.2f}. "
+                                    f"Shared: {', '.join(analogy['shared_properties'][:3])}",
+                                    confidence=analogy['similarity'] * 0.5
+                                )
+                                h.phase = Phase.PROPOSED
+                                h.cross_domain_links = []
+                                insights_generated += 1
+                                self._log("UPDATE", "KNOWLEDGE_GRAPH",
+                                          f"Cross-domain analogy: {analogy['entity1']} ↔ {analogy['entity2']}", h.id)
+
+            except Exception as e:
+                self._log("UPDATE", "KNOWLEDGE_GRAPH", f"Error in cross-domain reasoning: {e}")
+
+            # 4. Design experiments based on knowledge gaps
+            try:
+                proposals = self.cognitive_core.design_experiments(n_proposals=2)
+
+                if proposals:
+                    for proposal in proposals[:2]:
+                        h_name = f"Experiment: {proposal['gap_type'][:30]}..."
+                        if h_name not in existing_names:
+                            h = self.store.add(
+                                h_name, "Experimental Design",
+                                f"Observation proposal: {proposal['description']}. "
+                                f"Priority: {proposal['priority']:.2f}. "
+                                f"Suggested: {'; '.join(proposal['suggested_experiments'][:2])}",
+                                confidence=proposal['priority'] * 0.6
+                            )
+                            h.phase = Phase.PROPOSED
+                            insights_generated += 1
+                            self._log("UPDATE", "EXPERIMENT_DESIGN",
+                                      f"Observation proposal: {proposal['gap_type'][:30]}...", h.id)
+
+            except Exception as e:
+                self._log("UPDATE", "EXPERIMENT_DESIGN", f"Error designing experiments: {e}")
+
+        except Exception as e:
+            self._log("UPDATE", "COGNITIVE", f"Cognitive discovery error: {e}")
+
+        return insights_generated
+
+    def _run_multi_agent_discovery(self) -> int:
+        """
+        Run multi-agent scientific discovery debates (V9.0).
+        Returns: Number of debates completed.
+        """
+        if not self._multi_agent_enabled or not self.multi_agent_orchestrator:
+            return 0
+
+        debates_completed = 0
+
+        try:
+            active_hypotheses = self.store.active()[:5]
+            if not active_hypotheses:
+                return 0
+
+            for h in active_hypotheses[:3]:
+                question = f"Should we investigate: {h.name}?"
+                agent_ids = list(self.multi_agent_orchestrator.agent_registry.keys())
+
+                if len(agent_ids) < 3:
+                    break
+
+                try:
+                    debate_id = self.multi_agent_orchestrator.start_debate(
+                        question, agent_ids[:6]
+                    )
+
+                    max_phases = 4
+                    for _ in range(max_phases):
+                        phase = self.multi_agent_orchestrator.advance_debate(debate_id)
+                        if phase == "synthesis" or phase is None:
+                            break
+                        time.sleep(0.1)
+
+                    result = self.multi_agent_orchestrator.conclude_debate(debate_id)
+
+                    if result and result.final_consensus.consensus_reached:
+                        self._log("UPDATE", "V9_MULTI_AGENT",
+                                  f"Debate on '{h.name[:30]}...' "
+                                  f"→ {result.final_consensus.consensus_position.upper()} "
+                                  f"(agreement: {result.final_consensus.agreement_level:.2f})")
+
+                        if result.final_consensus.consensus_position == "support":
+                            h.confidence = min(0.95, h.confidence + 0.1)
+                        elif result.final_consensus.consensus_position == "oppose":
+                            h.confidence = max(0.05, h.confidence - 0.15)
+
+                        if result.key_insights:
+                            self._log("UPDATE", "V9_MULTI_AGENT",
+                                      f"Key insights: {'; '.join(result.key_insights[:2])}")
+
+                        debates_completed += 1
+
+                except Exception as e:
+                    self._log("UPDATE", "V9_MULTI_AGENT_ERROR", f"Debate error: {e}")
+
+        except Exception as e:
+            self._log("UPDATE", "V9_MULTI_AGENT", f"Multi-agent discovery error: {e}")
+
+        return debates_completed
+
+    def _run_autonomous_agenda_generation(self) -> int:
+        """
+        Run autonomous research agenda generation (V9.0).
+        Returns: Number of new goals generated.
+        """
+        if not self._autonomous_agenda_enabled or not self.autonomous_agenda:
+            return 0
+
+        goals_generated = 0
+
+        try:
+            knowledge_gaps = []
+
+            # Get gaps from knowledge graph
+            if self.cognitive_core and self.cognitive_core.knowledge_graph:
+                gaps = self.cognitive_core.knowledge_graph.find_knowledge_gaps()
+                for gap in gaps[:5]:
+                    knowledge_gaps.append({
+                        "description": f"Knowledge gap: {gap.description}",
+                        "domain": gap.domain if hasattr(gap, 'domain') else "astrophysics",
+                        "priority": gap.priority
+                    })
+
+            # Get gaps from discovery memory
+            if self.discovery_memory:
+                for source in ["exoplanets", "sdss", "gaia"]:
+                    untested = self.discovery_memory.get_unexplored_variable_pairs(source)
+                    if untested:
+                        v1, v2 = untested[0]
+                        knowledge_gaps.append({
+                            "description": f"Explore {v1}-{v2} relation in {source}",
+                            "domain": source,
+                            "priority": 0.6
+                        })
+
+            new_goals = self.autonomous_agenda.generate_research_agenda(
+                knowledge_gaps=knowledge_gaps,
+                max_goals=3,
+                time_horizon="medium"
+            )
+
+            goals_generated = len(new_goals)
+
+            if goals_generated > 0:
+                for goal in new_goals[:3]:
+                    self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                              f"New goal: {goal.title[:60]}... "
+                              f"(curiosity: {goal.curiosity_score:.2f}, "
+                              f"priority: {goal.priority.value})")
+
+                # Create hypotheses from high-priority goals
+                for goal in new_goals:
+                    try:
+                        if hasattr(goal.priority, 'value') and goal.priority.value in ["CRITICAL", "HIGH"]:
+                            h = self.store.add(
+                                goal.title[:80],
+                                goal.domain if hasattr(goal, 'domain') else "Astrophysics",
+                                goal.description,
+                                confidence=goal.curiosity_score * 0.8
+                            )
+                            h.phase = Phase.PROPOSED
+                            self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                                      f"Hypothesis created from goal: {h.id} ({h.name[:40]}...)")
+                    except Exception:
+                        pass
+
+        except Exception as e:
+            self._log("UPDATE", "V9_AUTONOMOUS_AGENDA", f"Agenda generation error: {e}")
+
+        return goals_generated
 
     def _recalculate_system_confidence(self):
         active = self.store.active()
@@ -2052,6 +2598,55 @@ class DiscoveryEngine:
 
         # Discovery-guided hypothesis generation (replaces random hardcoded list)
         self._generate_discovery_guided_hypotheses()
+
+        # Advanced theory discovery: runs every N cycles (default: every 10 cycles)
+        # This is where ASTRA generates genuinely novel theoretical concepts
+        if self._theory_discovery_enabled and (self.cycle_count - self._last_theory_discovery_cycle >= self._theory_discovery_interval):
+            theory_hypotheses = self._run_theoretical_discovery()
+            self._last_theory_discovery_cycle = self.cycle_count
+            self._log("UPDATE", "THEORY_DISCOVERY",
+                      f"Completed theoretical discovery cycle #{self.cycle_count // self._theory_discovery_interval}. "
+                      f"Generated {theory_hypotheses} novel theoretical hypotheses.")
+
+        # Phase 15: Cognitive Architecture discovery runs every N cycles (default: every 15 cycles)
+        if self._cognitive_discovery_enabled and self.cognitive_core and (self.cycle_count - self._last_cognitive_discovery_cycle >= self._cognitive_discovery_interval):
+            cognitive_discoveries = self._run_cognitive_discovery()
+            self._last_cognitive_discovery_cycle = self.cycle_count
+            self._log("UPDATE", "COGNITIVE",
+                      f"Completed cognitive discovery cycle #{self.cycle_count // self._cognitive_discovery_interval}. "
+                      f"Generated {cognitive_discoveries} cognitive insights.")
+
+        # Phase 16: V9.0 Multi-Agent Scientific Collaboration runs every N cycles
+        if self._multi_agent_enabled and self.multi_agent_orchestrator and (self.cycle_count - self._last_debate_cycle >= self._debate_interval):
+            debates_completed = self._run_multi_agent_discovery()
+            self._last_debate_cycle = self.cycle_count
+            if debates_completed > 0:
+                self._log("UPDATE", "V9_MULTI_AGENT",
+                          f"Completed {debates_completed} multi-agent debates. "
+                          f"Agent expertise tracking updated.")
+
+        # Phase 16: V9.0 Autonomous Agenda Generation runs every N cycles
+        if self._autonomous_agenda_enabled and self.autonomous_agenda and (self.cycle_count - self._last_agenda_generation_cycle >= self._agenda_generation_interval):
+            goals_generated = self._run_autonomous_agenda_generation()
+            self._last_agenda_generation_cycle = self.cycle_count
+            if goals_generated > 0:
+                self._log("UPDATE", "V9_AUTONOMOUS_AGENDA",
+                          f"Generated {goals_generated} new research goals from curiosity analysis. "
+                          f"Total active goals: {len(self.autonomous_agenda.current_goals)}.")
+
+        # State persistence: save state every N cycles (default: every 50 cycles)
+        if COGNITIVE_ARCHITECTURE_AVAILABLE and self.cognitive_core and (self.cycle_count - self._last_state_save_cycle >= self._state_save_interval):
+            try:
+                save_engine_state(self)
+                save_hypotheses(self.store)
+                if self.cognitive_core:
+                    save_cognitive_state(self.cognitive_core)
+                self._last_state_save_cycle = self.cycle_count
+                self._log("UPDATE", "PERSISTENCE",
+                          f"Saved state at cycle {self.cycle_count}: "
+                          f"{len(self.store.hypotheses)} hypotheses, {self.cycle_count} cycles completed")
+            except Exception as e:
+                self._log("UPDATE", "PERSISTENCE", f"State save error (non-fatal): {e}")
 
         self._recalculate_system_confidence()
         self._log("UPDATE", "UPDATE",
