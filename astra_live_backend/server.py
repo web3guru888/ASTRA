@@ -8,6 +8,7 @@ import json
 import os
 import sys
 from pathlib import Path
+import numpy as np
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -1878,7 +1879,7 @@ async def api_cognitive_reflect():
                 "knowledge_gaps_found": len(reflection.get("knowledge_gaps", []))
             }
 
-        return {"error": "Reflection failed"}
+        return {"message": "No cognitive traces available yet — reflection requires completed cognitive discovery cycles", "insights": [], "improvements": []}
     except Exception as e:
         return {"error": str(e)}
 
