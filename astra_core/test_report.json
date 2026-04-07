@@ -2986,18 +2986,8 @@
       "details": "No module named 'z3'"
     },
     {
-      "category": "import_error",
-      "message": "Error importing astra_core.reasoning.filament_counterfactual_demo",
-      "details": "attempted relative import with no known parent package"
-    },
-    {
       "category": "broken_reference",
       "message": "Referenced module not found: astra_core.astronomy.analysis.Analyzer",
-      "details": ""
-    },
-    {
-      "category": "broken_reference",
-      "message": "Referenced module not found: astra_core.causal.counterfactual.engine",
       "details": ""
     },
     {
@@ -3007,17 +2997,7 @@
     },
     {
       "category": "broken_reference",
-      "message": "Referenced module not found: astra_core.causal.intervention.planner",
-      "details": ""
-    },
-    {
-      "category": "broken_reference",
       "message": "Referenced module not found: astra_core.causal.model.scm.StructuralCausalModel",
-      "details": ""
-    },
-    {
-      "category": "broken_reference",
-      "message": "Referenced module not found: astra_core.core.v43",
       "details": ""
     },
     {
@@ -3087,11 +3067,6 @@
     },
     {
       "category": "broken_reference",
-      "message": "Referenced module not found: astra_core.theoretical_physics",
-      "details": ""
-    },
-    {
-      "category": "broken_reference",
       "message": "Referenced module not found: astra_core.theoretical_physics.MHDSolver",
       "details": ""
     }
@@ -3100,6 +3075,16 @@
     {
       "category": "potential_circular",
       "message": "Complex imports in __init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: abstraction/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: plasma/__init__.py",
       "details": ""
     },
     {
@@ -3118,6 +3103,11 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: astronomy/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in core/__init__.py",
       "details": ""
@@ -3128,8 +3118,23 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: analysis/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in memory/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: probability/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: archive/__init__.py",
       "details": ""
     },
     {
@@ -3143,13 +3148,48 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: learning/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in arc_agi/__init__.py",
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: episodic/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: theory/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: graph/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: planning/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in utils/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: working/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: hpc/__init__.py",
       "details": ""
     },
     {
@@ -3163,6 +3203,26 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: search/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: schema/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: multimodal/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: system/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in retrieval/__init__.py",
       "details": ""
@@ -3170,6 +3230,16 @@
     {
       "category": "potential_circular",
       "message": "Complex imports in gsd/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: inference/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: market/__init__.py",
       "details": ""
     },
     {
@@ -3188,6 +3258,11 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: creative/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in physics/__init__.py",
       "details": ""
@@ -3200,6 +3275,26 @@
     {
       "category": "potential_circular",
       "message": "Complex imports in self_teaching/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: detection/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: uncertainty/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: tool/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: quantum/__init__.py",
       "details": ""
     },
     {
@@ -3258,13 +3353,38 @@
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: discovery/analysis/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in intelligence/specialized_minds/__init__.py",
       "details": ""
     },
     {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: causal/order/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: causal/intervention/__init__.py",
+      "details": ""
+    },
+    {
       "category": "potential_circular",
       "message": "Complex imports in causal/discovery/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: causal/counterfactual/__init__.py",
+      "details": ""
+    },
+    {
+      "category": "init_empty",
+      "message": "Minimal __init__.py: causal/structure/__init__.py",
       "details": ""
     },
     {
@@ -3655,52 +3775,52 @@
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.transforms",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.mork_ontology",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.memory_graph",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.mork_expanded",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.leapcore_evolution",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.milvus_store",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.orchestrator",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.swarm.rrf_fusion",
-      "details": "No module named 'astra_core.swarm.pheromone_dynamics'"
+      "details": "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.capabilities.analogical_reasoning",
-      "details": "No module named 'astra_core.capabilities.unified_world_model'"
+      "details": "cannot import name 'UnifiedWorldModel' from 'astra_core.capabilities.unified_world_model' (/Users/gj"
     },
     {
       "category": "import_failed",
@@ -3849,7 +3969,17 @@
     },
     {
       "category": "import_failed",
-      "message": "Could not import astra_core.retrieval.hybrid_search",
+      "message": "Could not import astra_core.retrieval.vector",
+      "details": "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/"
+    },
+    {
+      "category": "import_failed",
+      "message": "Could not import astra_core.retrieval.semantic",
+      "details": "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/"
+    },
+    {
+      "category": "import_failed",
+      "message": "Could not import astra_core.retrieval.arxiv",
       "details": "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/"
     },
     {
@@ -3879,6 +4009,16 @@
     },
     {
       "category": "import_failed",
+      "message": "Could not import astra_core.symbolic.verification",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
+      "message": "Could not import astra_core.symbolic.neural",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
       "message": "Could not import astra_core.symbolic.v37_system",
       "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
     },
@@ -3899,6 +4039,11 @@
     },
     {
       "category": "import_failed",
+      "message": "Could not import astra_core.symbolic.logic",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
       "message": "Could not import astra_core.symbolic.local_rag",
       "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
     },
@@ -3910,6 +4055,11 @@
     {
       "category": "import_failed",
       "message": "Could not import astra_core.astro_physics.uncertainty_quantification",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
+      "message": "Could not import astra_core.astro_physics.deep_learning",
       "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
     },
     {
@@ -4064,12 +4214,22 @@
     },
     {
       "category": "import_failed",
+      "message": "Could not import astra_core.astro_physics.multi_messenger",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
       "message": "Could not import astra_core.astro_physics.infrared_submm",
       "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
     },
     {
       "category": "import_failed",
       "message": "Could not import astra_core.astro_physics.chemical_networks",
+      "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
+    },
+    {
+      "category": "import_failed",
+      "message": "Could not import astra_core.astro_physics.streaming",
       "details": "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw"
     },
     {
@@ -4410,8 +4570,332 @@
   ],
   "results": {
     "imports": {
-      "total_unique": 772,
+      "total_unique": 773,
       "by_file": {
+        "black_holes.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "episodic_warmstart.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "phase_space.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "neural_symbolic_bridge.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "lensing.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "analogical_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "integrated_system.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astrophysical_theory_synthesis.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "stepwise_retrieval.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "deep_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "formal_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "z3.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astrophysical_causal_discovery.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "instrumentation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "xray_binaries.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "verification.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "aletheia_stan_architecture.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "high_energy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "adaptive_compute.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "observation_generator.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "bayesian_design.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "galactic_astronomy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "cognitive_architecture.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "arxiv_integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "bayesian_inference.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "stellar_atmospheres.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "external_knowledge.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "alert_processing.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "planetary_science.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "atomic_physics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "multi_modal.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "collaborative_intelligence.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "consciousness.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "constraint_satisfaction.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "online_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "accretion_disk_theory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "molecular_clouds.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "numerical_methods.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "semantic_clustering.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "multi_agent.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "social_intelligence.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "active_experiment.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "enhanced_self_consistency.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astro_grounding.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "spectroscopy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "extragalactic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "optimization.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "gpqa_strategies.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theory_testing.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "arc_agi_integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "paper.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "benchmark_suite.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theoretical_physics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "__init__.py": {
           "standard": [],
           "third_party": [
@@ -4442,6 +4926,48 @@
           "local": [],
           "astra_core": []
         },
+        "llm_inference.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astrochemistry.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "advanced_arc_solver.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "atmospheric_retrieval.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "counterfactual.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "autonomous_experimenter.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "advanced_analysis.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "comprehensive_system_test.py": {
           "standard": [
             "sys",
@@ -4463,6 +4989,426 @@
             "astra_core.physics",
             "astra_core"
           ]
+        },
+        "hypothesis_generation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "calibrated_confidence.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "agn.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "meta_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "agents.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "radiative_transfer.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "observational_astronomy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "language_grounding.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "experimental_methodology.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "analogical_reasoner.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astrometry.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "ethical_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "spatial_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "hierarchical_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "contrastive_explanation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "unified_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "information_theory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theoretical_astrophysics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astro_databases.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "target_observation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "design_of_experiments.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "abductive_inference.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "pattern_recognition.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "active_knowledge_acquisition.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "anomaly_discovery.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astro_embodied_integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "archive_query.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "planning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "meta_cognitive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "embodied_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "embodied_intelligence.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "active_experimentation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "active_information.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "bayesian_structure_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "cognitive_control.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "autonomous_loop.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "intentionality.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "enhanced_math_engine.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "novelty_detection.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "active_inference.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astronomy_causal_discovery.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "cognitive_relativity_navigator.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "generative_model.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "explanation_generation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "interferometry.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "radiative_processes.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "abstraction_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "embodied_simulation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "bootstrap_memory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "experiment_designer.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astrochemical_surveys.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "gaia_dr3_integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astroparticle.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "answer_verification.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "neuro_symbolic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "sensorimotor_integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "architecture_evolution.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "hypothesis_testing.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "stellar_evolution.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "data_assimilation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "adaptive_reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "advanced_lensing.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "domain_strategies.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "plasma_physics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "test_time_search.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "forecasting.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "abstraction/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "abstraction/cognitive_relativity_navigator.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "plasma/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "plasma/theory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
         },
         "swarm/transforms.py": {
           "standard": [
@@ -4583,6 +5529,12 @@
           "third_party": [
             "numpy"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "swarm/pheromone_dynamics.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -4771,6 +5723,18 @@
           "local": [],
           "astra_core": []
         },
+        "astronomy/analysis.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "astronomy/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "core/unified.py": {
           "standard": [
             "typing",
@@ -4837,6 +5801,12 @@
             "astro_physics.streaming",
             "astro_physics.multi_messenger"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "core/v43.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -5085,6 +6055,12 @@
           "astra_core": [
             "astra_core.reasoning.v50_abstraction_learning"
           ]
+        },
+        "capabilities/unified_world_model.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
         },
         "capabilities/bayesian_inference.py": {
           "standard": [
@@ -6632,6 +7608,18 @@
           "local": [],
           "astra_core": []
         },
+        "analysis/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "analysis/causal_analysis.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "memory/integrated_kernel_memory.py": {
           "standard": [
             "dataclasses",
@@ -7854,6 +8842,42 @@
           "local": [],
           "astra_core": []
         },
+        "probability/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "probability/graphical_models.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "probability/inference.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "probability/bayesian.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "archive/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "archive/archive_explorer.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "scientific_discovery/discovery_orchestrator.py": {
           "standard": [
             "time",
@@ -8093,6 +9117,12 @@
             "astra_core.reasoning.metacognition"
           ]
         },
+        "causal/verification.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "causal/__init__.py": {
           "standard": [],
           "third_party": [
@@ -8108,6 +9138,12 @@
             "discovery.online_causal_learning",
             "inference"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/counterfactual.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -8221,6 +9257,36 @@
             "time",
             "itertools"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "learning/algorithms.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "learning/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "learning/meta_learning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "learning/transfer.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "learning/reinforcement.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -8387,6 +9453,60 @@
             "hypothesis_engine",
             "pattern_library"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "episodic/memory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "episodic/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theory/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theory/builder.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theory/experiment.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "theory/generator.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "graph/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "graph/visualization.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "discovery/analysis.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -8700,11 +9820,47 @@
             "astra_core.self_teaching"
           ]
         },
+        "planning/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "planning/experiment.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "simulation/market.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "simulation/__init__.py": {
           "standard": [],
           "third_party": [
             "physics.simulator"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "simulation/physics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "simulation/astronomy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "utils/observation.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -8755,6 +9911,12 @@
           "local": [],
           "astra_core": []
         },
+        "utils/plotting.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "utils/__init__.py": {
           "standard": [],
           "third_party": [
@@ -8766,12 +9928,60 @@
           "local": [],
           "astra_core": []
         },
+        "utils/experiment.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "utils/statistics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "utils/helpers.py": {
           "standard": [
             "time",
             "typing",
             "functools"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "utils/astroquery.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "working/memory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "working/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "hpc/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "hpc/parallel.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "hpc/profiling.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -9364,6 +10574,12 @@
           "local": [],
           "astra_core": []
         },
+        "reasoning/abstraction.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "reasoning/gpqa_strategies.py": {
           "standard": [
             "dataclasses",
@@ -9700,6 +10916,18 @@
           "local": [],
           "astra_core": []
         },
+        "reasoning/templates.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/theory.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "reasoning/v70_synthetic_intelligence.py": {
           "standard": [
             "dataclasses",
@@ -9718,6 +10946,12 @@
             "v70_analogical_transfer",
             "v70_hypothesis_generator"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/deductive.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -9818,6 +11052,12 @@
           "local": [],
           "astra_core": []
         },
+        "reasoning/inductive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "reasoning/abductive_inference.py": {
           "standard": [
             "typing",
@@ -9831,6 +11071,12 @@
           "third_party": [
             "numpy"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/causal.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -9874,6 +11120,12 @@
             "collections",
             "hashlib"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/analogical.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -9931,6 +11183,12 @@
             "collections",
             "re"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/probabilistic.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -10039,15 +11297,25 @@
             "typing",
             "dataclasses",
             "enum",
-            "collections"
+            "collections",
+            "sys",
+            "os",
+            "sys",
+            "os"
           ],
           "third_party": [
             "unified_world_model",
             "integration_bus",
+            "unified_world_model",
+            "integration_bus_stub",
             "integration_bus_stub"
           ],
           "local": [],
-          "astra_core": []
+          "astra_core": [
+            "astra_core.reasoning.unified_world_model",
+            "astra_core.reasoning.integration_bus",
+            "astra_core.reasoning.integration_bus_stub"
+          ]
         },
         "reasoning/cognitive_relativity_navigator.py": {
           "standard": [
@@ -10070,6 +11338,12 @@
             "typing",
             "collections"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "reasoning/bayesian.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -10376,6 +11650,66 @@
           "local": [],
           "astra_core": []
         },
+        "search/stochastic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "search/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "search/heuristic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "schema/induction.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "schema/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "multimodal/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "multimodal/embodied.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "system/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "system/integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "retrieval/vector.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "retrieval/hybrid_search.py": {
           "standard": [
             "time",
@@ -10395,6 +11729,18 @@
             "sklearn.feature_extraction.text",
             "sklearn.metrics.pairwise"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "retrieval/semantic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "retrieval/arxiv.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -10472,11 +11818,47 @@
           "local": [],
           "astra_core": []
         },
+        "knowledge/graph.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "knowledge/__init__.py": {
           "standard": [
             "json",
             "pathlib"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "knowledge/integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "knowledge/extraction.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "knowledge/acquisition.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "knowledge/representation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "knowledge/base.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -10572,6 +11954,108 @@
             "spec_driven_development",
             "codebase_mapper"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/deductive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/inductive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/causal.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/analogical.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/probabilistic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/abductive.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "inference/bayesian.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/simulation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/regime_detection.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/sentiment.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/strategy.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/indicators.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/orderbook.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "market/econometrics.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -10878,6 +12362,18 @@
           "local": [],
           "astra_core": []
         },
+        "symbolic/verification.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "symbolic/neural.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "symbolic/v37_system.py": {
           "standard": [
             "sys",
@@ -10952,6 +12448,12 @@
           "local": [],
           "astra_core": []
         },
+        "symbolic/logic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "symbolic/local_rag.py": {
           "standard": [
             "hashlib",
@@ -10981,6 +12483,30 @@
             "tool_integration",
             "local_rag"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "creative/novelty_generator.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "creative/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "creative/insight.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "creative/analogy.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -11088,6 +12614,12 @@
           "local": [],
           "astra_core": []
         },
+        "mathematical/numerical_methods.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "mathematical/__init__.py": {
           "standard": [],
           "third_party": [
@@ -11102,6 +12634,18 @@
             "training",
             "numpy"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "neural/symbolic.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "neural/architecture.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -11140,6 +12684,12 @@
             "dynesty",
             "corner"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "astro_physics/deep_learning.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -11654,6 +13204,12 @@
           "local": [],
           "astra_core": []
         },
+        "astro_physics/multi_messenger.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "astro_physics/infrared_submm.py": {
           "standard": [
             "typing",
@@ -11683,6 +13239,12 @@
             "scipy.integrate",
             "scipy.interpolate"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "astro_physics/streaming.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -12198,11 +13760,77 @@
           "local": [],
           "astra_core": []
         },
+        "detection/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "detection/integration.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "uncertainty/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "uncertainty/quantification.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "uncertainty/reasoning.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "tool/use.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "tool/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive/goals.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive/monitoring.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "metacognitive/__init__.py": {
           "standard": [],
           "third_party": [
             "monitoring.monitor"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive/experimentation.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive/planning.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -12218,6 +13846,42 @@
           "third_party": [
             "numpy"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "metacognitive/curiosity.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "quantum/information.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "quantum/applications.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "quantum/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "quantum/mechanics.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "quantum/chemistry.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -14403,6 +16067,18 @@
           "local": [],
           "astra_core": []
         },
+        "discovery/analysis/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "discovery/analysis/data_analyzer.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
         "intelligence/specialized_minds/__init__.py": {
           "standard": [
             "typing",
@@ -14410,6 +16086,30 @@
             "enum",
             "abc"
           ],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/order/causal_order.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/order/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/intervention/planner.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/intervention/__init__.py": {
+          "standard": [],
           "third_party": [],
           "local": [],
           "astra_core": []
@@ -14675,6 +16375,30 @@
           "third_party": [
             "numpy"
           ],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/counterfactual/__init__.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/counterfactual/engine.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/structure/causal_graph.py": {
+          "standard": [],
+          "third_party": [],
+          "local": [],
+          "astra_core": []
+        },
+        "causal/structure/__init__.py": {
+          "standard": [],
+          "third_party": [],
           "local": [],
           "astra_core": []
         },
@@ -15981,9 +17705,9 @@
     "dependencies": {},
     "references": {},
     "modules": {
-      "total_files": 612,
-      "successful": 462,
-      "failed": 150,
+      "total_files": 871,
+      "successful": 714,
+      "failed": 157,
       "failed_list": [
         [
           "astra_core..",
@@ -15991,43 +17715,43 @@
         ],
         [
           "astra_core.swarm.transforms",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.mork_ontology",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.memory_graph",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.mork_expanded",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.leapcore_evolution",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.milvus_store",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.orchestrator",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.swarm.rrf_fusion",
-          "No module named 'astra_core.swarm.pheromone_dynamics'"
+          "cannot import name 'DigitalPheromoneField' from 'astra_core.swarm.pheromone_dynamics' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/swarm/pheromone_dynamics.py)"
         ],
         [
           "astra_core.capabilities.analogical_reasoning",
-          "No module named 'astra_core.capabilities.unified_world_model'"
+          "cannot import name 'UnifiedWorldModel' from 'astra_core.capabilities.unified_world_model' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/capabilities/unified_world_model.py)"
         ],
         [
           "astra_core.scientific_discovery.discovery_orchestrator",
@@ -16134,10 +17858,6 @@
           "cannot import name 'get_integration_bus' from 'astra_core.reasoning.integration_bus' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/reasoning/integration_bus.py)"
         ],
         [
-          "astra_core.reasoning.filament_counterfactual_demo",
-          "attempted relative import with no known parent package"
-        ],
-        [
           "astra_core.reasoning.v70_synthetic_intelligence",
           "cannot import name 'AlgorithmicDiscoveryEngine' from 'astra_core.reasoning.v70_algorithmic_discovery' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/reasoning/v70_algorithmic_discovery.py)"
         ],
@@ -16150,7 +17870,15 @@
           "cannot import name 'create_world_model_system' from 'astra_core.reasoning.v60_predictive_world_models' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/reasoning/v60_predictive_world_models.py)"
         ],
         [
-          "astra_core.retrieval.hybrid_search",
+          "astra_core.retrieval.vector",
+          "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/retrieval/context_distiller.py)"
+        ],
+        [
+          "astra_core.retrieval.semantic",
+          "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/retrieval/context_distiller.py)"
+        ],
+        [
+          "astra_core.retrieval.arxiv",
           "cannot import name 'create_context_distiller' from 'astra_core.retrieval.context_distiller' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/retrieval/context_distiller.py)"
         ],
         [
@@ -16174,6 +17902,14 @@
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
+          "astra_core.symbolic.verification",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
+          "astra_core.symbolic.neural",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
           "astra_core.symbolic.v37_system",
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
@@ -16190,6 +17926,10 @@
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
+          "astra_core.symbolic.logic",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
           "astra_core.symbolic.local_rag",
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
@@ -16199,6 +17939,10 @@
         ],
         [
           "astra_core.astro_physics.uncertainty_quantification",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
+          "astra_core.astro_physics.deep_learning",
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
@@ -16322,11 +18066,19 @@
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
+          "astra_core.astro_physics.multi_messenger",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
           "astra_core.astro_physics.infrared_submm",
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
           "astra_core.astro_physics.chemical_networks",
+          "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
+        ],
+        [
+          "astra_core.astro_physics.streaming",
           "cannot import name 'EnhancedSelfConsistency' from 'astra_core.symbolic.self_consistency' (/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/astra_core/symbolic/self_consistency.py)"
         ],
         [
@@ -16588,7 +18340,312 @@
       ]
     },
     "cross_links": {
+      "black_holes.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "episodic_warmstart.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "phase_space.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "neural_symbolic_bridge.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "lensing.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "analogical_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "integrated_system.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astrophysical_theory_synthesis.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "stepwise_retrieval.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "deep_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "formal_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "z3.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astrophysical_causal_discovery.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "instrumentation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "xray_binaries.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "verification.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "aletheia_stan_architecture.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "high_energy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "adaptive_compute.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "observation_generator.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "bayesian_design.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "galactic_astronomy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "cognitive_architecture.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "arxiv_integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "bayesian_inference.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "stellar_atmospheres.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "external_knowledge.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "alert_processing.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "planetary_science.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "atomic_physics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "multi_modal.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "collaborative_intelligence.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "consciousness.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "constraint_satisfaction.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "online_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "accretion_disk_theory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "molecular_clouds.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "numerical_methods.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "semantic_clustering.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "multi_agent.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "social_intelligence.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "active_experiment.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "enhanced_self_consistency.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astro_grounding.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "spectroscopy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "extragalactic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "optimization.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "gpqa_strategies.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theory_testing.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "metacognitive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "arc_agi_integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "paper.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "benchmark_suite.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theoretical_physics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "llm_inference.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astrochemistry.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "advanced_arc_solver.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "atmospheric_retrieval.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "counterfactual.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "autonomous_experimenter.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "advanced_analysis.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -16724,6 +18781,356 @@
           "DomainRegistry",
           "UnifiedPhysicsEngine"
         ]
+      },
+      "hypothesis_generation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "calibrated_confidence.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "agn.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "meta_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "agents.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "radiative_transfer.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "observational_astronomy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "language_grounding.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "experimental_methodology.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "analogical_reasoner.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astrometry.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "ethical_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "spatial_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "hierarchical_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "contrastive_explanation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "unified_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "information_theory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theoretical_astrophysics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astro_databases.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "target_observation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "design_of_experiments.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "abductive_inference.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "pattern_recognition.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "active_knowledge_acquisition.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "anomaly_discovery.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astro_embodied_integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "archive_query.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "planning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "meta_cognitive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "embodied_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "embodied_intelligence.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "active_experimentation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "active_information.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "bayesian_structure_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "cognitive_control.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "autonomous_loop.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "intentionality.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "enhanced_math_engine.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "novelty_detection.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "active_inference.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astronomy_causal_discovery.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "cognitive_relativity_navigator.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "generative_model.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "explanation_generation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "interferometry.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "radiative_processes.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "abstraction_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "embodied_simulation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "bootstrap_memory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "experiment_designer.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astrochemical_surveys.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "gaia_dr3_integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astroparticle.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "answer_verification.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "neuro_symbolic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "sensorimotor_integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "architecture_evolution.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "hypothesis_testing.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "stellar_evolution.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "data_assimilation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "adaptive_reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "advanced_lensing.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "domain_strategies.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "plasma_physics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "test_time_search.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "forecasting.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "abstraction/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "abstraction/cognitive_relativity_navigator.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "plasma/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "plasma/theory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "swarm/transforms.py": {
         "imports": [],
@@ -17523,6 +19930,11 @@
           "VectorRecord"
         ]
       },
+      "swarm/pheromone_dynamics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "swarm/orchestrator.py": {
         "imports": [],
         "function_calls": [
@@ -17866,6 +20278,16 @@
           "CrossDomainConnection"
         ]
       },
+      "astronomy/analysis.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "astronomy/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "core/unified.py": {
         "imports": [],
         "function_calls": [
@@ -17983,6 +20405,11 @@
           "GWEMCorrelator",
           "JointLightCurveFitter"
         ]
+      },
+      "core/v43.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "core/unified_enhanced.py": {
         "imports": [],
@@ -20641,6 +23068,11 @@
           "AnalogyFinder",
           "KnowledgeTransferEngine"
         ]
+      },
+      "capabilities/unified_world_model.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "capabilities/bayesian_inference.py": {
         "imports": [],
@@ -26458,6 +28890,16 @@
           "BeliefState"
         ]
       },
+      "analysis/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "analysis/causal_analysis.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "memory/integrated_kernel_memory.py": {
         "imports": [],
         "function_calls": [
@@ -27663,6 +30105,36 @@
           "KernelAssociativeMemory"
         ]
       },
+      "probability/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "probability/graphical_models.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "probability/inference.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "probability/bayesian.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "archive/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "archive/archive_explorer.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "scientific_discovery/discovery_orchestrator.py": {
         "imports": [
           "astra_core.reasoning.v41_orchestrator",
@@ -28176,7 +30648,17 @@
         ],
         "class_usage": []
       },
+      "causal/verification.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "causal/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/counterfactual.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -28846,6 +31328,31 @@
           "SynergyModel",
           "CrossPollinationResult"
         ]
+      },
+      "learning/algorithms.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "learning/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "learning/meta_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "learning/transfer.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "learning/reinforcement.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "arc_agi/neural_patterns.py": {
         "imports": [],
@@ -29798,6 +32305,51 @@
           "TaskAnalysis",
           "PatternDetector"
         ]
+      },
+      "episodic/memory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "episodic/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theory/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theory/builder.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theory/experiment.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "theory/generator.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "graph/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "graph/visualization.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "discovery/analysis.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "discovery/__init__.py": {
         "imports": [],
@@ -31504,7 +34056,37 @@
           "Path"
         ]
       },
+      "planning/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "planning/experiment.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "simulation/market.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "simulation/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "simulation/physics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "simulation/astronomy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "utils/observation.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -31794,7 +34376,22 @@
           "TableStyle"
         ]
       },
+      "utils/plotting.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "utils/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "utils/experiment.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "utils/statistics.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -31813,6 +34410,36 @@
           "print",
           "max"
         ],
+        "class_usage": []
+      },
+      "utils/astroquery.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "working/memory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "working/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "hpc/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "hpc/parallel.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "hpc/profiling.py": {
+        "imports": [],
+        "function_calls": [],
         "class_usage": []
       },
       "core_legacy/unified.py": {
@@ -37528,6 +40155,11 @@
         ],
         "class_usage": []
       },
+      "reasoning/abstraction.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "reasoning/gpqa_strategies.py": {
         "imports": [],
         "function_calls": [
@@ -39336,6 +41968,16 @@
           "Intervention"
         ]
       },
+      "reasoning/templates.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "reasoning/theory.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "reasoning/v70_synthetic_intelligence.py": {
         "imports": [],
         "function_calls": [
@@ -39477,6 +42119,11 @@
           "SyntheticTask",
           "ComponentState"
         ]
+      },
+      "reasoning/deductive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "reasoning/physical_process_library.py": {
         "imports": [],
@@ -40370,6 +43017,11 @@
           "MCTSConfig"
         ]
       },
+      "reasoning/inductive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "reasoning/abductive_inference.py": {
         "imports": [],
         "function_calls": [
@@ -40467,6 +43119,11 @@
           "AnalogicalHypothesisGenerator",
           "Hypothesis"
         ]
+      },
+      "reasoning/causal.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "reasoning/active_knowledge_acquisition.py": {
         "imports": [],
@@ -40801,6 +43458,11 @@
           "Anomaly",
           "Anomaly"
         ]
+      },
+      "reasoning/analogical.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "reasoning/uncertainty_decomposition.py": {
         "imports": [],
@@ -41214,6 +43876,11 @@
           "ProgramNode",
           "ProgramPrimitive"
         ]
+      },
+      "reasoning/probabilistic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "reasoning/learned_proposals.py": {
         "imports": [],
@@ -41950,7 +44617,11 @@
         ]
       },
       "reasoning/counterfactual_reasoning.py": {
-        "imports": [],
+        "imports": [
+          "astra_core.reasoning.unified_world_model",
+          "astra_core.reasoning.integration_bus",
+          "astra_core.reasoning.integration_bus_stub"
+        ],
         "function_calls": [
           "field",
           "field",
@@ -42246,6 +44917,11 @@
         "class_usage": [
           "IntegrationBus"
         ]
+      },
+      "reasoning/bayesian.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "reasoning/abstraction_learning.py": {
         "imports": [],
@@ -45345,6 +48021,56 @@
           "BeliefState"
         ]
       },
+      "search/stochastic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "search/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "search/heuristic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "schema/induction.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "schema/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "multimodal/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "multimodal/embodied.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "system/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "system/integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "retrieval/vector.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "retrieval/hybrid_search.py": {
         "imports": [],
         "function_calls": [
@@ -45499,6 +48225,16 @@
           "ThreadPoolExecutor",
           "TfidfVectorizer"
         ]
+      },
+      "retrieval/semantic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "retrieval/arxiv.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "retrieval/sharded_retrieval.py": {
         "imports": [],
@@ -45767,6 +48503,11 @@
           "ThreadPoolExecutor"
         ]
       },
+      "knowledge/graph.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "knowledge/__init__.py": {
         "imports": [],
         "function_calls": [
@@ -45783,6 +48524,31 @@
           "Path",
           "Path"
         ]
+      },
+      "knowledge/integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "knowledge/extraction.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "knowledge/acquisition.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "knowledge/representation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "knowledge/base.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "gsd/spec_driven_development.py": {
         "imports": [],
@@ -46111,6 +48877,91 @@
         ]
       },
       "gsd/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/deductive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/inductive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/causal.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/analogical.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/probabilistic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/abductive.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "inference/bayesian.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/simulation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/regime_detection.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/sentiment.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/strategy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/indicators.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/orderbook.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "market/econometrics.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -47887,6 +50738,16 @@
           "CrossDomainAnalogy"
         ]
       },
+      "symbolic/verification.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "symbolic/neural.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "symbolic/v37_system.py": {
         "imports": [],
         "function_calls": [
@@ -48061,6 +50922,11 @@
           "ConsistencyResult"
         ]
       },
+      "symbolic/logic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "symbolic/local_rag.py": {
         "imports": [],
         "function_calls": [
@@ -48154,6 +51020,26 @@
           "KnowledgeBaseBuilder",
           "Path"
         ]
+      },
+      "creative/novelty_generator.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "creative/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "creative/insight.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "creative/analogy.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "physics/nuclear_astro.py": {
         "imports": [],
@@ -48525,12 +51411,27 @@
           "Path"
         ]
       },
+      "mathematical/numerical_methods.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "mathematical/__init__.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
       },
       "neural/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "neural/symbolic.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "neural/architecture.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -48668,6 +51569,11 @@
           "Prior",
           "Prior"
         ]
+      },
+      "astro_physics/deep_learning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "astro_physics/source_extraction.py": {
         "imports": [],
@@ -51607,6 +54513,11 @@
           "RadioSource"
         ]
       },
+      "astro_physics/multi_messenger.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "astro_physics/infrared_submm.py": {
         "imports": [],
         "function_calls": [
@@ -51778,6 +54689,11 @@
           "ChemistryConditions",
           "ChemistryConditions"
         ]
+      },
+      "astro_physics/streaming.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "astro_physics/interferometry.py": {
         "imports": [],
@@ -55046,7 +57962,62 @@
           "DiscoveredLaw"
         ]
       },
+      "detection/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "detection/integration.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "uncertainty/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "uncertainty/quantification.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "uncertainty/reasoning.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "tool/use.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "tool/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "metacognitive/goals.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "metacognitive/monitoring.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "metacognitive/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "metacognitive/experimentation.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "metacognitive/planning.py": {
         "imports": [],
         "function_calls": [],
         "class_usage": []
@@ -55110,6 +58081,36 @@
           "ContextMetadata",
           "ContextShift"
         ]
+      },
+      "metacognitive/curiosity.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "quantum/information.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "quantum/applications.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "quantum/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "quantum/mechanics.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "quantum/chemistry.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "metacognitive/monitoring/monitor.py": {
         "imports": [],
@@ -66264,6 +69265,16 @@
         "function_calls": [],
         "class_usage": []
       },
+      "discovery/analysis/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "discovery/analysis/data_analyzer.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
       "intelligence/specialized_minds/__init__.py": {
         "imports": [],
         "function_calls": [
@@ -66335,6 +69346,26 @@
           "MindResult",
           "MindResult"
         ]
+      },
+      "causal/order/causal_order.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/order/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/intervention/planner.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/intervention/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "causal/discovery/independence.py": {
         "imports": [],
@@ -67617,6 +70648,26 @@
           "Expert",
           "MoECapabilityRouter"
         ]
+      },
+      "causal/counterfactual/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/counterfactual/engine.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/structure/causal_graph.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
+      },
+      "causal/structure/__init__.py": {
+        "imports": [],
+        "function_calls": [],
+        "class_usage": []
       },
       "memory/fusion/__init__.py": {
         "imports": [],
@@ -71808,8 +74859,8 @@
     }
   },
   "summary": {
-    "total_errors": 619,
-    "total_warnings": 262,
+    "total_errors": 614,
+    "total_warnings": 299,
     "status": "FAIL"
   }
 }
