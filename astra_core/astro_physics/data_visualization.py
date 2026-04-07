@@ -37,6 +37,8 @@ def _trapz_compat(y, x=None, dx=1.0, axis=-1):
     except AttributeError:
         # Fallback for NumPy < 2.0
         return np.trapz(y, x=x, dx=dx, axis=axis)
+
+try:
     from matplotlib.gridspec import GridSpec
     MATPLOTLIB_AVAILABLE = True
 except ImportError:

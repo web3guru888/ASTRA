@@ -260,3 +260,21 @@ class V42CompleteSystem:
         """Generate final answer based on analysis."""
         # Simplified answer generation
         return f"Answer to '{question}' in {domain} based on V42 analysis."
+
+
+def create_v42_standard(config: V42Config = None, mode: V42Mode = V42Mode.STANDARD):
+    """
+    Factory function to create a V42 system.
+
+    Args:
+        config: V42 configuration (uses default if None)
+        mode: V42 operation mode
+
+    Returns:
+        V42CompleteSystem: Configured V42 system instance
+    """
+    if config is None:
+        config = V42Config()
+
+    system = V42CompleteSystem(config=config, mode=mode)
+    return system
