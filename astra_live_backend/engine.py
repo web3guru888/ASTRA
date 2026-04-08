@@ -386,12 +386,22 @@ class DiscoveryEngine:
         try:
             exo_data = get_cached_exoplanets()
             if exo_data and hasattr(exo_data, 'data') and exo_data.data is not None and len(exo_data.data) > 0:
-                df = exo_data.data.select_dtypes(include=[np.number])
-                if len(df.columns) >= 2:
-                    x = df.iloc[:, 0].values[:100]
-                    y = df.iloc[:, 1].values[:100]
+                raw = exo_data.data
+                if hasattr(raw, 'select_dtypes'):
+                    df_num = raw.select_dtypes(include=[np.number])
+                    col_names = list(df_num.columns)
+                    arr = df_num.values
+                elif hasattr(raw, 'dtype') and raw.dtype.names:
+                    col_names = list(raw.dtype.names)
+                    arr = np.column_stack([raw[n].astype(float) for n in col_names])
+                else:
+                    arr = np.atleast_2d(raw)
+                    col_names = [f"var_{i}" for i in range(arr.shape[1])]
+                if len(col_names) >= 2:
+                    x = arr[:100, 0]
+                    y = arr[:100, 1]
                     equation = self.math_discoverer.discover_equation(
-                        x, y, list(df.columns[:2]), max_complexity=2
+                        x, y, col_names[:2], max_complexity=2
                     )
                     if equation and equation.goodness_of_fit < 0.1:
                         h = self.store.add(
@@ -437,11 +447,24 @@ class DiscoveryEngine:
                 for source, fetcher in _unsup_fetchers.items():
                     cached = fetcher()
                     if cached and hasattr(cached, 'data') and cached.data is not None and len(cached.data) > 0:
-                        df = cached.data.select_dtypes(include=[np.number])
-                        if len(df.columns) >= 3:
-                            data_subset = df.dropna().iloc[:200].values
+                        raw = cached.data
+                        if hasattr(raw, 'select_dtypes'):
+                            df_num = raw.select_dtypes(include=[np.number])
+                            _col_names = list(df_num.columns)
+                            _arr = df_num.dropna().values
+                        elif hasattr(raw, 'dtype') and raw.dtype.names:
+                            _col_names = list(raw.dtype.names)
+                            _arr = np.column_stack([raw[n].astype(float) for n in _col_names])
+                            # Remove rows with NaN
+                            _mask = ~np.isnan(_arr).any(axis=1)
+                            _arr = _arr[_mask]
+                        else:
+                            _arr = np.atleast_2d(raw)
+                            _col_names = [f"var_{i}" for i in range(_arr.shape[1])]
+                        if len(_col_names) >= 3:
+                            data_subset = _arr[:200]
                             results = self.unsupervised_discoverer.discover_latent_structure(
-                                data_subset, list(df.columns[:data_subset.shape[1]])
+                                data_subset, _col_names[:data_subset.shape[1]]
                             )
                             if results.get('invariants'):
                                 for inv in results['invariants'][:2]:
@@ -527,14 +550,28 @@ class DiscoveryEngine:
                 try:
                     cached = fetcher()
                     if cached and hasattr(cached, 'data') and cached.data is not None and len(cached.data) > 0:
-                        df = cached.data.select_dtypes(include=[np.number])
+                        # Convert structured numpy arrays or DataFrames to regular 2D arrays
+                        raw = cached.data
+                        if hasattr(raw, 'select_dtypes'):
+                            # pandas DataFrame
+                            df_num = raw.select_dtypes(include=[np.number])
+                            col_names = list(df_num.columns)
+                            arr = df_num.values
+                        elif hasattr(raw, 'dtype') and raw.dtype.names:
+                            # structured numpy array
+                            col_names = list(raw.dtype.names)
+                            arr = np.column_stack([raw[n].astype(float) for n in col_names])
+                        else:
+                            # plain numpy array
+                            arr = np.atleast_2d(raw)
+                            col_names = [f"var_{i}" for i in range(arr.shape[1])]
 
-                        if len(df.columns) >= 2 and len(df) > 20:
-                            sample_size = min(100, len(df))
-                            sample_data = df.iloc[:sample_size].values
+                        if len(col_names) >= 2 and len(arr) > 20:
+                            sample_size = min(100, len(arr))
+                            sample_data = arr[:sample_size]
 
-                            features = {col: df[col].iloc[:sample_size].values
-                                      for col in df.columns[:min(5, len(df.columns))]}
+                            features = {col_names[i]: arr[:sample_size, i]
+                                      for i in range(min(5, len(col_names)))}
 
                             discovery = self.cognitive_core.discover(
                                 sample_data, "numerical", features
