@@ -1502,6 +1502,27 @@ class DiscoveryEngine:
         self._log("INVESTIGATE", "INVESTIGATE",
                   f"Planck ({PLANCK_2018['H0']}) tension: {tension_planck:.1f}σ", h.id)
 
+        # Statistical test: χ² goodness-of-fit for ΛCDM model
+        chi2_per_dof = chi2 / dof if dof > 0 else 0
+        from scipy import stats as sp_stats
+        chi2_p = 1.0 - sp_stats.chi2.cdf(chi2, dof) if dof > 0 else 1.0
+        h.test_results.append(asdict(StatTestResult(
+            test_name="Chi-squared GOF (ΛCDM Hubble fit)",
+            statistic=float(chi2_per_dof), p_value=float(chi2_p),
+            passed=chi2_p > 0.01,  # Good fit = p not too small
+            details=f"H0={best_h0:.2f}±{h0_err:.2f}, χ²/dof={chi2_per_dof:.3f}, Planck tension={tension_planck:.1f}σ")))
+
+        # Statistical test: KS test on Hubble residuals vs normal
+        mu_model = distance_modulus(z, {'H0': best_h0, 'Om': 0.3, 'Ol': 0.7})
+        residuals = mb - mu_model
+        ks_stat, ks_p = sp_stats.kstest(residuals / np.std(residuals), 'norm')
+        h.test_results.append(asdict(StatTestResult(
+            test_name="KS normality (Hubble residuals)",
+            statistic=float(ks_stat), p_value=float(ks_p),
+            passed=ks_p > 0.05,
+            details=f"Residual normality: KS={ks_stat:.4f}, p={ks_p:.4f}")))
+        h.update_from_pvalue(min(chi2_p, ks_p) if chi2_p < 0.5 else ks_p)
+
         self.total_plots += 1
 
     def _investigate_galaxy(self, h: Hypothesis):
@@ -1532,6 +1553,35 @@ class DiscoveryEngine:
         self._log("INVESTIGATE", "INVESTIGATE",
                   f"Redshift distribution: median z = {np.median(z):.3f}, "
                   f"IQR = {np.percentile(z, 25):.3f}–{np.percentile(z, 75):.3f}", h.id)
+
+        # Statistical test: KS test — redshift distribution vs uniform
+        from scipy import stats as sp_stats
+        z_norm = (z - z.min()) / (z.max() - z.min() + 1e-10)
+        ks_stat, ks_p = sp_stats.kstest(z_norm, 'uniform')
+        h.test_results.append(asdict(StatTestResult(
+            test_name="KS test (redshift vs uniform)",
+            statistic=float(ks_stat), p_value=float(ks_p),
+            passed=ks_p < 0.05,  # Expect non-uniform → significant
+            details=f"Redshift non-uniformity: KS={ks_stat:.4f}, p={ks_p:.2e}, N={len(z)}")))
+
+        # Statistical test: Bimodality in galaxy color (u-g)
+        # Hartigan's dip test proxy: compare to unimodal normal
+        ks_color, ks_color_p = sp_stats.kstest(
+            (u_g - np.mean(u_g)) / np.std(u_g), 'norm')
+        h.test_results.append(asdict(StatTestResult(
+            test_name="KS normality (u-g color distribution)",
+            statistic=float(ks_color), p_value=float(ks_color_p),
+            passed=ks_color_p < 0.05,  # Non-normal → bimodal color distribution
+            details=f"Color bimodality: KS={ks_color:.4f}, p={ks_color_p:.2e}")))
+
+        # Correlation: redshift vs g-r color (redder at higher z?)
+        corr_stat, corr_p = sp_stats.spearmanr(z, g_r)
+        h.test_results.append(asdict(StatTestResult(
+            test_name="Spearman correlation (redshift vs g-r color)",
+            statistic=float(corr_stat), p_value=float(corr_p),
+            passed=corr_p < 0.05,
+            details=f"z vs g-r: ρ={corr_stat:.4f}, p={corr_p:.2e}")))
+        h.update_from_pvalue(float(corr_p))
 
         self.total_plots += 1
 
@@ -1565,6 +1615,29 @@ class DiscoveryEngine:
                   f"Planet masses: {len(valid_mass)} measured, "
                   f"median = {np.median(valid_mass):.3f} M_Jup", h.id)
 
+        # Statistical test: Correlation between log(period) and log(mass)
+        from scipy import stats as sp_stats
+        valid_both = (periods > 0) & (masses > 0)
+        if np.sum(valid_both) > 10:
+            lp = np.log10(periods[valid_both])
+            lm = np.log10(masses[valid_both])
+            corr_stat, corr_p = sp_stats.spearmanr(lp, lm)
+            h.test_results.append(asdict(StatTestResult(
+                test_name="Spearman correlation (log P vs log M)",
+                statistic=float(corr_stat), p_value=float(corr_p),
+                passed=corr_p < 0.05,
+                details=f"Period-mass: ρ={corr_stat:.4f}, p={corr_p:.2e}, N={np.sum(valid_both)}")))
+
+        # Statistical test: Period distribution log-normality
+        ks_stat, ks_p = sp_stats.kstest(
+            (log_p - np.mean(log_p)) / np.std(log_p), 'norm')
+        h.test_results.append(asdict(StatTestResult(
+            test_name="KS log-normality (orbital periods)",
+            statistic=float(ks_stat), p_value=float(ks_p),
+            passed=ks_p > 0.05,  # Good fit to log-normal = high p
+            details=f"Log-period normality: KS={ks_stat:.4f}, p={ks_p:.2e}, N={len(log_p)}")))
+        h.update_from_pvalue(float(corr_p) if np.sum(valid_both) > 10 else float(ks_p))
+
         self.total_plots += 1
 
     def _investigate_stellar(self, h: Hypothesis):
@@ -1593,6 +1666,26 @@ class DiscoveryEngine:
         self._log("INVESTIGATE", "INVESTIGATE",
                   f"Parallaxes: median = {np.median(plx):.2f} mas, "
                   f"median distance = {1000/np.median(plx):.1f} pc", h.id)
+
+        # Statistical test: HR diagram — correlation between color and absolute magnitude
+        from scipy import stats as sp_stats
+        if len(bp_rp) > 10:
+            corr_stat, corr_p = sp_stats.spearmanr(bp_rp, abs_mag)
+            h.test_results.append(asdict(StatTestResult(
+                test_name="Spearman correlation (BP-RP vs M_G)",
+                statistic=float(corr_stat), p_value=float(corr_p),
+                passed=corr_p < 0.05,
+                details=f"HR diagram color-mag: ρ={corr_stat:.4f}, p={corr_p:.2e}, N={len(bp_rp)}")))
+
+        # Statistical test: Parallax distribution normality
+        plx_norm = (plx - np.mean(plx)) / np.std(plx)
+        ks_stat, ks_p = sp_stats.kstest(plx_norm, 'norm')
+        h.test_results.append(asdict(StatTestResult(
+            test_name="KS normality (parallax distribution)",
+            statistic=float(ks_stat), p_value=float(ks_p),
+            passed=ks_p < 0.05,  # Expect non-normal (selection effects)
+            details=f"Parallax normality: KS={ks_stat:.4f}, p={ks_p:.2e}, N={len(plx)}")))
+        h.update_from_pvalue(float(corr_p) if len(bp_rp) > 10 else float(ks_p))
 
         self.total_plots += 1
 
@@ -1636,6 +1729,28 @@ class DiscoveryEngine:
 
         self._log("INVESTIGATE", "INVESTIGATE",
                   f"Star formation fraction (u-r < 2): {blue_frac:.1%} of {len(sdss.data)} galaxies", h.id)
+
+        # Statistical test: Is star-forming fraction significantly different from 50%?
+        from scipy import stats as sp_stats
+        n_blue = int(np.sum(u_r < 2.0))
+        n_total = len(u_r)
+        binom_p = sp_stats.binom_test(n_blue, n_total, 0.5) if hasattr(sp_stats, 'binom_test') else \
+                  sp_stats.binomtest(n_blue, n_total, 0.5).pvalue
+        h.test_results.append(asdict(StatTestResult(
+            test_name="Binomial test (SF fraction vs 50%)",
+            statistic=float(blue_frac), p_value=float(binom_p),
+            passed=binom_p < 0.05,
+            details=f"SF fraction={blue_frac:.3f}, N={n_total}, p={binom_p:.2e}")))
+
+        # Statistical test: Correlation between u-r color and redshift
+        z = sdss.data['redshift']
+        corr_stat, corr_p = sp_stats.spearmanr(z, u_r)
+        h.test_results.append(asdict(StatTestResult(
+            test_name="Spearman correlation (redshift vs u-r color)",
+            statistic=float(corr_stat), p_value=float(corr_p),
+            passed=corr_p < 0.05,
+            details=f"z vs u-r: ρ={corr_stat:.4f}, p={corr_p:.2e}")))
+        h.update_from_pvalue(float(corr_p))
 
         self.total_plots += 1
 
