@@ -600,11 +600,22 @@ def api_literature_search(query: str = "galaxy", max_results: int = 5):
 
 @app.get("/api/literature/papers")
 def api_literature_papers():
-    """List all cached papers in the literature store."""
+    """List all cached papers in the literature store, with relevance scores."""
     from astra_live_backend.literature import get_literature_store
     store = get_literature_store()
+    # Build a query from current hypothesis names for relevance scoring
+    query_parts = []
+    try:
+        hyps = engine.hypotheses if engine else []
+        for h in hyps[:20]:
+            name = getattr(h, 'name', '') or ''
+            desc = getattr(h, 'description', '') or ''
+            query_parts.append(f"{name} {desc}")
+    except Exception:
+        pass
+    query_text = " ".join(query_parts) if query_parts else ""
     return {
-        "papers": store.get_papers(),
+        "papers": store.get_papers_with_relevance(query_text),
         "total": store.paper_count,
         "backend": "sklearn" if store._vectorizer is not None else "custom",
         "timestamp": time.time(),
