@@ -43,19 +43,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 import numpy as np
 import logging
-import re
-
-# Import meta-cognitive data sufficiency for graceful degradation
-try:
-    from ..metacognitive.data_sufficiency_evaluator import DataSufficiency
-    DATA_SUFFICIENCY_AVAILABLE = True
-except ImportError:
-    DATA_SUFFICIENCY_AVAILABLE = False
-    # Create dummy enum for graceful degradation
-    class DataSufficiency(Enum):
-        SUFFICIENT = "sufficient"
-        UNCERTAIN = "uncertain"
-        INSUFFICIENT = "insufficient"
 
 # Import all capabilities from version-specific modules
 try:
@@ -349,7 +336,6 @@ class UnifiedSTANSystem:
         self._initialize_capabilities()
         self._initialize_memory()
         self._initialize_intelligence()
-        self._initialize_metacognitive()
 
         # Performance tracking
         self.performance_stats = {
@@ -374,166 +360,6 @@ class UnifiedSTANSystem:
     def _initialize_intelligence(self):
         """Initialize intelligence systems - placeholder for future expansion"""
         pass
-
-    def _initialize_metacognitive(self):
-        """
-        Initialize enhanced meta-cognitive evaluation with advanced reasoning support.
-
-        Priority order:
-        1. Advanced reasoner (V4.0) - Rich quantitative justifications
-        2. Hybrid system (V3.0) - Multi-signal integration
-        3. Enhanced rule-based (V3.1) - Qualitative patterns
-        4. Basic rule-based (fallback)
-        """
-        # Try to load advanced reasoner first (BEST)
-        try:
-            from ..metacognitive import (
-                ADVANCED_REASONER_AVAILABLE,
-                create_advanced_meta_cognitive_reasoner
-            )
-            if ADVANCED_REASONER_AVAILABLE:
-                self.advanced_meta_cognitive_reasoner = create_advanced_meta_cognitive_reasoner()
-                self.data_sufficiency_evaluator = self.advanced_meta_cognitive_reasoner
-                self.metacognitive_mode = 'advanced_reasoning'
-                self.metacognitive_enabled = True
-                print("✓ Advanced meta-cognitive reasoner initialized (V4.0 - rich justifications)")
-        except Exception as e:
-            self.advanced_meta_cognitive_reasoner = None
-            print(f"Advanced reasoner not available: {e}")
-
-        # Fallback to hybrid system
-        if not self.metacognitive_enabled:
-            try:
-                from ..metacognitive import (
-                    HYBRID_SYSTEM_AVAILABLE,
-                    create_hybrid_meta_cognitive_system
-                )
-                if HYBRID_SYSTEM_AVAILABLE:
-                    self.hybrid_meta_cognitive_system = create_hybrid_meta_cognitive_system()
-                    self.data_sufficiency_evaluator = self.hybrid_meta_cognitive_system
-                    self.metacognitive_mode = 'hybrid'
-                    self.metacognitive_enabled = True
-                    print("✓ Hybrid meta-cognitive system initialized (V3.0 - multi-signal)")
-            except Exception as e:
-                self.hybrid_meta_cognitive_system = None
-                print(f"Hybrid system not available: {e}")
-
-        # Fallback to enhanced rule-based
-        if not self.metacognitive_enabled:
-            try:
-                from ..metacognitive.data_sufficiency_evaluator import (
-                    EnhancedDataSufficiencyEvaluator,
-                    create_enhanced_data_sufficiency_evaluator,
-                    DataSufficiency
-                )
-
-                self.data_sufficiency_evaluator = create_enhanced_data_sufficiency_evaluator()
-                self.metacognitive_mode = 'rule_based'
-                self.metacognitive_enabled = True
-                print("✓ Enhanced rule-based meta-cognitive system initialized (V3.1)")
-
-            except Exception as e:
-                self.data_sufficiency_evaluator = None
-                self.metacognitive_enabled = False
-                print(f"Meta-cognitive system initialization failed: {e}")
-
-        # Try to load ML classifier (works with all modes)
-        try:
-            from ..metacognitive import ML_CLASSIFIER_AVAILABLE, create_ml_classifier
-            if ML_CLASSIFIER_AVAILABLE:
-                self.ml_classifier = create_ml_classifier()
-                self.ml_available = True
-            else:
-                self.ml_classifier = None
-                self.ml_available = False
-        except Exception as e:
-            self.ml_classifier = None
-            self.ml_available = False
-
-    def _check_data_sufficiency(self, query: str):
-        """
-        Check if query involves data sufficiency concerns.
-
-        Enhanced version that uses both rule-based and ML approaches.
-
-        Args:
-            query: The query to check
-
-        Returns:
-            Meta-cognitive response if data insufficient, None if data sufficient
-        """
-        if not self.metacognitive_enabled or self.data_sufficiency_evaluator is None:
-            return None
-
-        # Try to extract scenario and question from benchmark task format
-        # Format: "Task X: Name\n\nScenario: ...\n\nQuestion: ..."
-
-        # Look for Scenario: and Question: markers
-        scenario_match = re.search(r'Scenario:\s*(.*?)\s*(?:Question:|$)', query, re.DOTALL | re.IGNORECASE)
-        question_match = re.search(r'Question:\s*(.*?)\s*$', query, re.DOTALL | re.IGNORECASE)
-
-        if scenario_match and question_match:
-            scenario = scenario_match.group(1).strip()
-            question = question_match.group(1).strip()
-
-            # Evaluate using appropriate system (hybrid or rule-based)
-            assessment = self.data_sufficiency_evaluator.evaluate_task(scenario, question)
-
-            # Handle both HybridAssessment and MetaCognitiveAssessment
-            if hasattr(assessment, 'final_sufficiency'):
-                # Hybrid system
-                sufficiency = assessment.final_sufficiency
-                confidence = assessment.final_confidence
-                justification = assessment.base_assessment.justification
-
-                # Add reasoning trace if available
-                if assessment.reasoning_trace:
-                    justification += f"\n\nReasoning: {' → '.join(assessment.reasoning_trace)}"
-
-                # Check if insufficient or uncertain
-                sufficiency_str = str(sufficiency).lower()
-                is_insufficient = 'insufficient' in sufficiency_str or 'uncertain' in sufficiency_str
-
-                if is_insufficient:
-                    return justification
-
-            elif hasattr(assessment, 'sufficiency'):
-                # Standard assessment
-                sufficiency_str = str(assessment.sufficiency).lower()
-                is_insufficient = 'insufficient' in sufficiency_str or 'uncertain' in sufficiency_str
-
-                # If ML classifier available, use it to confirm or override
-                if self.ml_available and self.ml_classifier:
-                    ml_result = self.ml_classifier.classify(scenario, question)
-
-                    # Ensemble: ML confidence high + rule-based insufficient
-                    if ml_result.is_meta_cognitive and ml_result.confidence > 0.6:
-                        # ML confirms it's meta-cognitive - return rule-based justification
-                        if is_insufficient:
-                            return assessment.justification
-                        else:
-                            # ML thinks it's meta-cognitive but rule-based missed it
-                            # Return ML-based meta-cognitive response
-                            return self._generate_ml_meta_cognitive_response(ml_result, scenario, question)
-
-                    # Rule-based insufficient with high confidence, return it
-                    if is_insufficient and assessment.confidence > 0.8:
-                        return assessment.justification
-
-                # Standard rule-based response
-                if is_insufficient:
-                    return assessment.justification
-
-        return None
-
-    def _generate_ml_meta_cognitive_response(self, ml_result, scenario: str, question: str) -> str:
-        """Generate meta-cognitive response based on ML classification."""
-        limitation = ml_result.predicted_limitation or "data limitations"
-
-        return (f"The data contain {limitation} that preclude reliable conclusions. "
-                f"Based on meta-cognitive evaluation (confidence: {ml_result.confidence:.2f}), "
-                f"I cannot provide a definitive answer to the question about {question[:50]}... "
-                f"The observational or experimental constraints are fundamental to the measurement.")
 
     def process_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """

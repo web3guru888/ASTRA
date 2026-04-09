@@ -70,14 +70,6 @@ class DomainQueryResult:
         if not 0 <= self.confidence <= 1:
             raise ValueError("confidence must be between 0 and 1")
 
-    def __getitem__(self, key: str) -> Any:
-        """Support dict-style access for backward compatibility"""
-        return getattr(self, key, self.metadata.get(key))
-
-    def get(self, key: str, default: Any = None) -> Any:
-        """Get method for dict-like compatibility"""
-        return getattr(self, key, self.metadata.get(key, default))
-
 
 @dataclass
 class CrossDomainConnection:

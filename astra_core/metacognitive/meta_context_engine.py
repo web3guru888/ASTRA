@@ -1,5 +1,5 @@
 """
-Meta-Context Engine (MCE) for ASTRA V4.0
+Meta-Context Engine (MCE) for STAN_XI_ASTRO V4.0
 
 Inspired by: Large Contextual Models (LCMs) and dimensional perception
 
@@ -510,8 +510,8 @@ class MetaContextEngine:
                 try:
                     normalized_dimensions.append(ContextDimension[dim.upper()])
                 except KeyError:
-                    # Use DOMAIN as default for unrecognized string dimensions
-                    normalized_dimensions.append(ContextDimension.DOMAIN)
+                    # Use LITERAL as default for unrecognized string dimensions
+                    normalized_dimensions.append(ContextDimension.LITERAL)
             else:
                 normalized_dimensions.append(dim)
 
@@ -535,16 +535,11 @@ class MetaContextEngine:
                 layer = self._create_context_layer(query, dim, frame)
                 layers.append(layer)
 
-        # Determine primary layer ID
-        primary_dim = normalized_dimensions[0] if normalized_dimensions else ContextDimension.DOMAIN
-        primary_frame = normalized_frames[0] if normalized_frames else CognitiveFrame.PREDICTIVE
-        primary_layer_id = f"{primary_dim.value}_{primary_frame.value}"
-
         return LayeredContext(
+            query=query,
             layers=layers,
-            primary_layer=primary_layer_id,
-            coherence_score=0.8 if len(layers) > 1 else 1.0,
-            timestamp=self.current_time
+            primary_dimension=normalized_dimensions[0] if normalized_dimensions else ContextDimension.LITERAL,
+            primary_frame=normalized_frames[0] if normalized_frames else CognitiveFrame.PREDICTIVE
         )
 
     def _create_context_layer(
@@ -557,57 +552,13 @@ class MetaContextEngine:
         # Generate context based on dimension and frame
         content = f"{dimension.value} context via {frame.value} frame: {query}"
 
-        # Map dimension to temporal scale
-        temporal_scales = {
-            ContextDimension.TEMPORAL: TemporalScale.MESO,
-            ContextDimension.PERCEPTUAL: TemporalScale.MACRO,
-            ContextDimension.DOMAIN: TemporalScale.MEGA,
-            ContextDimension.MODALITY: TemporalScale.MICRO,
-            ContextDimension.CERTAINTY: TemporalScale.TICK,
-            ContextDimension.SOCIAL: TemporalScale.EPOCH,
-            ContextDimension.EPISTEMIC: TemporalScale.ABSTRACT,
-        }
-        temporal_scale = temporal_scales.get(dimension, TemporalScale.MESO)
-
-        # Map frame to perceptual granularity
-        granularities = {
-            CognitiveFrame.PREDICTIVE: 0.8,
-            CognitiveFrame.ANALYTICAL: 0.9,
-            CognitiveFrame.EMOTIONAL: 0.3,
-            CognitiveFrame.CREATIVE: 0.4,
-            CognitiveFrame.CRITICAL: 0.7,
-            CognitiveFrame.NARRATIVE: 0.5,
-            CognitiveFrame.MATHEMATICAL: 0.95,
-            CognitiveFrame.INTUITIVE: 0.25,
-        }
-        granularity = granularities.get(frame, 0.5)
-
         return ContextLayer(
-            layer_id=f"{dimension.value}_{frame.value}",
-            temporal_scale=temporal_scale,
-            perceptual_granularity=granularity,
-            cognitive_frame=frame,
-            activation=1.0,
-            contents={"content": content, "dimension": dimension.value, "frame": frame.value},
-            metadata=ContextMetadata(
-                created_at=self.current_time,
-                last_accessed=self.current_time
-            )
+            dimension=dimension,
+            frame=frame,
+            content=content,
+            weight=1.0,
+            metadata={"dimension": dimension.value, "frame": frame.value}
         )
-
-    def get_statistics(self) -> Dict[str, Any]:
-        """
-        Get statistics about the meta-context engine.
-
-        Returns:
-            Dictionary with engine statistics
-        """
-        return {
-            "active_layers": len(self.context_history),
-            "total_shifts": len(self.shift_history),
-            "current_time": self.current_time,
-            "last_primary_layer": self.last_primary_layer,
-        }
 
 
 # Factory functions

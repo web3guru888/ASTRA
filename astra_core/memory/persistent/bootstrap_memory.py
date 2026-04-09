@@ -190,14 +190,14 @@ class BootstrapMemory:
     """
 
     # Default persistent directory
-    DEFAULT_PERSISTENT_DIR = Path.home() / ".stan_persistent"
+    DEFAULT_PERSISTENT_DIR = Path.home() / ".astra_persistent"
 
     def __init__(self, persistent_dir: Optional[Path] = None, auto_load: bool = True):
         """
         Initialize bootstrap memory.
 
         Args:
-            persistent_dir: Directory for persistent storage (default: ~/.stan_persistent)
+            persistent_dir: Directory for persistent storage (default: ~/.astra_persistent)
             auto_load: Whether to automatically load existing data
         """
         self.persistent_dir = Path(persistent_dir) if persistent_dir else self.DEFAULT_PERSISTENT_DIR
@@ -302,7 +302,7 @@ class BootstrapMemory:
         bootstrap_path = self.persistent_dir / "BOOTSTRAP.md"
 
         lines = [
-            "# ASTRA Persistent Memory Bootstrap",
+            "# STAN_XI_ASTRO Persistent Memory Bootstrap",
             f"# Last Updated: {datetime.now().isoformat()}",
             "# Version: 1.0.0",
             "",

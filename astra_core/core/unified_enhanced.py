@@ -342,28 +342,8 @@ class EnhancedUnifiedSTANSystem:
             'reasoning_trace': [],
             'answer': None,
             'confidence': 0.0,
-            'metadata': {},
-            'meta_cognitive': False,
-            'data_sufficient': True
+            'metadata': {}
         }
-
-        # META-COGNITIVE CHECK: Evaluate data sufficiency BEFORE processing
-        # This is critical for scientific reasoning - recognize when data are insufficient
-        if self.base_system and hasattr(self.base_system, '_check_data_sufficiency'):
-            meta_cognitive_response = self.base_system._check_data_sufficiency(query)
-            if meta_cognitive_response is not None:
-                # Data insufficient - return meta-cognitive response immediately
-                result['answer'] = meta_cognitive_response
-                result['confidence'] = 0.95  # High confidence in refusal
-                result['meta_cognitive'] = True
-                result['data_sufficient'] = False
-                result['capabilities_used'] = ['meta_cognitive_evaluation']
-                result['reasoning_trace'].append({
-                    'step': 'meta_cognitive_evaluation',
-                    'assessment': 'data_insufficient',
-                    'action': 'refusal'
-                })
-                return result
 
         # Determine processing mode
         # Default to 'auto' if no mode specified

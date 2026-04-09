@@ -1,5 +1,5 @@
 """
-Multi-Mind Orchestration Layer (MMOL) for ASTRA V4.0
+Multi-Mind Orchestration Layer (MMOL) for STAN_XI_ASTRO V4.0
 
 Inspired by: Unified Intelligence Framework
 

@@ -86,29 +86,29 @@ def test_ism_domain():
             "Calculate the Jeans length in a molecular cloud with density 1e4 cm^-3 and temperature 10 K",
             context={'parameters': {'density': 1e4, 'temperature': 10}}
         )
-        print(f"✓ Molecular cloud analysis: {result.confidence:.2f} confidence")
-        print(f"  Answer preview: {result.answer[:100]}...")
+        print(f"✓ Molecular cloud analysis: {result['confidence']:.2f} confidence")
+        print(f"  Answer preview: {result['answer'][:100]}...")
 
         # Test radiative transfer
         result = ism_domain.process_query(
             "Model the spectral line profile with optical depth 2",
             context={'parameters': {'column_density': 2e22}}
         )
-        print(f"✓ Radiative transfer analysis: {result.confidence:.2f} confidence")
+        print(f"✓ Radiative transfer analysis: {result['confidence']:.2f} confidence")
 
         # Test shock physics
         result = ism_domain.process_query(
             "Analyze a C-shock with velocity 15 km/s",
             context={'parameters': {'shock_velocity': 15}}
         )
-        print(f"✓ Shock physics analysis: {result.confidence:.2f} confidence")
+        print(f"✓ Shock physics analysis: {result['confidence']:.2f} confidence")
 
         # Test turbulence
         result = ism_domain.process_query(
             "Analyze turbulence with velocity dispersion 2 km/s",
             context={'parameters': {'velocity_dispersion': 2.0}}
         )
-        print(f"✓ Turbulence analysis: {result.confidence:.2f} confidence")
+        print(f"✓ Turbulence analysis: {result['confidence']:.2f} confidence")
 
         return True
 
@@ -144,36 +144,36 @@ def test_star_formation_domain():
             "Sample a Chabrier IMF with 1000 stars",
             context={'parameters': {'imf_type': 'chabrier', 'n_stars': 1000}}
         )
-        print(f"✓ IMF analysis: {result.confidence:.2f} confidence")
-        print(f"  Answer preview: {result.answer[:100]}...")
+        print(f"✓ IMF analysis: {result['confidence']:.2f} confidence")
+        print(f"  Answer preview: {result['answer'][:100]}...")
 
         # Test SFR calculation
         result = sf_domain.process_query(
             "Calculate star formation rate using Kennicutt-Schmidt law",
             context={'parameters': {'gas_density': 10, 'region_size': 1.0}}
         )
-        print(f"✓ SFR calculation: {result.confidence:.2f} confidence")
+        print(f"✓ SFR calculation: {result['confidence']:.2f} confidence")
 
         # Test stellar evolution
         result = sf_domain.process_query(
             "Model evolution of a 10 M_sun star",
             context={'parameters': {'mass': 10}}
         )
-        print(f"✓ Stellar evolution: {result.confidence:.2f} confidence")
+        print(f"✓ Stellar evolution: {result['confidence']:.2f} confidence")
 
         # Test feedback
         result = sf_domain.process_query(
             "Calculate stellar feedback from SFR 5 M_sun/yr",
             context={'parameters': {'sfr': 5.0}}
         )
-        print(f"✓ Feedback analysis: {result.confidence:.2f} confidence")
+        print(f"✓ Feedback analysis: {result['confidence']:.2f} confidence")
 
         # Test collapse
         result = sf_domain.process_query(
             "Model gravitational collapse of 2 M_sun core",
             context={'parameters': {'mass': 2.0, 'density': 1e4}}
         )
-        print(f"✓ Collapse analysis: {result.confidence:.2f} confidence")
+        print(f"✓ Collapse analysis: {result['confidence']:.2f} confidence")
 
         return True
 

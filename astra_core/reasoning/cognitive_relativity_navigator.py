@@ -1,5 +1,5 @@
 """
-Cognitive-Relativity Navigator (CRN) for ASTRA V4.0
+Cognitive-Relativity Navigator (CRN) for STAN_XI_ASTRO V4.0
 
 Inspired by: Cognitive relativity and perceptual dimensional modelling
 

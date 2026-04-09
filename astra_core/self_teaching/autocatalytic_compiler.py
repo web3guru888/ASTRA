@@ -1,5 +1,5 @@
 """
-Autocatalytic Self-Compiler (ASC) for ASTRA V4.0
+Autocatalytic Self-Compiler (ASC) for STAN_XI_ASTRO V4.0
 
 Inspired by: Recursive Self-Improvement + Embedded Prompt Engine
 

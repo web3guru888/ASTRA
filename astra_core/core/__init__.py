@@ -6,19 +6,6 @@ Main entry point for STAN-CORE V4.0. Integrates all components.
 
 from typing import Optional, Dict, Any, List
 import warnings
-from enum import Enum
-
-# Import DataSufficiency for meta-cognitive evaluation
-try:
-    from ..metacognitive.data_sufficiency_evaluator import DataSufficiency
-    DATA_SUFFICIENCY_AVAILABLE = True
-except ImportError:
-    DATA_SUFFICIENCY_AVAILABLE = False
-    # Create dummy enum for graceful degradation
-    class DataSufficiency(Enum):
-        SUFFICIENT = "sufficient"
-        UNCERTAIN = "uncertain"
-        INSUFFICIENT = "insufficient"
 
 
 class UnifiedSTANSystem:
@@ -128,20 +115,16 @@ class UnifiedSTANSystem:
             warnings.warn(f"Could not initialize simulation components: {e}")
 
     def _init_metacognitive_components(self):
-        """Initialize metacognitive monitoring and data sufficiency evaluation."""
+        """Initialize metacognitive monitoring."""
         try:
-            from ..metacognitive.data_sufficiency_evaluator import (
-                DataSufficiencyEvaluator,
-                create_data_sufficiency_evaluator
-            )
+            from ..metacognition.monitor import MetacognitiveMonitor
+            from ..metacognition.uncertainty import UncertaintyEstimator
 
-            self.data_sufficiency_evaluator = create_data_sufficiency_evaluator()
-            self.metacognitive_enabled = True
+            self.metacognitive_monitor = MetacognitiveMonitor()
+            self.uncertainty_estimator = UncertaintyEstimator()
 
         except Exception as e:
-            warnings.warn(f"Could not initialize data sufficiency evaluator: {e}")
-            self.data_sufficiency_evaluator = None
-            self.metacognitive_enabled = False
+            warnings.warn(f"Could not initialize metacognitive components: {e}")
 
     def _init_trading_components(self):
         """Initialize trading-specific components."""
@@ -214,40 +197,6 @@ class UnifiedSTANSystem:
         except Exception as e:
             warnings.warn(f"Could not initialize multi-messenger components: {e}")
 
-    def _check_data_sufficiency(self, query: str) -> Optional[str]:
-        """
-        Check if query involves data sufficiency concerns.
-
-        Args:
-            query: The query to check
-
-        Returns:
-            Meta-cognitive response if data insufficient, None if data sufficient
-        """
-        if not self.metacognitive_enabled or self.data_sufficiency_evaluator is None:
-            return None
-
-        # Try to extract scenario and question from benchmark task format
-        # Format: "Task X: Name\n\nScenario: ...\n\nQuestion: ..."
-        import re
-
-        # Look for Scenario: and Question: markers
-        scenario_match = re.search(r'Scenario:\s*(.*?)\s*(?:Question:|$)', query, re.DOTALL | re.IGNORECASE)
-        question_match = re.search(r'Question:\s*(.*?)\s*$', query, re.DOTALL | re.IGNORECASE)
-
-        if scenario_match and question_match:
-            scenario = scenario_match.group(1).strip()
-            question = question_match.group(1).strip()
-
-            # Evaluate data sufficiency
-            assessment = self.data_sufficiency_evaluator.evaluate_task(scenario, question)
-
-            # If data insufficient or uncertain, return meta-cognitive response
-            if assessment.sufficiency in [DataSufficiency.INSUFFICIENT, DataSufficiency.UNCERTAIN]:
-                return assessment.justification
-
-        return None
-
     def process(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Process a query through the unified system.
@@ -259,21 +208,6 @@ class UnifiedSTANSystem:
         Returns:
             Response dict with results and metadata
         """
-        # Check for data sufficiency first (meta-cognitive evaluation)
-        meta_cognitive_response = self._check_data_sufficiency(query)
-
-        if meta_cognitive_response is not None:
-            # Data insufficient - return meta-cognitive response
-            return {
-                'query': query,
-                'mode': self.mode,
-                'status': 'meta_cognitive_refusal',
-                'answer': meta_cognitive_response,
-                'meta_cognitive': True,
-                'data_sufficient': False
-            }
-
-        # Data sufficient - process normally through appropriate components
         # This is a simplified implementation
         # Full implementation would route through appropriate components
 
@@ -281,9 +215,7 @@ class UnifiedSTANSystem:
             'query': query,
             'mode': self.mode,
             'status': 'processed',
-            'message': 'STAN-CORE V4.0 system operational',
-            'meta_cognitive': False,
-            'data_sufficient': True
+            'message': 'STAN-CORE V4.0 system operational'
         }
 
 

@@ -1,802 +1,981 @@
-#!/usr/bin/env python3
 """
-ASTRA PDF Generator Module
-============================
+STAN_IX_ASTRO PDF Generator
+==========================
 
-A robust PDF generator for scientific papers that properly handles:
-- Markdown to HTML conversion
-- HTML tag rendering (bold, italic, superscript, etc.)
-- Table text wrapping without overflow
-- Unicode to ASCII conversion
-- Complex document structure
+Direct PDF generation module for creating PDF documents without intermediate HTML.
+This module provides a simple interface for generating professional PDFs with
+support for text, tables, code blocks, and structured sections.
 
-Author: ASTRA Project
-Version: 1.0
-Date: April 2026
+Author: STAN_IX_ASTRO
+Date: January 10, 2026
+Updated: March 19, 2026 - Fixed table widths, font issues, figure placement
 """
 
-import re
-import os
-from typing import List, Tuple, Optional, Dict
+from typing import List, Dict, Any, Optional, Tuple
+from dataclasses import dataclass, field
 from pathlib import Path
+from enum import Enum
+import re
+from datetime import datetime
 
+# Conditional imports for PDF generation
 try:
     from reportlab.lib.pagesizes import A4, letter
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib.units import inch, cm
-    from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_JUSTIFY, TA_RIGHT
-    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
+    from reportlab.lib.colors import HexColor
     from reportlab.platypus import (
-        SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle,
-        PageBreak, KeepTogether
+        SimpleDocTemplate, Paragraph, Spacer, PageBreak, Table, TableStyle,
+        KeepTogether, Preformatted
     )
-    from reportlab.lib.utils import simpleSplit
+    from reportlab.platypus.tableofcontents import TableOfContents
+    from reportlab.lib import colors
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    try:
-        from reportlab.platypus.flowables import Flowable
-    except ImportError:
-        Flowable = None
-    from PIL import Image as PILImage
     REPORTLAB_AVAILABLE = True
 except ImportError:
     REPORTLAB_AVAILABLE = False
-    # Define fallback constants
-    inch = 72
-    cm = 28.35
-    A4 = (595.27, 841.89)
-    letter = (612, 792)
-    print("WARNING: reportlab not available. PDF generation disabled.")
+    print("Warning: reportlab not available, PDF generation disabled")
+
+try:
+    from fpdf import FPDF
+    FPDF_AVAILABLE = True
+except ImportError:
+    FPDF_AVAILABLE = False
+
+try:
+    from reportlab.lib.utils import ImageReader
+    IMAGEREADER_AVAILABLE = True
+except ImportError:
+    IMAGEREADER_AVAILABLE = False
 
 
-class ASTRAPDFStyles:
-    """Pre-defined styles for ASTRA documents"""
+class PDFFormat(Enum):
+    """PDF page formats."""
+    A4 = "A4"
+    LETTER = "Letter"
+    LEGAL = "Legal"
 
-    def __init__(self):
-        if not REPORTLAB_AVAILABLE:
-            return
 
-        self._styles = getSampleStyleSheet()
-        self._custom_styles = {}
-        self._build_styles()
+class TextAlign(Enum):
+    """Text alignment options."""
+    LEFT = "left"
+    CENTER = "center"
+    RIGHT = "right"
+    JUSTIFY = "justify"
 
-    def _build_styles(self):
-        """Build custom styles"""
 
+@dataclass
+class PDFSection:
+    """A section in the PDF document."""
+    title: str
+    content: str
+    level: int = 1  # 1=h1, 2=h2, 3=h3, etc.
+    page_break_before: bool = False
+
+
+@dataclass
+class PDFTable:
+    """A table in the PDF document."""
+    headers: List[str]
+    rows: List[List[str]]
+    title: Optional[str] = None
+    column_widths: Optional[List[float]] = None
+
+
+@dataclass
+class PDFCodeBlock:
+    """A code block in the PDF document."""
+    code: str
+    language: str = "Python"
+    title: Optional[str] = None
+
+
+class PDFGenerator:
+    """
+    Direct PDF generator for STAN_IX_ASTRO.
+
+    Creates professional PDF documents with support for:
+    - Multi-level headings
+    - Paragraphs with various formatting
+    - Tables with custom styling and automatic width calculation
+    - Code blocks with syntax highlighting
+    - Inline figure placement at correct positions
+    - Font character compatibility
+    """
+
+    def __init__(
+        self,
+        filename: str,
+        format: PDFFormat = PDFFormat.A4,
+        title: str = "STAN_IX_ASTRO Document",
+        author: str = "STAN_IX_ASTRO",
+        subject: str = "",
+        keywords: List[str] = None
+    ):
+        """
+        Initialize the PDF generator.
+
+        Args:
+            filename: Output PDF filename
+            format: Page format (A4, Letter, Legal)
+            title: Document title (metadata)
+            author: Document author (metadata)
+            subject: Document subject (metadata)
+            keywords: Document keywords (metadata)
+        """
+        self.filename = Path(filename)
+        self.format = format
+        self.title = title
+        self.author = author
+        self.subject = subject
+        self.keywords = keywords or []
+
+        # Document content
+        self.sections: List[PDFSection] = []
+        self.tables: List[PDFTable] = []
+        self.code_blocks: List[PDFCodeBlock] = []
+        self.toc_enabled = True
+        self.embedded_figures = set()  # Track which figures have been embedded
+
+        # Setup
+        self._setup_document()
+
+    def _setup_document(self):
+        """Setup the PDF document based on available libraries."""
+        if REPORTLAB_AVAILABLE:
+            self._setup_reportlab()
+        elif FPDF_AVAILABLE:
+            self._setup_fpdf()
+        else:
+            raise ImportError(
+                "No PDF generation library available. "
+                "Install reportlab: pip install reportlab"
+            )
+
+    def _setup_reportlab(self):
+        """Setup ReportLab-based document."""
+        # Page size
+        if self.format == PDFFormat.A4:
+            pagesize = A4
+        elif self.format == PDFFormat.LETTER:
+            pagesize = letter
+        else:
+            pagesize = A4
+
+        # Create document with proper margins
+        self.doc = SimpleDocTemplate(
+            str(self.filename),
+            pagesize=pagesize,
+            rightMargin=1.8*cm,
+            leftMargin=1.8*cm,
+            topMargin=2*cm,
+            bottomMargin=2*cm
+        )
+
+        # Set up metadata
+        self.doc.title = self.title
+        self.doc.author = self.author
+        self.doc.subject = self.subject
+        self.doc.keywords = ", ".join(self.keywords)
+
+        # Document elements container
+        self.elements = []
+
+        # Available page width for content (A4 width - margins)
+        self.available_width = pagesize[0] - (1.8*cm * 2)
+
+        # Styles
+        self.styles = getSampleStyleSheet()
+        self._setup_styles()
+
+    def _setup_styles(self):
+        """Setup custom paragraph styles."""
         # Title style
-        self._custom_styles['Title'] = ParagraphStyle(
-            'ASTRATitle',
-            parent=self._styles['Title'],
-            fontSize=18,
-            textColor=colors.darkblue,
+        self.styles.add(ParagraphStyle(
+            name='CustomTitle',
+            parent=self.styles['Heading1'],
+            fontSize=20,
+            textColor=HexColor('#1a1a2e'),
             spaceAfter=20,
             alignment=TA_CENTER,
-            fontName='Helvetica-Bold',
-            leading=22
-        )
+            fontName='Helvetica-Bold'
+        ))
 
-        # Subtitle style
-        self._custom_styles['Subtitle'] = ParagraphStyle(
-            'ASTRASubtitle',
-            parent=self._styles['Normal'],
-            fontSize=12,
-            textColor=colors.darkgray,
-            spaceAfter=30,
-            alignment=TA_CENTER,
-            fontName='Helvetica-Oblique',
-            leading=16
-        )
-
-        # Heading 1 style
-        self._custom_styles['Heading1'] = ParagraphStyle(
-            'ASTRAHeading1',
-            parent=self._styles['Heading1'],
-            fontSize=14,
-            textColor=colors.darkblue,
-            spaceAfter=12,
-            spaceBefore=20,
-            fontName='Helvetica-Bold',
-            leading=18,
-            keepWithNext=True
-        )
-
-        # Heading 2 style
-        self._custom_styles['Heading2'] = ParagraphStyle(
-            'ASTRAHeading2',
-            parent=self._styles['Heading2'],
-            fontSize=12,
-            textColor=colors.darkblue,
+        # Heading 1
+        self.styles.add(ParagraphStyle(
+            name='CustomHeading1',
+            parent=self.styles['Heading1'],
+            fontSize=16,
+            textColor=HexColor('#1a1a2e'),
             spaceAfter=10,
             spaceBefore=15,
-            fontName='Helvetica-Bold',
-            leading=15,
-            keepWithNext=True
-        )
+            fontName='Helvetica-Bold'
+        ))
 
-        # Heading 3 style
-        self._custom_styles['Heading3'] = ParagraphStyle(
-            'ASTRAHeading3',
-            parent=self._styles['Heading3'],
-            fontSize=11,
-            textColor=colors.darkblue,
+        # Heading 2
+        self.styles.add(ParagraphStyle(
+            name='CustomHeading2',
+            parent=self.styles['Heading2'],
+            fontSize=13,
+            textColor=HexColor('#2d3436'),
             spaceAfter=8,
             spaceBefore=12,
-            fontName='Helvetica-Bold',
-            leading=14
-        )
+            fontName='Helvetica-Bold'
+        ))
 
-        # Body text style
-        self._custom_styles['Body'] = ParagraphStyle(
-            'ASTRABody',
-            parent=self._styles['BodyText'],
-            fontSize=10,
-            spaceAfter=8,
-            alignment=TA_JUSTIFY,
-            fontName='Times-Roman',
-            leading=13
-        )
-
-        # Abstract style
-        self._custom_styles['Abstract'] = ParagraphStyle(
-            'ASTRAAbstract',
-            parent=self._styles['Normal'],
-            fontSize=9,
-            spaceAfter=20,
-            alignment=TA_JUSTIFY,
-            fontName='Times-Roman',
-            leftIndent=20,
-            rightIndent=20,
-            leading=12
-        )
-
-        # Caption style
-        self._custom_styles['Caption'] = ParagraphStyle(
-            'ASTRACaption',
-            parent=self._styles['Normal'],
-            fontSize=8,
-            spaceAfter=12,
-            spaceBefore=6,
-            alignment=TA_JUSTIFY,
-            fontName='Times-Italic',
-            leading=10
-        )
-
-        # Table cell style
-        self._custom_styles['TableCell'] = ParagraphStyle(
-            'ASTRATableCell',
-            parent=self._styles['Normal'],
-            fontSize=8,
-            fontName='Times-Roman',
-            leading=10,
-            wordWrap='CJK'
-        )
-
-        # Code style
-        self._custom_styles['Code'] = ParagraphStyle(
-            'ASTRACode',
-            parent=self._styles['Code'],
-            fontSize=8,
-            spaceAfter=8,
-            fontName='Courier',
-            leftIndent=20,
-            leading=10
-        )
-
-        # Reference style
-        self._custom_styles['Reference'] = ParagraphStyle(
-            'ASTRAReference',
-            parent=self._styles['Normal'],
-            fontSize=9,
+        # Heading 3
+        self.styles.add(ParagraphStyle(
+            name='CustomHeading3',
+            parent=self.styles['Heading3'],
+            fontSize=11,
+            textColor=HexColor('#4a4a4a'),
             spaceAfter=6,
-            alignment=TA_LEFT,
-            fontName='Times-Roman',
-            leftIndent=20,
-            leading=11
-        )
+            spaceBefore=10,
+            fontName='Helvetica-Bold'
+        ))
 
-        # Keyword style
-        self._custom_styles['Keyword'] = ParagraphStyle(
-            'ASTRAKeyword',
-            parent=self._styles['Normal'],
+        # Body text - use Times-Roman for better readability
+        self.styles.add(ParagraphStyle(
+            name='CustomBody',
+            parent=self.styles['BodyText'],
+            fontSize=10,
+            textColor=HexColor('#2d3436'),
+            spaceAfter=8,
+            leading=14,
+            alignment=TA_JUSTIFY,
+            fontName='Times-Roman'
+        ))
+
+        # Code block
+        self.styles.add(ParagraphStyle(
+            name='CustomCode',
+            parent=self.styles['Code'],
+            fontSize=8,
+            textColor=HexColor('#dfe6e9'),
+            backColor=HexColor('#2d3436'),
+            spaceAfter=10,
+            spaceBefore=10,
+            leftIndent=8,
+            fontName='Courier',
+            leading=11
+        ))
+
+        # Figure caption
+        self.styles.add(ParagraphStyle(
+            name='FigureCaption',
+            parent=self.styles['Normal'],
             fontSize=9,
-            spaceAfter=30,
+            fontStyle='Italic',
             alignment=TA_CENTER,
-            fontName='Times-Italic',
-            leading=11
-        )
+            textColor=HexColor('#4a4a4a'),
+            spaceAfter=15,
+            fontName='Helvetica'
+        ))
 
-    def get_style(self, name: str) -> ParagraphStyle:
-        """Get a style by name"""
-        if name in self._custom_styles:
-            return self._custom_styles[name]
-        return self._styles.get(name, self._styles['Normal'])
+    def _setup_fpdf(self):
+        """Setup FPDF-based document (fallback)."""
+        self.pdf = FPDF()
+        self.pdf.set_title(self.title)
+        self.pdf.set_author(self.author)
+        self.pdf.set_subject(self.subject)
 
+        if self.format == PDFFormat.A4:
+            self.pdf.add_page("A4")
+        else:
+            self.pdf.add_page("Letter")
 
-class MarkdownConverter:
-    """Converts Markdown to reportlab-compatible HTML"""
-
-    # Unicode to ASCII mappings
-    UNICODE_MAP = {
-        '±': '+/-',
-        '×': ' x ',
-        '÷': ' / ',
-        '²': '²',
-        '³': '³',
-        '⁴': '⁴',
-        '⁵': '⁵',
-        '⁶': '⁶',
-        '⁷': '⁷',
-        '⁸': '⁸',
-        '⁹': '⁹',
-        '⁰': '⁰',
-        '¹': '¹',
-        '⁻': '-',
-        'α': 'alpha',
-        'β': 'beta',
-        'γ': 'gamma',
-        'δ': 'delta',
-        'ε': 'epsilon',
-        'θ': 'theta',
-        'κ': 'kappa',
-        'λ': 'lambda',
-        'μ': 'mu',
-        'π': 'pi',
-        'σ': 'sigma',
-        'τ': 'tau',
-        'φ': 'phi',
-        'ω': 'omega',
-        '°': ' degrees',
-        '′': "'",
-        '″': '"',
-        '—': '&mdash;',
-        '–': '&ndash;',
-        '≤': '<=',
-        '≥': '>=',
-        '≈': 'approximately',
-        '≠': '!=',
-        '∝': 'proportional to',
-        '√': 'sqrt',
-        '∞': 'infinity',
-        '∑': 'sum',
-        '∫': 'integral',
-        '∂': 'partial',
-        'Δ': 'Delta',
-        'Σ': 'Sigma',
-        'Π': 'Pi',
-        'Ω': 'Omega',
-        'Γ': 'Gamma',
-        'Λ': 'Lambda',
-        'Ψ': 'Psi',
-        'Φ': 'Phi',
-    }
-
-    # Greek letters that should be italicized
-    GREEK_ITALIC = ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'theta',
-                     'kappa', 'lambda', 'mu', 'pi', 'sigma', 'tau', 'phi', 'omega']
-
-    def __init__(self):
-        self._patterns = [
-            # Superscript patterns: ^text^ or ^number
-            (r'\^([0-9a-zA-Z+-]+)\^', r'<super>\1</super>'),
-
-            # Subscript patterns: _text_ (but not __ for bold)
-            (r'(?<!_)_(?!_)([a-zA-Z0-9+-]+)(?!_)_', r'<sub>\1</sub>'),
-
-            # Bold: **text** or __text__
-            (r'\*\*([^*]+?)\*\*', r'<b>\1</b>'),
-            (r'__([^_]+?)__', r'<b>\1</b>'),
-
-            # Italic: *text* (but not ** or within superscript/subscript)
-            (r'(?<!\*)\*([^*]+?)\*(?!\*)', r'<i>\1</i>'),
-
-            # Strikethrough: ~~text~~
-            (r'~~([^~]+?)~~', r'<strike>\1</strike>'),
-
-            # Underline: __text__ handled by bold, use u-text-u for underline
-            (r'~([^~]+)~', r'<u>\1</u>'),
-        ]
-
-    def convert(self, text: str, preserve_tags: bool = True) -> str:
+    def _clean_text(self, text: str) -> str:
         """
-        Convert markdown text to reportlab-compatible HTML
+        Clean text to fix font rendering issues while preserving Greek and mathematical symbols.
 
-        Args:
-            text: The markdown text to convert
-            preserve_tags: If True, preserve existing HTML tags
+        CRITICAL: This method must ensure that:
+        1. All text is renderable by reportlab's standard fonts
+        2. No raw HTML tags appear in output (they will show as literal text)
+        3. Unicode characters are either preserved (Greek/math) or converted to ASCII
 
-        Returns:
-            HTML string compatible with reportlab Paragraph
+        This method:
+        - Preserves Greek characters (alpha, beta, gamma, etc.) - converted to names for compatibility
+        - Preserves mathematical symbols - converted to ASCII equivalents
+        - Replaces problematic Unicode characters with safe alternatives
+        - Filters out non-ASCII characters that cause font issues
+        - Does NOT handle HTML escaping (that's done in _process_inline_formatting)
         """
-        if not isinstance(text, str):
-            text = str(text)
+        # Comprehensive unicode replacements
+        replacements = {
+            # Punctuation
+            '\u2014': '--',      # em dash
+            '\u2013': '-',       # en dash
+            '\u2018': "'",       # left single quote
+            '\u2019': "'",       # right single quote
+            '\u201c': '"',       # left double quote
+            '\u201d': '"',       # right double quote
+            '\u2026': '...',     # ellipsis
+            '\u2022': '-',       # bullet
+            '\u00b7': '-',       # middle dot
 
-        # First, escape HTML special characters IF we're not preserving tags
-        if not preserve_tags:
-            text = self._escape_html(text)
+            # Symbols
+            '\u2605': '*',       # Star
+            '\u2606': '*',       # White star
+            '\u2713': '[PASS]',  # Checkmark
+            '\u2714': '[PASS]',  # Heavy checkmark
+            '\u2717': '[FAIL]',  # Cross mark
+            '\u2718': '[FAIL]',  # Heavy cross mark
+            '\u25cf': '*',       # Black circle
+            '\u25cb': 'o',       # White circle
+            '\u25a0': '#',       # Black square
+            '\u25a1': '#',       # White square
+            '\u25e6': 'o',       # White bullet
+            '\u25b2': '^',       # Triangle up
+            '\u25bc': 'v',       # Triangle down
 
-        # Convert unicode characters to HTML/ASCII
-        text = self._convert_unicode(text)
+            # Math operators
+            '\u2212': '-',       # Minus sign
+            '\u00b1': '+/-',     # Plus-minus
+            '\u00d7': 'x',       # Multiplication
+            '\u00f7': '/',       # Division
+            '\u2248': '~',       # Approximately
+            '\u2264': '<=',      # Less than or equal
+            '\u2265': '>=',      # Greater than or equal
+            '\u2260': '!=',      # Not equal
+            '\u221e': 'infinity', # Infinity
+            '\u2202': 'partial',  # Partial derivative
+            '\u2206': 'Delta',    # Delta
+            '\u2207': 'nabla',    # Nabla
 
-        # Make Greek letters italic
-        for greek in self.GREEK_ITALIC:
-            text = re.sub(r'\b' + greek + r'\b', f'<i>{greek}</i>', text)
+            # Greek letters - convert to names for font compatibility
+            '\u03b1': 'alpha',
+            '\u03b2': 'beta',
+            '\u03b3': 'gamma',
+            '\u03b4': 'delta',
+            '\u03b5': 'epsilon',
+            '\u03b6': 'zeta',
+            '\u03b7': 'eta',
+            '\u03b8': 'theta',
+            '\u03b9': 'iota',
+            '\u03ba': 'kappa',
+            '\u03bb': 'lambda',
+            '\u03bc': 'mu',
+            '\u03bd': 'nu',
+            '\u03be': 'xi',
+            '\u03bf': 'omicron',
+            '\u03c0': 'pi',
+            '\u03c1': 'rho',
+            '\u03c2': 'sigma',
+            '\u03c3': 'sigma',
+            '\u03c4': 'tau',
+            '\u03c5': 'upsilon',
+            '\u03c6': 'phi',
+            '\u03c7': 'chi',
+            '\u03c8': 'psi',
+            '\u03c9': 'omega',
+            '\u0391': 'Alpha',
+            '\u0392': 'Beta',
+            '\u0393': 'Gamma',
+            '\u0394': 'Delta',
+            '\u0395': 'Epsilon',
+            '\u0396': 'Zeta',
+            '\u0397': 'Eta',
+            '\u0398': 'Theta',
+            '\u0399': 'Iota',
+            '\u039a': 'Kappa',
+            '\u039b': 'Lambda',
+            '\u039c': 'Mu',
+            '\u039d': 'Nu',
+            '\u039e': 'Xi',
+            '\u039f': 'Omicron',
+            '\u03a0': 'Pi',
+            '\u03a1': 'Rho',
+            '\u03a3': 'Sigma',
+            '\u03a4': 'Tau',
+            '\u03a5': 'Upsilon',
+            '\u03a6': 'Phi',
+            '\u03a7': 'Chi',
+            '\u03a8': 'Psi',
+            '\u03a9': 'Omega',
 
-        # Apply markdown patterns
-        for pattern, replacement in self._patterns:
-            text = re.sub(pattern, replacement, text)
+            # Arrows
+            '\u2192': '->',
+            '\u2190': '<-',
+            '\u2194': '<->',
+            '\u21d2': '=>',
+            '\u21d0': '<=',
 
-        # Clean up any double escapes
-        text = text.replace('&amp;amp;', '&amp;')
+            # Special
+            '\u00b0': ' degrees',
+            '\u212b': 'Angstrom',
+            '\u00a0': ' ',        # Non-breaking space
+            '\u200b': '',         # Zero-width space
+            '\u200c': '',         # Zero-width non-joiner
+            '\u200d': '',         # Zero-width joiner
+            '\u27c2': 'perpendicular',
+            '\u2225': 'parallel',
+        }
 
-        return text
+        for old, new in replacements.items():
+            text = text.replace(old, new)
 
-    def _escape_html(self, text: str) -> str:
-        """Escape HTML special characters"""
-        # Only escape if not already part of a tag
-        parts = []
-        in_tag = False
-        i = 0
+        # Remove any remaining non-ASCII characters that might cause font issues
+        # Keep only ASCII (0-127) and common whitespace
+        cleaned_text = ""
+        for char in text:
+            char_code = ord(char)
+            if char_code < 128:
+                cleaned_text += char
+            elif char in [' ', '\n', '\t', '\r']:
+                cleaned_text += char
+            # All other non-ASCII characters are removed to prevent font issues
 
-        while i < len(text):
-            if text[i] == '<':
-                # Check if this is a valid tag
-                if i + 1 < len(text) and text[i+1] in '/bisuBISU':
-                    in_tag = True
-                    parts.append('<')
-                else:
-                    parts.append('&lt;')
-            elif text[i] == '>':
-                if in_tag:
-                    parts.append('>')
-                    in_tag = False
-                else:
-                    parts.append('&gt;')
-            elif text[i] == '&':
-                # Check if already an entity
-                if i + 1 < len(text) and text[i+1] in '#aA':
-                    # Already an entity, preserve
-                    parts.append('&')
-                else:
-                    parts.append('&amp;')
-            else:
-                parts.append(text[i])
-            i += 1
+        return cleaned_text
 
-        return ''.join(parts)
-
-    def _convert_unicode(self, text: str) -> str:
-        """Convert unicode characters to ASCII equivalents"""
-        for uni, ascii_equiv in self.UNICODE_MAP.items():
-            text = text.replace(uni, ascii_equiv)
-        return text
-
-
-class WrappedTableCell:
-    """Helper class for creating properly wrapped table cells"""
-
-    def __init__(self, text: str, style: ParagraphStyle, max_width: float):
-        """
-        Create a wrapped table cell
-
-        Args:
-            text: The text content
-            style: The Paragraph style to use
-            max_width: Maximum width for the cell
-        """
-        self.text = text
-        self.style = style
-        self.max_width = max_width
-
-    def wrap_text(self, text: str) -> str:
-        """
-        Wrap text to fit within max_width
-
-        Args:
-            text: The text to wrap
-
-        Returns:
-            Wrapped text with <br/> tags for line breaks
-        """
-        # First, convert any markdown
-        converter = MarkdownConverter()
-        html_text = converter.convert(text, preserve_tags=True)
-
-        # Split the text into lines that fit
-        wrapped_lines = simpleSplit(
-            html_text,
-            self.style.fontName,
-            self.style.fontSize,
-            self.max_width - 6  # Account for padding
-        )
-
-        # Join with <br/> tags
-        if len(wrapped_lines) > 1:
-            # Limit to 3 lines maximum
-            wrapped_lines = wrapped_lines[:3]
-            if len(wrapped_lines) == 3 and wrapped_lines[2] != html_text:
-                wrapped_lines[2] = wrapped_lines[2][:max(0, len(wrapped_lines[2])-3)] + '...'
-
-            return '<br/>'.join(wrapped_lines)
-
-        return wrapped_lines[0] if wrapped_lines else ''
-
-
-class ASTRAPDFGenerator:
-    """
-    Main PDF generator for ASTRA scientific papers
-
-    Features:
-    - Markdown to HTML conversion
-    - Proper table text wrapping
-    - Figure embedding with captions
-    - Automatic page numbering
-    - Table of contents generation
-    """
-
-    # Page size mappings
-    PAGE_SIZES = {
-        'A4': A4,
-        'LETTER': letter,
-        'LETTER': letter,
-    }
-
-    def __init__(self,
-                 output_path: str,
-                 pagesize='A4',
-                 margin: float = 0.75 * inch):
-        """
-        Initialize the PDF generator
-
-        Args:
-            output_path: Path to output PDF file
-            pagesize: Reportlab pagesize (default: 'A4')
-            margin: Page margin in points
-        """
+    def add_figure(self, image_path: str, caption: str, width: float = 5.0):
+        """Add a figure to the document."""
         if not REPORTLAB_AVAILABLE:
-            raise ImportError("reportlab is required for PDF generation")
-
-        # Handle string pagesize
-        if isinstance(pagesize, str):
-            pagesize = self.PAGE_SIZES.get(pagesize.upper(), A4)
-
-        self.output_path = output_path
-        self.pagesize = pagesize
-        self.margin = margin
-        self.content_width = pagesize[0] - 2 * margin
-
-        self.styles = ASTRAPDFStyles()
-        self.converter = MarkdownConverter()
-        self.story = []
-
-        # Document template
-        self.doc = SimpleDocTemplate(
-            output_path,
-            pagesize=pagesize,
-            leftMargin=margin,
-            rightMargin=margin,
-            topMargin=margin,
-            bottomMargin=margin
-        )
-
-    def add_title(self, text: str, subtitle: str = None):
-        """Add document title and optional subtitle"""
-        converted = self.converter.convert(text)
-        self.story.append(Paragraph(converted, self.styles.get_style('Title')))
-
-        if subtitle:
-            sub_conv = self.converter.convert(subtitle)
-            self.story.append(Paragraph(sub_conv, self.styles.get_style('Subtitle')))
-
-        self.story.append(Spacer(1, 0.2*inch))
-
-    def add_heading(self, text: str, level: int = 1):
-        """
-        Add a section heading
-
-        Args:
-            text: Heading text
-            level: Heading level (1-3)
-        """
-        converted = self.converter.convert(text)
-        style_name = f'Heading{min(level, 3)}'
-        self.story.append(Paragraph(converted, self.styles.get_style(style_name)))
-
-    def add_paragraph(self, text: str, style: str = 'Body'):
-        """
-        Add a paragraph
-
-        Args:
-            text: Paragraph text (can contain markdown)
-            style: Style name to use
-        """
-        converted = self.converter.convert(text)
-        self.story.append(Paragraph(converted, self.styles.get_style(style)))
-
-    def add_abstract(self, text: str):
-        """Add an abstract paragraph"""
-        converted = self.converter.convert(text)
-        self.story.append(Paragraph(converted, self.styles.get_style('Abstract')))
-
-    def add_keywords(self, keywords: List[str]):
-        """Add keywords list"""
-        text = '<b>Keywords:</b> ' + ', '.join(keywords)
-        converted = self.converter.convert(text)
-        self.story.append(Paragraph(converted, self.styles.get_style('Keyword')))
-
-    def add_figure(self,
-                  image_path: str,
-                  caption: str = None,
-                  max_height: float = 4 * inch,
-                  max_width: float = None):
-        """
-        Add a figure with caption
-
-        Args:
-            image_path: Path to image file
-            caption: Figure caption text
-            max_height: Maximum height for figure
-            max_width: Maximum width (default: content_width)
-        """
-        if not os.path.exists(image_path):
-            print(f"Warning: Image not found: {image_path}")
             return
+
+        from reportlab.platypus import Image
 
         try:
-            # Get image dimensions
-            img = PILImage.open(image_path)
-            img_width, img_height = img.size
+            # Get image dimensions to scale properly
+            if IMAGEREADER_AVAILABLE:
+                img_reader = ImageReader(image_path)
+                img_width, img_height = img_reader.getSize()
 
-            # Calculate display size
-            if max_width is None:
-                max_width = self.content_width
+                # Max dimensions for A4 page (with margins)
+                max_width = self.available_width
+                max_height = 14 * cm  # Leave room for caption
 
-            scale_w = max_width / img_width
-            scale_h = max_height / img_height
-            scale = min(scale_w, scale_h)
+                # Calculate scale factor
+                width_scale = max_width / img_width
+                height_scale = max_height / img_height
+                scale = min(width_scale, height_scale)
 
-            display_width = img_width * scale
-            display_height = img_height * scale
+                # Scaled dimensions
+                display_width = img_width * scale
+                display_height = img_height * scale
 
-            # Add image
-            img_obj = Image(image_path, width=display_width, height=display_height)
-            img_obj.hAlign = TA_CENTER
-            self.story.append(img_obj)
+                img = Image(image_path, width=display_width, height=display_height, lazy=1)
+            else:
+                # Fallback to width-only scaling
+                img = Image(image_path, width=min(width, 5.0)*inch, lazy=1)
 
-            # Add caption
-            if caption:
-                cap_conv = self.converter.convert(caption)
-                self.story.append(Paragraph(cap_conv, self.styles.get_style('Caption')))
+            self.elements.append(Spacer(1, 0.2*cm))
+            self.elements.append(img)
 
-            self.story.append(Spacer(1, 0.1*inch))
-
+            # Clean caption text
+            clean_caption = self._clean_text(caption)
+            self.elements.append(Paragraph(clean_caption, self.styles['FigureCaption']))
+            self.elements.append(Spacer(1, 0.2*cm))
         except Exception as e:
-            print(f"Error adding image {image_path}: {e}")
+            self.elements.append(Paragraph(
+                f"[Figure: {image_path} - {e}]",
+                self.styles['CustomBody']
+            ))
 
-    def add_table(self,
-                  headers: List[str],
-                  rows: List[List[str]],
-                  col_widths: List[float] = None,
-                  repeat_header: bool = True):
+    def generate_from_markdown_with_figures(self, markdown_file: str, figures_dir: str = None):
+        """Generate PDF from markdown with inline figure placement."""
+        with open(markdown_file, 'r', encoding='utf-8') as f:
+            md_content = f.read()
+
+        self.figures_dir = figures_dir or Path(markdown_file).parent / "figures"
+        self._parse_markdown_with_inline_figures(md_content)
+
+    def _parse_markdown_with_inline_figures(self, md_content: str):
+        """Parse markdown with inline figure placement."""
+        lines = md_content.split('\n')
+        i = 0
+
+        # Track if we're in the references/tables section at the end
+        in_end_section = False
+
+        while i < len(lines):
+            line = lines[i].rstrip()
+
+            # Skip empty lines
+            if not line:
+                i += 1
+                continue
+
+            # Check if we've reached the end section (tables/figures list)
+            if line.startswith('## ') and ('Table' in line or 'Figure' in line or 'References' in line):
+                in_end_section = True
+
+            # Skip content in the end section
+            if in_end_section:
+                i += 1
+                continue
+
+            # Check for inline figure references in the text
+            # Matches "Figure N" or "Figure N:" patterns within text
+            figure_match = re.search(r'Figure (\d+):?', line)
+            if figure_match:
+                fig_num = int(figure_match.group(1))
+                if fig_num not in self.embedded_figures:
+                    fig_caption = self._get_figure_caption(fig_num)
+                    fig_path = self._get_figure_path(fig_num)
+                    if fig_path:
+                        self.add_figure(fig_path, f"Figure {fig_num}: {fig_caption}")
+                        self.embedded_figures.add(fig_num)
+
+                        # Remove the figure reference from the line
+                        line = re.sub(r'Figure \d+:?\s*', '', line).strip()
+
+            # Headings
+            if line.startswith('# '):
+                heading_text = self._clean_text(line[2:].replace('*', '').strip())
+                self.add_section(heading_text, level=1)
+            elif line.startswith('## '):
+                heading_text = self._clean_text(line[3:].replace('*', '').strip())
+                self.add_section(heading_text, level=2)
+            elif line.startswith('### '):
+                heading_text = self._clean_text(line[4:].replace('*', '').strip())
+                self.add_section(heading_text, level=3)
+            elif line.startswith('#### '):
+                heading_text = self._clean_text(line[5:].replace('*', '').strip())
+                self.add_section(heading_text, level=4)
+
+            # Tables
+            elif line.startswith('|') and i + 1 < len(lines) and lines[i+1].strip().startswith('|'):
+                table_data = []
+                while i < len(lines) and lines[i].strip().startswith('|'):
+                    row = [cell.strip() for cell in lines[i].strip().split('|')[1:-1]]
+                    if row:  # Only add non-empty rows
+                        table_data.append(row)
+                    i += 1
+
+                if len(table_data) >= 1:
+                    # Skip separator row if present (contains ---)
+                    headers = table_data[0]
+                    rows = [r for r in table_data[1:] if r and not all(c.startswith('---') for c in r)]
+                    self.add_table_with_auto_width(headers, rows)
+                continue
+
+            # Regular text
+            elif line and not line.startswith('**'):
+                para_text = self._process_inline_formatting(line)
+                if para_text:
+                    self.add_paragraph(para_text)
+
+            i += 1
+
+    def _get_figure_caption(self, figure_number: int) -> str:
+        """Get figure caption by number. Supports both V4.0 and legacy figures."""
+        # V4.0 figure captions
+        v40_captions = {
+            1: "STAN-XI-ASTRO V4.0 System Architecture showing the seven-layer structure: Semantic Grounding, Metacognitive Systems, Multi-Mind Orchestration, Meta-Context Engine, Integration, Memory/Knowledge, and Physical Foundation layers",
+            2: "V4.0 Revolutionary Capabilities: (A) Meta-Context Engine with temporal scales and cognitive frames, (B) Autocatalytic Self-Compiler cycle, (C) Cognitive-Relativity Navigator abstraction scale, (D) Multi-Mind Orchestration with seven specialized minds",
+            3: "V95 Semantic Grounding Layer anti-hallucination system showing verification pipeline and performance metrics",
+            4: "STAN-XI-ASTRO Domain Expansion: Original 9 domains (blue), V1.0 expansion +14 domains (green), V4.0 expansion +48 astrophysics domains (orange). Total: 75 domains, all verified operational (100% pass rate)"
+        }
+        # Legacy figure captions
+        legacy_captions = {
+            1: "System architecture showing the four-layer structure: Physical Foundation, Domain, Integration, and Inquiry layers",
+            2: "Domain adaptation accuracy versus number of training examples for various source-target domain pairs",
+            3: "Causal structure learning example for galaxy evolution variables showing the learned directed acyclic graph",
+            4: "Physics curriculum learning stages and mastery progression through fifteen learning stages"
+        }
+
+        # Try V4.0 figures first, then fallback to legacy
+        if figure_number in v40_captions:
+            return v40_captions[figure_number]
+        return legacy_captions.get(figure_number, "")
+
+    def _get_figure_path(self, figure_number: int):
+        """Get figure path by number. Supports both V4.0 and legacy figures."""
+        if not hasattr(self, 'figures_dir'):
+            return None
+        figures_dir = Path(self.figures_dir)
+        if not figures_dir.exists():
+            return None
+
+        # V4.0 figure files
+        v40_figure_files = {
+            1: "figure1_v40_architecture.png",
+            2: "figure2_v40_capabilities.png",
+            3: "figure3_semantic_grounding.png",
+            4: "figure4_domain_expansion_updated.png"
+        }
+        # Legacy figure files
+        legacy_figure_files = {
+            1: "figure1_architecture.png",
+            2: "figure2_adaptation.png",
+            3: "figure3_causal.png",
+            4: "figure4_curriculum.png"
+        }
+
+        # Try V4.0 figures first, then fallback to legacy
+        if figure_number in v40_figure_files:
+            path = figures_dir / v40_figure_files[figure_number]
+            if path.exists():
+                return str(path)
+
+        if figure_number in legacy_figure_files:
+            path = figures_dir / legacy_figure_files[figure_number]
+            if path.exists():
+                return str(path)
+
+        return None
+
+    def add_section(self, title: str, level: int = 1, page_break_before: bool = False):
+        """Add a section heading to the document."""
+        if page_break_before:
+            self.elements.append(PageBreak())
+
+        # Clean title text
+        title = self._clean_text(title)
+
+        if level == 1:
+            self.elements.append(Paragraph(title, self.styles['CustomHeading1']))
+        elif level == 2:
+            self.elements.append(Paragraph(title, self.styles['CustomHeading2']))
+        elif level == 3:
+            self.elements.append(Paragraph(title, self.styles['CustomHeading3']))
+        else:
+            self.elements.append(Paragraph(title, self.styles['CustomBody']))
+
+    def add_paragraph(self, text: str):
+        """Add a paragraph to the document."""
+        # Clean text to fix font issues
+        text = self._clean_text(text)
+        self.elements.append(Paragraph(text, self.styles['CustomBody']))
+
+    def add_table_with_auto_width(self, headers: List[str], rows: List[List[str]], title: str = None):
         """
-        Add a table with proper text wrapping
+        Add a table with automatic width calculation and proper text wrapping.
 
-        Args:
-            headers: Column headers
-            rows: Table data rows
-            col_widths: Optional column widths
-            repeat_header: Whether to repeat header on new pages
+        This method creates tables that:
+        - Automatically calculate column widths to fit page
+        - Wrap long text within cells
+        - Handle multi-line content properly
+        - Clean all text to avoid font rendering issues
         """
-        if not headers or not rows:
-            return
-
-        n_cols = len(headers)
-        if col_widths is None:
-            col_width = self.content_width / n_cols
-            col_widths = [col_width] * n_cols
-
-        # Convert cells to Paragraph objects for proper HTML rendering
-        cell_style = self.styles.get_style('TableCell')
-        header_style = ParagraphStyle(
-            'ASTRATableHeader',
-            parent=cell_style,
-            fontName='Helvetica-Bold',
-            textColor=colors.whitesmoke
-        )
-
-        wrapped_data = []
-
-        # Wrap headers as Paragraphs
-        wrapped_headers = []
-        for h in headers:
-            converted = self.converter.convert(h)
-            wrapped_headers.append(Paragraph(converted, header_style))
-        wrapped_data.append(wrapped_headers)
-
-        # Wrap rows as Paragraphs
+        # Clean all cell content
+        cleaned_headers = [self._clean_text(h) for h in headers]
+        cleaned_rows = []
         for row in rows:
-            wrapped_row = []
-            for cell in row:
-                converted = self.converter.convert(str(cell))
-                wrapped_row.append(Paragraph(converted, cell_style))
-            wrapped_data.append(wrapped_row)
+            cleaned_rows.append([self._clean_text(cell) for cell in row])
 
-        # Create table
-        table = Table(wrapped_data, colWidths=col_widths, repeatRows=1 if repeat_header else 0)
+        # Calculate column widths based on content length
+        num_cols = len(cleaned_headers)
+        available_width = self.available_width
 
-        # Build style
-        style_commands = [
-            ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+        # Find maximum content length for each column
+        col_widths = []
+        for col_idx in range(num_cols):
+            max_length = len(cleaned_headers[col_idx]) if col_idx < len(cleaned_headers) else 0
+
+            for row in cleaned_rows:
+                if col_idx < len(row):
+                    # Split by words to find longest word
+                    words = row[col_idx].split()
+                    if words:
+                        max_word_len = max(len(w) for w in words)
+                        max_length = max(max_length, max_word_len)
+
+            # Calculate width based on character count (assuming ~3pt per character)
+            # Minimum width is at least 1cm for very short columns
+            min_width = max(max_length * 2.5, 25)  # Points per character approximation
+
+            # Limit maximum column width
+            max_col_width = available_width * 0.6
+            col_widths.append(min(min_width, max_col_width))
+
+        # Adjust widths to fit available width
+        total_width = sum(col_widths)
+
+        if total_width > available_width:
+            # Scale down proportionally
+            scale = available_width / total_width
+            col_widths = [w * scale for w in col_widths]
+        elif total_width < available_width * 0.9:
+            # Expand to fill available width (but leave some margin)
+            extra_space = (available_width * 0.9 - total_width) / num_cols
+            col_widths = [w + extra_space for w in col_widths]
+
+        # Convert cells to Paragraphs for proper text wrapping
+        table_data = []
+        for col_idx, header in enumerate(cleaned_headers):
+            table_data.append([Paragraph(header, ParagraphStyle(
+                f'TableHeader_{col_idx}',
+                parent=self.styles['Normal'],
+                fontName='Helvetica-Bold',
+                fontSize=7,
+                alignment=TA_LEFT,
+                leading=9
+            ))])
+
+        for row in cleaned_rows:
+            table_row = []
+            for col_idx, cell in enumerate(row):
+                # Create paragraph with wrapping for each cell
+                # Use default wordWrap handling
+                cell_style = ParagraphStyle(
+                    f'TableCell_{col_idx}',
+                    parent=self.styles['Normal'],
+                    fontName='Times-Roman',
+                    fontSize=7,
+                    alignment=TA_LEFT,
+                    leading=9
+                )
+                table_row.append(Paragraph(cell, cell_style))
+            table_data.append(table_row)
+
+        # Create table with calculated widths
+        t = Table(table_data, colWidths=col_widths)
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('FONTSIZE', (0, 0), (-1, 0), 8),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-            ('TOPPADDING', (0, 0), (-1, 0), 8),
-            ('FONTSIZE', (0, 1), (-1, -1), 8),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
-            ('LEFTPADDING', (0, 0), (-1, -1), 4),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 4),
-        ]
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 7),
+            ('LEFTPADDING', (0, 0), (-1, -1), 3),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, 0), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 4),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 0.3, colors.black),
+            ('LEFTPADDING', (0, 1), (-1, -1), 3),
+            ('RIGHTPADDING', (0, 1), (-1, -1), 3),
+            ('TOPPADDING', (0, 1), (-1, -1), 3),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 3),
+        ]))
 
-        # Add alternating row colors
-        for i in range(1, len(wrapped_data)):
-            row_color = colors.white if i % 2 == 0 else colors.lightgrey
-            style_commands.append(('BACKGROUND', (0, i), (-1, i), row_color))
+        # Add zebra striping for alternating rows
+        for i in range(1, len(cleaned_rows) + 1):
+            if i % 2 == 0:
+                bg_color = colors.Color(0.95, 0.95, 0.95, 1)
+                for j in range(num_cols):
+                    t.setStyle(TableStyle([
+                        ('BACKGROUND', (j, i), (j, i), bg_color),
+                    ]))
 
-        table.setStyle(TableStyle(style_commands))
-        self.story.append(table)
-        self.story.append(Spacer(1, 0.1*inch))
+        if title:
+            self.elements.append(Paragraph(f"<b>{self._clean_text(title)}</b>", self.styles['CustomBody']))
 
-    def add_bullet_list(self, items: List[str], style: str = 'Body'):
-        """Add a bullet list"""
-        for item in items:
-            converted = self.converter.convert(f"&#8226; {item}")
-            self.story.append(Paragraph(converted, self.styles.get_style(style)))
-        self.story.append(Spacer(1, 0.05*inch))
+        self.elements.append(t)
+        self.elements.append(Spacer(1, 0.3*cm))
 
-    def add_numbered_list(self, items: List[str], style: str = 'Body'):
-        """Add a numbered list"""
-        for i, item in enumerate(items, 1):
-            converted = self.converter.convert(f"{i}. {item}")
-            self.story.append(Paragraph(converted, self.styles.get_style(style)))
-        self.story.append(Spacer(1, 0.05*inch))
+    def add_table(self, headers: List[str], rows: List[List[str]], title: str = None):
+        """Add a table to the document (deprecated - use add_table_with_auto_width)."""
+        self.add_table_with_auto_width(headers, rows, title)
 
-    def add_reference(self, text: str):
-        """Add a bibliography reference"""
-        converted = self.converter.convert(text)
-        self.story.append(Paragraph(converted, self.styles.get_style('Reference')))
+    def add_title_page(self, title: str, authors: List[str], affiliations: List[str], date: str):
+        """Add a title page."""
+        self.elements.append(Spacer(1, 2*cm))
 
-    def add_page_break(self):
-        """Add a page break"""
-        self.story.append(PageBreak())
+        # Clean title
+        title = self._clean_text(title)
+        self.elements.append(Paragraph(title, self.styles['CustomTitle']))
+        self.elements.append(Spacer(1, 0.8*cm))
 
-    def add_spacer(self, height: float = 0.2 * inch):
-        """Add vertical space"""
-        self.story.append(Spacer(1, height))
+        for author in authors:
+            self.elements.append(Paragraph(author, ParagraphStyle(
+                "AuthorStyle",
+                parent=self.styles['Normal'],
+                fontSize=11,
+                alignment=TA_CENTER,
+                fontName='Helvetica'
+            )))
 
-    def add_horizontal_rule(self):
-        """Add a horizontal rule"""
-        self.story.append(Paragraph('<hr/>', self.styles.get_style('Body')))
+        self.elements.append(Spacer(1, 0.2*cm))
+
+        for aff in affiliations:
+            self.elements.append(Paragraph(aff, ParagraphStyle(
+                "AffiliationStyle",
+                parent=self.styles['Normal'],
+                fontSize=9,
+                alignment=TA_CENTER,
+                fontName='Helvetica-Oblique'
+            )))
+
+        self.elements.append(Spacer(1, 0.4*cm))
+        self.elements.append(Paragraph(date, ParagraphStyle(
+            "DateStyle",
+            parent=self.styles['Normal'],
+            fontSize=9,
+            alignment=TA_CENTER,
+            fontName='Helvetica'
+        )))
+
+        self.elements.append(PageBreak())
+
+    def add_abstract(self, abstract: str, keywords: List[str] = None):
+        """Add an abstract section."""
+        self.elements.append(Paragraph("<b>Abstract</b>", self.styles['CustomHeading1']))
+
+        # Clean abstract text
+        abstract = self._clean_text(abstract)
+        self.elements.append(Paragraph(abstract, ParagraphStyle(
+            "AbstractStyle",
+            parent=self.styles['CustomBody'],
+            fontName='Times-Italic',
+            leftIndent=1*cm,
+            rightIndent=1*cm,
+            alignment=TA_JUSTIFY
+        )))
+
+        if keywords:
+            kw_text = "<b>Keywords:</b> " + ", ".join(keywords)
+            self.elements.append(Paragraph(kw_text, ParagraphStyle(
+                "KeywordsStyle",
+                parent=self.styles['CustomBody'],
+                fontSize=9,
+                fontName='Times-Italic'
+            )))
+
+        self.elements.append(Spacer(1, 0.4*cm))
+
+    def _process_inline_formatting(self, text: str) -> str:
+        """
+        Process inline markdown formatting SAFELY.
+
+        CRITICAL: This method must:
+        1. Only convert **bold** to <b>bold</b> - NEVER convert single * to <i>
+           because asterisks are used in mathematical expressions (e.g., dyn*cm^2)
+        2. Escape all HTML special characters (<, >, &) except our converted tags
+        3. Handle code backticks carefully
+
+        This prevents issues like:
+        - "dyn*cm^2" becoming "dyn<i>cm^2</i>" (broken formatting)
+        - Raw HTML tags appearing in output
+        - Unicode characters causing rendering errors
+        """
+        # Clean text first (handles unicode)
+        text = self._clean_text(text)
+
+        # Step 1: Protect our valid HTML tags by using placeholders
+        # Bold: **text** -> <b>text</b>
+        text = re.sub(r'\*\*([^*]+?)\*\*', r'%%BOLD_START%%\1%%BOLD_END%%', text)
+
+        # Step 2: Escape ALL HTML special characters
+        text = text.replace('&', '&amp;')
+        text = text.replace('<', '&lt;')
+        text = text.replace('>', '&gt;')
+
+        # Step 3: Restore our protected tags
+        text = text.replace('%%BOLD_START%%', '<b>')
+        text = text.replace('%%BOLD_END%%', '</b>')
+
+        # Step 4: Handle code backticks - escape any remaining special chars inside
+        # We don't convert to <font> because it can cause parsing issues
+        # Just leave code as-is with escaped HTML
+        text = re.sub(r'`([^`]+?)`', r'<font face="Courier">\1</font>', text)
+
+        # DO NOT convert single * to <i> - asterisks are used in math!
+        # This was the source of the bug: "dyn*cm^2" became "dyn<i>cm^2</i>"
+
+        return text
 
     def build(self):
-        """Build the PDF document"""
-        self.doc.build(self.story)
-        print(f"PDF built successfully: {self.output_path}")
-        return self.output_path
+        """Build and save the PDF."""
+        if not REPORTLAB_AVAILABLE:
+            raise ImportError("ReportLab not available")
+        self.doc.build(self.elements)
+        return str(self.filename)
 
 
-# Convenience function for quick PDF generation
-def create_pdf_from_markdown(markdown_file: str,
-                            output_file: str = None,
-                            title: str = None) -> str:
+def generate_stan_paper_with_figures(
+    markdown_file: str,
+    output_pdf: str,
+    title: str = "STAN Paper",
+    authors: List[str] = None,
+    abstract: str = None,
+    keywords: List[str] = None,
+    figures_dir: str = None
+) -> str:
     """
-    Create a PDF from a markdown file
+    Generate STAN paper with embedded figures.
+
+    Convenience function for creating publication-ready PDFs from markdown
+    with embedded figures. Automatically handles figure scaling and placement.
 
     Args:
-        markdown_file: Path to markdown file
-        output_file: Path to output PDF (optional)
-        title: Document title (optional)
+        markdown_file: Path to markdown source file
+        output_pdf: Path for output PDF
+        title: Paper title
+        authors: List of author names
+        abstract: Abstract text
+        keywords: List of keywords
+        figures_dir: Directory containing figure images (defaults to markdown_file.parent/figures)
 
     Returns:
         Path to generated PDF file
     """
-    if output_file is None:
-        output_file = Path(markdown_file).stem + '.pdf'
+    generator = PDFGenerator(
+        filename=output_pdf,
+        title=title,
+        author=", ".join(authors or ["STAN Team"]),
+        subject="Astronomical Research",
+        keywords=keywords or []
+    )
 
-    # Read markdown file
-    with open(markdown_file, 'r') as f:
-        content = f.read()
-
-    # Create PDF generator
-    pdf = ASTRAPDFGenerator(output_file)
-
-    # Simple parser for basic markdown structure
-    lines = content.split('\n')
-    i = 0
-    in_list = False
-    list_items = []
-
-    while i < len(lines):
-        line = lines[i].strip()
-
-        if not line:
-            if in_list and list_items:
-                pdf.add_bullet_list(list_items)
-                list_items = []
-                in_list = False
-            i += 1
-            continue
-
-        # Title
-        if line.startswith('# ') and not line.startswith('##'):
-            if title is None:
-                title = line[2:].strip()
-            pdf.add_title(title)
-            i += 1
-
-        # Headings
-        elif line.startswith('##'):
-            level = len(line) - len(line.lstrip('#'))
-            pdf.add_heading(line.lstrip('#').strip(), level)
-            i += 1
-
-        # Images
-        elif line.startswith('!['):
-            match = re.match(r'!\[(.*?)\]\((.*?)\)', line)
-            if match:
-                caption = match.group(1)
-                img_path = match.group(2)
-                pdf.add_figure(img_path, caption)
-            i += 1
-
-        # Lists
-        elif line.startswith('- ') or line.startswith('* '):
-            list_items.append(line[2:].strip())
-            in_list = True
-            i += 1
-
-        # Tables
-        elif '|' in line and i + 1 < len(lines) and '|' in lines[i + 1]:
-            headers = [h.strip() for h in line.split('|')[1:-1]]
-            i += 2  # Skip separator
-            rows = []
-            while i < len(lines) and '|' in lines[i]:
-                row = [c.strip() for c in lines[i].split('|')[1:-1]]
-                if row:
-                    rows.append(row)
-                i += 1
-            pdf.add_table(headers, rows)
-
-        # Regular paragraph
-        else:
-            if in_list and list_items:
-                pdf.add_bullet_list(list_items)
-                list_items = []
-                in_list = False
-
-            para_text = line
-            while i + 1 < len(lines) and lines[i + 1].strip() and not lines[i + 1].strip().startswith(('#', '-', '*', '|', '!', '##')):
-                para_text += ' ' + lines[i + 1].strip()
-                i += 1
-            pdf.add_paragraph(para_text)
-            i += 1
-
-    # Build PDF
-    return pdf.build()
+    generator.add_title_page(title, authors or ["STAN Team"], ["STAN-XI-ASTRO"], "March 2026")
+    if abstract:
+        generator.add_abstract(abstract, keywords)
+    generator.generate_from_markdown_with_figures(markdown_file, figures_dir)
+    return generator.build()
 
 
-if __name__ == '__main__':
-    # Test the PDF generator
-    print("ASTRA PDF Generator Module")
-    print("="*50)
-    print("Available classes:")
-    print("  - ASTRAPDFGenerator: Main PDF generator")
-    print("  - ASTRAPDFStyles: Style management")
-    print("  - MarkdownConverter: Markdown to HTML")
-    print("  - WrappedTableCell: Table cell wrapping")
-    print()
-    print("Usage:")
-    print("  from astra_core.utils.pdf_generator import ASTRAPDFGenerator")
-    print("  pdf = ASTRAPDFGenerator('output.pdf')")
-    print("  pdf.add_title('My Paper')")
-    print("  pdf.add_paragraph('This is **bold** and *italic* text.')")
-    print("  pdf.build()")
+def create_publication_pdf_from_markdown(
+    markdown_file: str,
+    output_pdf: str,
+    figures_dir: str = None,
+    title: str = None,
+    **metadata
+) -> str:
+    """
+    Create a publication PDF from markdown.
+
+    Simple interface for converting markdown papers to PDF with embedded figures.
+    Detects figures marked with "Figure N" references in the text and embeds them inline.
+
+    Args:
+        markdown_file: Path to markdown source file
+        output_pdf: Path for output PDF
+        figures_dir: Directory containing figure images (defaults to markdown_file.parent/figures)
+        title: Paper title (extracted from first # heading if not provided)
+        **metadata: Additional metadata (author, subject, keywords)
+
+    Returns:
+        Path to generated PDF file
+    """
+    md_path = Path(markdown_file)
+    if not title:
+        # Extract title from first heading
+        with open(md_path, 'r') as f:
+            for line in f:
+                if line.startswith('# '):
+                    title = line[2:].strip()
+                    break
+        title = title or "Document"
+
+    generator = PDFGenerator(
+        filename=output_pdf,
+        title=title,
+        author=metadata.get('author', 'STAN-XI-ASTRO'),
+        subject=metadata.get('subject', ''),
+        keywords=metadata.get('keywords', [])
+    )
+
+    # Auto-detect figures directory if not specified
+    if figures_dir is None:
+        figures_dir = str(md_path.parent / "figures")
+
+    generator.generate_from_markdown_with_figures(markdown_file, figures_dir)
+    return generator.build()
+
+
+__all__ = [
+    'PDFGenerator',
+    'PDFFormat',
+    'TextAlign',
+    'PDFSection',
+    'PDFTable',
+    'PDFCodeBlock',
+    'generate_stan_paper_with_figures',
+    'create_publication_pdf_from_markdown',
+    'REPORTLAB_AVAILABLE',
+    'FPDF_AVAILABLE'
+]
