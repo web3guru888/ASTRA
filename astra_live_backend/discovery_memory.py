@@ -155,7 +155,10 @@ class DiscoveryMemory:
             (max_records,)
         ).fetchall()
         for row in rows:
-            variables = json.loads(row["variables"]) if row["variables"] else []
+            try:
+                variables = json.loads(row["variables"]) if row["variables"] else []
+            except (json.JSONDecodeError, TypeError):
+                variables = []
             rec = DiscoveryRecord(
                 id=row["id"],
                 timestamp=row["timestamp"],

@@ -20,7 +20,60 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from astra_live_backend.engine import DiscoveryEngine
 
-app = FastAPI(title="ASTRA Live API", version="1.0.0")
+
+def _sanitize_for_json(obj):
+    """Recursively convert numpy types to native Python for JSON serialisation."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, (np.bool_,)):
+        return bool(obj)
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        v = float(obj)
+        if np.isnan(v) or np.isinf(v):
+            return None
+        return v
+    if isinstance(obj, np.ndarray):
+        return _sanitize_for_json(obj.tolist())
+    if isinstance(obj, float) and (np.isnan(obj) or np.isinf(obj)):
+        return None
+    return obj
+
+
+class _NumpySafeEncoder(json.JSONEncoder):
+    """JSON encoder that handles numpy types transparently."""
+    def default(self, obj):
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            v = float(obj)
+            if np.isnan(v) or np.isinf(v):
+                return None
+            return v
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
+
+
+class NumpySafeResponse(JSONResponse):
+    """JSONResponse subclass that handles numpy types."""
+    def render(self, content) -> bytes:
+        return json.dumps(
+            _sanitize_for_json(content),
+            ensure_ascii=False,
+        ).encode("utf-8")
+
+
+app = FastAPI(
+    title="ASTRA Live API",
+    version="1.0.0",
+    default_response_class=NumpySafeResponse,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -109,18 +162,18 @@ def api_status():
         "failure_deposits": engine.stigmergy.metrics.get("failure_deposits", 0),
         "novelty_deposits": engine.stigmergy.metrics.get("novelty_deposits", 0),
     }
-    return {
+    return _sanitize_for_json({
         "status": "running" if engine.running else "stopped",
         "engine": state,
         "stigmergy": stigmergy_summary,
         "timestamp": time.time(),
-    }
+    })
 
 
 @app.get("/api/state")
 def api_state():
     """Full engine state for dashboard."""
-    return engine.get_state()
+    return _sanitize_for_json(engine.get_state())
 
 
 @app.get("/api/hypotheses")
