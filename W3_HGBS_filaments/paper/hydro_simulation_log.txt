@@ -1,0 +1,70 @@
+/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/W3_HGBS_filaments/paper/hydro_simulations_2d.py:215: RuntimeWarning: overflow encountered in exp
+  growth_factor = np.exp(np.sqrt(-omega2) * t_s / self.H_cm * self.c_s_cm)
+/Users/gjw255/astrodata/SWARM/ASTRA-dev-main/W3_HGBS_filaments/paper/hydro_simulations_2d.py:219: RuntimeWarning: invalid value encountered in scalar multiply
+  evolved_fourier[i] = perturbation_fourier[i] * growth_factor
+================================================================================
+2D HYDRODYNAMICAL FILAMENT FRAGMENTATION SIMULATIONS
+================================================================================
+
+Parameter grid:
+  L/H: 5, 8, 10, 15, 20
+  P_ext: 0, 5e4, 1e5, 2e5, 5e5 K/cm^3
+  B: 0, 10, 20, 30, 50 μG
+  Taper: 0, 0.1, 0.2
+  Total: 5×5×5×3 = 375 simulations
+
+Running simulations...
+
+Sim   1/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   2/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   3/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   4/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   5/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   6/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   7/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   8/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim   9/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  10/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  11/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  12/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  13/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  14/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  15/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  16/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  17/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  18/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  19/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  20/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  21/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  22/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  23/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  24/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  25/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  26/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  27/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  28/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  29/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  30/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  31/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  32/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  33/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  34/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  35/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  36/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  37/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  38/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  39/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  40/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  41/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  42/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  43/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  44/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  45/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  46/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  47/48: FAILED - unsupported format string passed to NoneType.__format__
+Sim  48/48: FAILED - unsupported format string passed to NoneType.__format__
+
+================================================================================
+COMPLETE: 48 simulations
+Results saved to hydro_results_detailed.json
+================================================================================
