@@ -139,6 +139,20 @@ class DiscoveryMemory:
                 hypothesis_text TEXT,
                 domain TEXT
             );
+            -- Table for cross-session variable affinity persistence
+            CREATE TABLE IF NOT EXISTS variable_affinity (
+                variable_name TEXT PRIMARY KEY,
+                affinity_score REAL DEFAULT 0.0,
+                last_updated REAL DEFAULT 0.0,
+                discovery_count INTEGER DEFAULT 0
+            );
+            -- Table for cross-session domain momentum persistence
+            CREATE TABLE IF NOT EXISTS domain_momentum (
+                domain_name TEXT PRIMARY KEY,
+                momentum_score REAL DEFAULT 0.0,
+                last_updated REAL DEFAULT 0.0,
+                discovery_count INTEGER DEFAULT 0
+            );
         """)
         conn.commit()
         conn.close()
@@ -213,6 +227,14 @@ class DiscoveryMemory:
         ).fetchone()[0]
         self.generation_count = gen_count
 
+        # Load variable affinity from database (cross-session persistence)
+        for row in conn.execute("SELECT * FROM variable_affinity").fetchall():
+            self._variable_affinity[row["variable_name"]] = row["affinity_score"]
+
+        # Load domain momentum from database (cross-session persistence)
+        for row in conn.execute("SELECT * FROM domain_momentum").fetchall():
+            self._domain_momentum[row["domain_name"]] = row["momentum_score"]
+
         conn.close()
 
     # ── Recording ────────────────────────────────────────────────────
@@ -252,12 +274,14 @@ class DiscoveryMemory:
         # Persist to SQLite
         self._persist_discovery(rec)
 
-        # Update variable affinity
+        # Update variable affinity (with cross-session persistence)
         for v in variables:
             self._variable_affinity[v] += strength * 0.3
+            self._persist_variable_affinity(v, self._variable_affinity[v])
 
-        # Update domain momentum
+        # Update domain momentum (with cross-session persistence)
         self._domain_momentum[domain] += strength * 0.2
+        self._persist_domain_momentum(domain, self._domain_momentum[domain])
 
         # Update exploration state
         key = data_source
@@ -341,6 +365,66 @@ class DiscoveryMemory:
             conn.close()
         except Exception as e:
             print(f"[DiscoveryMemory] SQLite persist outcome error: {e}")
+
+    def _persist_variable_affinity(self, variable: str, score: float):
+        """UPDATE or INSERT variable affinity score for cross-session persistence."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            existing = conn.execute(
+                "SELECT discovery_count FROM variable_affinity WHERE variable_name = ?",
+                (variable,)
+            ).fetchone()
+
+            now = time.time()
+            if existing:
+                # Update existing record
+                conn.execute(
+                    """UPDATE variable_affinity
+                       SET affinity_score = ?, last_updated = ?, discovery_count = discovery_count + 1
+                       WHERE variable_name = ?""",
+                    (score, now, variable),
+                )
+            else:
+                # Insert new record
+                conn.execute(
+                    """INSERT INTO variable_affinity (variable_name, affinity_score, last_updated, discovery_count)
+                       VALUES (?, ?, ?, 1)""",
+                    (variable, score, now),
+                )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[DiscoveryMemory] SQLite persist affinity error: {e}")
+
+    def _persist_domain_momentum(self, domain: str, score: float):
+        """UPDATE or INSERT domain momentum score for cross-session persistence."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            existing = conn.execute(
+                "SELECT discovery_count FROM domain_momentum WHERE domain_name = ?",
+                (domain,)
+            ).fetchone()
+
+            now = time.time()
+            if existing:
+                # Update existing record
+                conn.execute(
+                    """UPDATE domain_momentum
+                       SET momentum_score = ?, last_updated = ?, discovery_count = discovery_count + 1
+                       WHERE domain_name = ?""",
+                    (score, now, domain),
+                )
+            else:
+                # Insert new record
+                conn.execute(
+                    """INSERT INTO domain_momentum (domain_name, momentum_score, last_updated, discovery_count)
+                       VALUES (?, ?, ?, 1)""",
+                    (domain, score, now),
+                )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[DiscoveryMemory] SQLite persist momentum error: {e}")
 
     def record_generated_hypothesis(self, source_discovery_id: str,
                                      hypothesis_text: str, domain: str):

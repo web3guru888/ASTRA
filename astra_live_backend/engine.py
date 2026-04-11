@@ -2882,7 +2882,17 @@ class DiscoveryEngine:
             max_new=2,
         )
 
-        if not candidates:
+        # Also generate diversification hypotheses if one domain dominates
+        diversification_candidates = self.hypothesis_generator.generate_diversification_hypotheses(
+            current_cycle=current_cycle,
+            existing_names=existing_names,
+            max_new=2,
+        )
+
+        # Combine candidates (diversification get priority)
+        all_candidates = diversification_candidates + candidates
+
+        if not all_candidates:
             # Fallback: propose from untested variable pairs
             self._propose_from_unexplored_pairs(existing_names)
             return
@@ -2895,7 +2905,7 @@ class DiscoveryEngine:
             for h in self.store.all()
         ]
         filtered = []
-        for c in candidates:
+        for c in all_candidates:
             if not self.hypothesis_generator._is_semantic_duplicate(c, existing_hypotheses):
                 filtered.append(c)
                 existing_hypotheses.append({
