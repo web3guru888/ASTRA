@@ -244,8 +244,34 @@ class DiscoveryMemory:
                          description: str, data_source: str,
                          sample_size: int = 0,
                          effect_size: Optional[float] = None,
-                         metadata: Optional[dict] = None) -> DiscoveryRecord:
-        """Record a scientific finding for future hypothesis generation."""
+                         metadata: Optional[dict] = None) -> Optional[DiscoveryRecord]:
+        """
+        Record a scientific finding for future hypothesis generation.
+
+        Returns None if discovery is a duplicate (same finding_type + data_source + variables
+        already recorded within last 10 cycles).
+        """
+        # ── Deduplication: Check if similar discovery exists ──
+        # Create a key from finding characteristics
+        var_key = tuple(sorted(variables)) if variables else ()
+        dedup_key = (finding_type, data_source, var_key)
+
+        # Check recent discoveries for duplicates (last 10 cycles worth)
+        # Use timestamp-based check instead of cycle since cycle is set by caller
+        now = time.time()
+        for disc in self.discoveries:
+            # Only check recent discoveries (within 1 hour)
+            if now - disc.timestamp > 3600:
+                continue
+
+            # Compare key characteristics
+            disc_var_key = tuple(sorted(disc.variables)) if disc.variables else ()
+            if (finding_type == disc.finding_type and
+                data_source == disc.data_source and
+                var_key == disc_var_key):
+                # Duplicate found! Skip recording.
+                return None
+
         # Composite strength: significance × effect size proxy × log sample size
         sig_score = max(0, 1 - p_value) if p_value <= 1 else 0
         effect_score = min(1.0, abs(statistic) / 10.0)

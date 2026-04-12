@@ -1181,8 +1181,9 @@ class DiscoveryEngine:
                 break
             if h not in targets:
                 targets.append(h)
-        # Always include 1 validated for monitoring
-        if validated:
+        # Include validated hypotheses only occasionally (every 10 cycles)
+        # to prevent duplicate discovery spam while still monitoring proven findings
+        if self.cycle_count % 10 == 0 and validated:
             targets.append(validated[0])
         # Cap at 8 per cycle (more budget since we have more domains now)
         targets = targets[:8]
@@ -2214,7 +2215,12 @@ class DiscoveryEngine:
         testing = self.store.by_phase(Phase.TESTING)
         validated = self.store.by_phase(Phase.VALIDATED)
 
-        targets = testing[:3] + validated[:1]
+        # Test up to 3 TESTING hypotheses
+        targets = testing[:3]
+        # Only test validated hypotheses occasionally (every 10 cycles)
+        # to prevent duplicate discovery spam
+        if self.cycle_count % 10 == 0 and validated:
+            targets += [validated[0]]
         for h in targets:
             conf_before = h.confidence
             tests_before = len(h.test_results)
@@ -3172,6 +3178,23 @@ class DiscoveryEngine:
                 self._log("LIFECYCLE", "ENGINE",
                           f"Queue-pruned {h.id} ({h.name}): confidence {h.confidence:.2f} "
                           f"(queue too deep)", h.id)
+
+        # ── Auto-reseed: If queue is completely empty, seed new hypotheses ──
+        queue_depth = len(self.store.by_phase(Phase.SCREENING)) + len(self.store.by_phase(Phase.TESTING))
+        proposed_count = len(self.store.by_phase(Phase.PROPOSED))
+
+        if queue_depth == 0 and proposed_count == 0:
+            self._log("LIFECYCLE", "ENGINE",
+                      f"Queue empty — reseeding with fresh hypotheses to prevent idle",
+                      "SYSTEM")
+            seed_initial_hypotheses(self.store)
+
+            # Log newly seeded hypotheses
+            new_hypotheses = self.store.all()
+            active_count = len([h for h in new_hypotheses if h.phase != Phase.ARCHIVED])
+            self._log("LIFECYCLE", "ENGINE",
+                      f"Reseeded {active_count} active hypotheses across {len(set(h.domain for h in new_hypotheses))} domains",
+                      "SYSTEM")
 
     # ── Phase 10.6: Exploration Diversification ──────────────────
     def _get_forced_domain(self) -> Optional[str]:
