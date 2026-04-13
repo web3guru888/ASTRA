@@ -186,12 +186,37 @@ def build_dashboard_html(snapshot_data):
 
     html = html.replace(old_status, new_status)
 
-    # Update hardcoded discoveries count with live data
-    discovery_count = (data.get('discovery-memory') or {}).get('improvement', {}).get('total_discoveries', 0)
+    # Update hardcoded discovery and outcome counts with live data
+    import re
+
+    # Get discovery count (total, not unique)
+    discovery_count = (snapshot_data.get('discovery-memory') or {}).get('discovery_count', 0)
+    if discovery_count == 0:
+        discovery_count = (snapshot_data.get('discovery-memory') or {}).get('improvement', {}).get('total_discoveries', 0)
+
+    # Get method outcomes count
+    outcomes_count = (snapshot_data.get('discovery-memory') or {}).get('improvement', {}).get('total_outcomes', 0)
+
     if discovery_count > 0:
-        html = html.replace(
-            'id="si-discoveries-count">102</div>',
-            f'id="si-discoveries-count">{discovery_count}</div>'
+        # Update the key metric value (si-km-discoveries)
+        html = re.sub(
+            r'id="si-km-discoveries">[0-9]+</div>',
+            f'id="si-km-discoveries">{discovery_count}</div>',
+            html
+        )
+        # Also update the summary section (si-discoveries-count)
+        html = re.sub(
+            r'id="si-discoveries-count">.*?</div>',
+            f'id="si-discoveries-count">{discovery_count}</div>',
+            html
+        )
+
+    if outcomes_count > 0:
+        # Update the method outcomes count
+        html = re.sub(
+            r'id="si-km-outcomes">[0-9]+</div>',
+            f'id="si-km-outcomes">{outcomes_count}</div>',
+            html
         )
 
     return html
