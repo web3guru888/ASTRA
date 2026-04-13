@@ -15,7 +15,7 @@
 %   - Conclusion: added cognitive architecture sentence
 %   - Author Contributions: updated for V8.0/V9.0 contributions
 %   - Updated bibliography to references-v6
-%   - Added bibliography entries: Newell1972, Fauconnier2002, Kocsis2006
+%   - Added bibliography entry: Kocsis2006
 %
 % V5.0 revisions (2026-04-06):
 %   - NEW: Stigmergic Swarm Intelligence subsection (Section 2.7) with full technical detail
@@ -96,7 +96,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{newtxtext,newtxmath}
-\usepackage{hyperref}
+% hyperref is already loaded by RASTI.cls — do not reload
 \usepackage{xspace}
 \usepackage{booktabs}
 
@@ -197,7 +197,7 @@ The system integrates multiple specialized components through a coordinated fram
 
 \textbf{What \astra Demonstrates:}
 The six astrophysical test cases show that \astra can: discover physical laws from data with theoretical validation; fuse multi-wavelength observations with proper uncertainty handling; identify established astrophysical relationships through pattern recognition; distinguish causation from correlation; perform rigorous Bayesian model comparison; and operate in knowledge isolation mode to discover patterns and generate testable predictions beyond knowledge retrieval.
-The cross-domain validation (Section~\ref{sec:crossdomain}) further demonstrates that these capabilities generalize to economics, climate science, and epidemiology, recovering approximately 42 validated hypotheses across five scientific domains.
+The cross-domain validation (Section~\ref{sec:crossdomain}) further demonstrates that these capabilities generalize to economics, climate science, and epidemiology, testing approximately 43 hypotheses and validating 38 across five scientific domains.
 
 \textbf{What \astra Does Not Claim:}
 \astra is not presented as achieving artificial general intelligence or AGI-like performance.
@@ -223,7 +223,7 @@ Generalization to additional domains or datasets requires further validation.
 
 \begin{enumerate}
   \item \textbf{Data Processing Pipeline:}
-  \astra accepts heterogeneous astronomical data formats including catalogues (CSV, FITS), time-series data, images, and spectral data.
+  \astra accepts heterogeneous astronomical data formats including catalogues (CSV, Flexible Image Transport System [FITS]), time-series data, images, and spectral data.
   The pipeline performs ingestion, validation, cleaning, and normalization while preserving measurement uncertainties and metadata.
 
   \item \textbf{Physics Engine:}
@@ -232,14 +232,14 @@ Generalization to additional domains or datasets requires further validation.
 
   \item \textbf{Causal Reasoning Module:}
   The causal reasoning module discovers and analyses causal structures using the \pc algorithm \citep{Spirtes2000} for learning directed acyclic graphs from observational data, the \fci algorithm \citep{Zhang2008} for causal discovery in the presence of latent confounders, conditional independence testing for continuous variables (Fisher's $Z$-test), V-structure detection for identifying colliders, do-calculus \citep{Pearl2009} for predicting effects of interventions, and domain-specific adaptations for astrophysical contexts.
-  This module enables \astra to distinguish causal relationships from correlations, addressing a fundamental limitation of both traditional ML and LLM approaches.
+  This module enables \astra to distinguish causal relationships from correlations, addressing a fundamental limitation of both traditional machine learning (ML) and large language model (LLM) approaches.
 
   \item \textbf{Bayesian Inference Engine:}
-  Rigorous model comparison and uncertainty quantification are performed through evidence computation via marginal likelihood estimation, learned harmonic mean estimation \citep{SpurioMancini+2023}, Bayes factors and PSIS-LOO-CV for model comparison \citep{Eadie+2023}, automatic complexity penalty (Occam's razor), posterior predictive checking, and Monte Carlo methods for uncertainty propagation.
+  Rigorous model comparison and uncertainty quantification are performed through evidence computation via marginal likelihood estimation, learned harmonic mean estimation \citep{SpurioMancini+2023}, Bayes factors and Pareto-smoothed importance sampling leave-one-out cross-validation (PSIS-LOO-CV) for model comparison \citep{Eadie+2023}, automatic complexity penalty (Occam's razor), posterior predictive checking, and Monte Carlo methods for uncertainty propagation.
   Model complexity is assessed using the Bayesian Information Criterion \citep[BIC;][]{Schwarz1978} as a rapid approximation where full evidence computation is unnecessary.
 
   \item \textbf{Domain Knowledge Systems:}
-  Organized astrophysical knowledge through MORK ontology encoding taxonomic and causal relationships, knowledge graphs for semantic relationships, vector-based semantic memory for concept retrieval, and 75 specialized domain modules (ISM, star formation, exoplanets, etc.).
+  Organized astrophysical knowledge through the MORK (Modular Ontology Reasoning Kernel) ontology encoding taxonomic and causal relationships, knowledge graphs for semantic relationships, vector-based semantic memory for concept retrieval, and 75 specialized domain modules (interstellar medium [ISM], star formation, exoplanets, etc.).
 
   \item \textbf{Multi-Module Orchestration:}
   Coordinates different analytical perspectives through specialized processing modules for different analysis types, a meta-cognitive layer for context-appropriate module selection, result synthesis and conflict resolution, and quality control and validation checks.
@@ -325,7 +325,7 @@ Capabilities not demonstrated here (temporal reasoning, instrument-aware analysi
 \label{sec:methods:implementation}
 
 \astra is implemented in Python with approximately 313\,000 lines of code across 621~files.
-The system uses established scientific Python libraries (NumPy, SciPy, Pandas, scikit-learn) combined with specialized implementations for causal discovery (\textsc{causal-learn}, \textsc{dowhy}), Bayesian inference (\textsc{dynesty} for nested sampling), and physics simulation (\textsc{astropy} for astronomical constants and coordinate transformations).
+The system uses established scientific Python libraries (\textsc{NumPy}, \textsc{SciPy}, \textsc{Pandas}, \textsc{scikit-learn}) combined with specialized implementations for causal discovery (\textsc{causal-learn}, \textsc{dowhy}), Bayesian inference (\textsc{dynesty} for nested sampling), and physics simulation (\textsc{astropy} for astronomical constants and coordinate transformations).
 
 \textbf{Reproducibility:}
 \astra requires Python~3.10 or later.
@@ -348,7 +348,7 @@ Autonomous discovery systems require continuous human oversight to ensure scient
 \astra provides this through a real-time monitoring dashboard (Fig.~\ref{fig:dashboard}), implemented as a single-page web application served by a \textsc{FastAPI} backend exposing 89~REST endpoints.
 The dashboard is organized into nine operational views; we describe the four primary monitoring views here (the stigmergy view is described in Section~\ref{sec:methods:stigmergy}).
 
-\textbf{Overview} (Fig.~\ref{fig:dashboard}) displays \astra's OODA-loop decision engine, which cycles through five phases---\textsc{Orient}, \textsc{Select}, \textsc{Investigate}, \textsc{Evaluate}, \textsc{Update}---providing a real-time trace of the system's autonomous reasoning.
+\textbf{Overview} (Fig.~\ref{fig:dashboard}) displays \astra's OODA-inspired (Observe--Orient--Decide--Act) decision engine, which cycles through five phases---\textsc{Orient}, \textsc{Select}, \textsc{Investigate}, \textsc{Evaluate}, \textsc{Update}---providing a real-time trace of the system's autonomous reasoning.
 A neural topology graph visualizes the current hypothesis network, and an autonomous decision log records every action with timestamps, enabling full auditability.
 Summary statistics---hypothesis funnel, confidence radar, null-hypothesis distribution, discovery rate, and error rate---give the operator an at-a-glance assessment of the engine's state.
 
@@ -366,7 +366,7 @@ Together, these four views provide the transparency and intervention capability 
 
 \begin{figure*}
   \includegraphics[width=\textwidth]{figures/dashboard-overview-hero.png}
-  \caption{The \astra Live Dashboard overview during autonomous operation. \emph{Left:} Activity stream logging statistical evaluations, FDR corrections, and engine decisions, with the OODA decision engine displaying the current phase of the \textsc{Orient}--\textsc{Select}--\textsc{Investigate}--\textsc{Evaluate}--\textsc{Update} cycle. \emph{Centre:} AGI Neural Topology graph visualizing the hypothesis network with domain-coloured nodes showing hypothesis interconnections. \emph{Right:} Data visualizations including the hypothesis funnel, domain activity, confidence radar, $H_0$ distribution, discovery rate, and error rate. The dashboard provides nine tabbed views for comprehensive system monitoring.}
+  \caption{The \astra Live Dashboard overview during autonomous operation. \emph{Left:} Activity stream logging statistical evaluations, FDR corrections, and engine decisions, with the OODA decision engine displaying the current phase of the \textsc{Orient}--\textsc{Select}--\textsc{Investigate}--\textsc{Evaluate}--\textsc{Update} cycle. \emph{Centre:} Hypothesis network topology graph visualizing domain-coloured nodes showing hypothesis interconnections. \emph{Right:} Data visualizations including the hypothesis funnel, domain activity, confidence radar, $H_0$ distribution, discovery rate, and error rate. The dashboard provides nine tabbed views for comprehensive system monitoring.}
   \label{fig:dashboard}
 \end{figure*}
 
@@ -380,7 +380,7 @@ Together, these four views provide the transparency and intervention capability 
 \label{sec:methods:stigmergy}
 
 Scientific discovery in large hypothesis spaces requires balancing exploration of novel domains against exploitation of productive research directions.
-\astra addresses this through stigmergic swarm intelligence: a biologically-inspired coordination mechanism in which hypotheses leave digital ``pheromone trails'' that guide future exploration, enabling the system to learn from its own discovery history without centralized planning \citep{Grasse1959}.
+\astra addresses this through stigmergic swarm intelligence: a biologically-inspired coordination mechanism in which hypotheses leave digital ``pheromone trails'' that guide future exploration, enabling the system to learn from its own discovery history without centralized planning \citep{Grasse1959,Theraulaz1999}.
 
 \subsubsection{Digital Pheromone Field}
 
@@ -394,7 +394,7 @@ Five pheromone types encode different discovery signals:
   \item \textsc{Exploration} --- deposited whenever a domain is visited, regardless of outcome.
   \item \textsc{Danger} --- deposited at locations where analyses produce anomalous or numerically unstable results.
 \end{itemize}
-Pheromone concentrations evolve according to
+Pheromone concentrations evolve according to equation~(\ref{eq:pheromone}):
 \begin{equation}
   \phi_i(t+1) = (1 - \varepsilon)\,\phi_i(t) + \rho\,\Delta\phi_i,
   \label{eq:pheromone}
@@ -428,7 +428,7 @@ These agents are coordinated by a \texttt{SwarmCoordinator} that maps them to \a
 
 \subsubsection{Pheromone-Guided Hypothesis Selection}
 
-During the \textsc{Select} phase, candidate hypotheses are re-ranked by blending the engine's original score with a pheromone-derived score:
+During the \textsc{Select} phase, candidate hypotheses are re-ranked by blending the engine's original score with a pheromone-derived score (equation~\ref{eq:ranking}):
 \begin{equation}
   s_{\mathrm{final}} = (1 - w)\,s_{\mathrm{engine}} + w\,s_{\mathrm{pheromone}},
   \label{eq:ranking}
@@ -463,7 +463,7 @@ Fig.~\ref{fig:stigmergy} shows the complete stigmergy dashboard view, including 
 
 \begin{figure*}
   \includegraphics[width=\textwidth]{figures/dashboard-verified-discoveries.png}
-  \caption{Verified scientific discoveries recovered by \astra during autonomous operation. Kepler's Third Law from 2\,839 exoplanets (slope 1.497 vs.\ theory 1.500, $R^{2} = 0.9982$); accelerating expansion from 1\,701 Type~Ia supernovae ($+6.6$\,per\,cent excess slope indicating dark energy); galaxy colour bimodality from 2\,000 SDSS galaxies (blue fraction declining from 50\,per\,cent to 10\,per\,cent over 3\,Gyr); stellar populations from Gaia DR3; and causal inference correctly identifying redshift as causing colour changes.}
+  \caption{Verified scientific discoveries recovered by \astra during autonomous operation. Kepler's Third Law from 2\,839 exoplanets (slope 1.497 vs.\ theory 1.500, $R^{2} = 0.9982$); accelerating expansion from 1\,701 Type~Ia supernovae ($+6.6$\,per\,cent excess slope indicating dark energy); galaxy colour bimodality from 2\,000 SDSS galaxies (blue fraction declining from 50\,per\,cent to 10\,per\,cent over 3\,Gyr); stellar populations from Gaia EDR3; and causal inference correctly identifying redshift as causing colour changes.}
   \label{fig:discoveries}
 \end{figure*}
 
@@ -599,13 +599,13 @@ The measured exponent is $0.49 \pm 0.03$, compared to the theoretical value of 0
 
 \textbf{Dimensionless Groups:}
 The Buckingham $\pi$ theorem analysis identifies three independent dimensionless groups from five physical quantities (width, line mass, velocity dispersion, column density, sound speed), correctly reducing the parameter space and guiding the search for physically meaningful scaling relations.
-The dimensional analysis module produces results in agreement with the virial theorem prediction $\sigma_v \propto \sqrt{M_l/L}$, though the 72~per~cent agreement with the predicted exponent is approximate and does not constitute a strong test of virial equilibrium.
+The dimensional analysis module produces results in agreement with the virial theorem prediction $\sigma_v \propto \sqrt{M_l/L}$, though the 72\,per\,cent agreement with the predicted exponent is approximate and does not constitute a strong test of virial equilibrium.
 
 \textbf{Theoretical Origin of Filament Widths:}
-In evaluating competing mechanisms for the observed characteristic width, \astra autonomously tested four theoretical length scales. The system identified the **turbulent dissipation scale (sonic scale)** as the statistically preferred model:
+In evaluating competing mechanisms for the observed characteristic width, \astra autonomously tested five theoretical length scales. The system identified the \emph{turbulent dissipation scale} (sonic scale) as the statistically preferred model:
 \begin{itemize}
-  \item \emph{Sonic Scale (best match):} Predicts $0.080 \pm 0.000$~pc, exhibiting minimal scatter across diverse ISM conditions and agreeing with the observed median value within 20~per~cent. High theoretical robustness based on the transition from supersonic to subsonic turbulence.
-  \item \emph{Ostriker Hydrostatic Scale (plausible):} Predicts $0.088 \pm 0.073$~pc, broadly consistent in the mean but dominated by 83.5~per~cent system-derived scatter over realistic conditions, lowering its predictive power.
+  \item \emph{Sonic Scale (best match):} Predicts $0.080$~pc with negligible scatter ($<0.001$~pc) across diverse ISM conditions, agreeing with the observed median value within 20\,per\,cent. The theoretical robustness arises from the transition from supersonic to subsonic turbulence.
+  \item \emph{Ostriker Hydrostatic Scale (plausible):} Predicts $0.088 \pm 0.073$~pc, broadly consistent in the mean but dominated by 83.5\,per\,cent system-derived scatter over realistic conditions, lowering its predictive power.
   \item \emph{Poor/Rejected Models:} \astra rejected the Thermal Jeans Length ($0.28 \pm 0.23$~pc), Turbulent Jeans Length ($0.87 \pm 0.73$~pc), and Ion-Neutral Damping scales as severely overpredicting the observed widths by factors of 3 to orders of magnitude. 
 \end{itemize}
 
@@ -614,8 +614,8 @@ In evaluating competing mechanisms for the observed characteristic width, \astra
 
 The results are consistent with several established results in the ISM filament literature:
 \begin{itemize}
-  \item The ${\sim}0.1$~pc characteristic width is strongly supported by \astra's analysis as the sonic scale, where turbulent and thermal pressures are comparable \citep{Andre2010}. The insensitivity of this scale to local temperature and density explains the observed universality of filament widths.
-  \item This mechanism naturally links the filament fragmentation scale ($\approx 4\times$ width, or $\sim$0.4~pc) to the peak of the Stellar Initial Mass Function (IMF). Assuming typical densities, \astra calculates a core mass of $\sim$0.15~M$_\odot$, in excellent agreement (25~per~cent difference) with the empirically observed IMF peak ($\sim$0.2~M$_\odot$).
+  \item The ${\sim}0.1$~pc characteristic width is consistent with the sonic scale identified by \astra's analysis, where turbulent and thermal pressures are comparable \citep{Andre2010}. The insensitivity of this scale to local temperature and density may explain the observed universality of filament widths.
+  \item This mechanism suggests a natural link between the filament fragmentation scale ($\approx 4\times$ width, or $\sim$0.4~pc) and the peak of the Stellar Initial Mass Function (IMF), as noted in the literature \citep{Andre2010}. Assuming typical densities, \astra estimates a core mass of $\sim$0.15~M$_\odot$, consistent with (within 25\,per\,cent of) the empirically observed IMF peak ($\sim$0.2~M$_\odot$).
   \item The strong virial scaling relation ($r = 0.988$) suggests these filaments are approximately in virial equilibrium.
   \item Dimensional analysis correctly identifies the key physical quantities and their relationships without requiring prior specification of the expected functional form.
 \end{itemize}
@@ -624,8 +624,8 @@ The results are consistent with several established results in the ISM filament 
 The identified relations are well-established in the literature; the value of this test case is not in novel discovery but in demonstrating \astra's ability to correctly recover known physical scaling relations through automated dimensional analysis and statistical fitting.
 
 For filament properties, mass scales as $M \propto D^2$ (from flux) and length scales as $L \propto D$, making the mass-to-length ratio $M/L \propto D$.
-A systematic distance uncertainty of 20~per~cent---typical for kinematic distance estimates to molecular cloud complexes---propagates to a $\sim$20~per~cent systematic uncertainty in $M/L$.
-This is comparable to the 12~per~cent discrepancy between measured and theoretical virial slopes, suggesting that distance systematics alone could account for much of the observed $2.7\sigma$ tension.
+A systematic distance uncertainty of 20\,per\,cent---typical for kinematic distance estimates to molecular cloud complexes---propagates to a $\sim$20\,per\,cent systematic uncertainty in $M/L$.
+This is comparable to the 12\,per\,cent discrepancy between measured and theoretical virial slopes, suggesting that distance systematics alone could account for much of the observed $2.7\sigma$ tension.
 
 % ======================================================================
 \section{Test Case 2: Multi-Wavelength Data Fusion}
@@ -660,7 +660,7 @@ Figure~\ref{fig:crossmatch} shows the cross-matching results.
 \subsection{Results}
 \label{sec:tc2:results}
 
-From the input catalogues, \astra identifies 60~secure matches from 370~X-ray sources, with a false match rate below 5~per~cent.
+From the input catalogues, \astra identifies 60~secure matches from 370~X-ray sources, with a false match rate below 5\,per\,cent.
 Source classification based on X-ray and optical properties yields:
 \begin{itemize}
   \item 41 Active Galactic Nuclei (AGN), identified by high X-ray-to-optical flux ratios and hard X-ray spectra
@@ -682,7 +682,7 @@ The high AGN fraction among cross-matched sources reflects the X-ray selection f
 \textbf{Limitations:} The zero count of normal galaxies classified is a selection effect, not a physical result.
 The cross-matching uses standard Bayesian methods and does not introduce novel algorithmic developments.
 The value of this test case is in demonstrating \astra's ability to chain catalogue cross-matching, uncertainty propagation, and physical classification within a single integrated workflow.
-We note that the 68~per~cent AGN fraction in our 60-source matched sample is not representative of the full CDFS X-ray source population, which includes many optically faint high-redshift AGN; the tri-band secure detection requirement biases the sample toward the brightest, most compact, and lowest-redshift sources.
+We note that the 68\,per\,cent AGN fraction in our 60-source matched sample is not representative of the full CDFS X-ray source population, which includes many optically faint high-redshift AGN; the tri-band secure detection requirement biases the sample toward the brightest, most compact, and lowest-redshift sources.
 
 % ======================================================================
 \section{Test Case 3: Pattern Recognition in Galaxy Properties}
@@ -874,7 +874,7 @@ The strong preference for power-law/logarithmic models over linear ($33\,000\tim
 \textbf{Theoretical Validation:}
 The power-law model corresponds to the virial theorem prediction $\sigma_v \propto \sqrt{M/L}$.
 The measured exponent is $0.0812 \pm 0.0043$, compared to the theoretical value of 0.0927.
-The dimensionless parameter ratio is $0.0812/0.0927 = 0.88$ (88~per~cent of the predicted value), corresponding to the 72~per~cent agreement reported in Section~\ref{sec:tc1}'s dimensional analysis.
+The dimensionless parameter ratio is $0.0812/0.0927 = 0.88$ (88\,per\,cent of the predicted value), corresponding to the 72\,per\,cent agreement reported in Section~\ref{sec:tc1}'s dimensional analysis.
 This $2.7\sigma$ tension is suggestive but not definitive, and may reflect real physics (non-thermal support, magnetic fields) or systematic effects in the small sample.
 
 \begin{figure*}
@@ -960,7 +960,7 @@ We constructed a synthetic dataset of 500 molecular cloud regions with the follo
   \item[(ii)] \textbf{Temperature:} Inversely correlated with star formation through the Jeans mass ($M_J \propto T^{3/2}$).
 \end{enumerate}
 
-The synthetic data include: realistic measurement uncertainties (5--15~per~cent); non-linear relationships (power laws, thresholds); latent confounders (cloud mass affects both column density and Jeans mass); and selection effects (biased toward detectable star-forming regions).
+The synthetic data include: realistic measurement uncertainties (5--15\,per\,cent); non-linear relationships (power laws, thresholds); latent confounders (cloud mass affects both column density and Jeans mass); and selection effects (biased toward detectable star-forming regions).
 
 \subsection{Results}
 \label{sec:tc6:results}
@@ -1001,7 +1001,7 @@ The \fci algorithm \citep{Zhang2008}, which accounts for latent confounders, ref
   \item Column density $\rightarrow$ SFR: \textbf{Identified as having a latent common cause} (cloud mass, which is not directly measured). \astra correctly identifies column density as a proxy rather than a direct cause.
 \end{itemize}
 
-This is the key result: \astra correctly distinguishes the three genuine causal drivers from the correlated proxy variable, despite column density having the highest univariate feature importance.
+This is the key result: \astra correctly distinguishes the three genuine causal drivers from the correlated proxy variable, despite column density having the highest univariate feature importance (Fig.~\ref{fig:tc6_causal}).
 
 \begin{figure*}
   \centering
@@ -1099,14 +1099,14 @@ Definitive scientific discovery requires collaboration with domain experts and o
 % ======================================================================
 
 Beyond the controlled test cases above, \astra has been deployed on live astronomical datasets drawn from public archives, producing results that independently validate the framework's capabilities on real-world data at scale.
-Across six deployments, the system processed more than 12\,000 individual objects from four independent archives (NASA Exoplanet Archive, Pantheon+, SDSS, Gaia EDR3).
+Across six deployments, the system processed more than 11\,500 individual objects from four independent archives (NASA Exoplanet Archive, Pantheon+, SDSS, Gaia EDR3).
 In each case, \astra operated without prior guidance on what relationships to seek; the system ingested the data, autonomously identified patterns, applied causal and physical reasoning, and returned interpretations that we compare with established results.
 
 \subsection{Kepler's Third Law Recovery}
 \label{sec:live:kepler}
 
 \astra analysed 2\,839 confirmed exoplanets from the NASA Exoplanet Archive with measured orbital periods, semi-major axes, and host-star masses.
-Operating in discovery mode, the system autonomously identified a power-law relationship between orbital period~$P$ and semi-major axis~$a$, recovering the multivariate fit
+Operating in discovery mode, the system autonomously identified a power-law relationship between orbital period~$P$ and semi-major axis~$a$, recovering the multivariate fit (equation~\ref{eq:kepler})
 \begin{equation}
   \log P = 1.497\,\log a - 0.474\,\log M_{\star},
   \label{eq:kepler}
@@ -1120,7 +1120,7 @@ This demonstrates \astra's ability to rediscover fundamental physical laws direc
 \subsection{Accelerating Expansion (Dark Energy Signature)}
 \label{sec:live:sne}
 
-From 1\,701 Type~Ia supernovae in the Pantheon+ compilation \citep{Brout2022}, \astra fitted a distance modulus--redshift relation
+From 1\,701 Type~Ia supernovae in the Pantheon+ compilation \citep{Brout2022}, \astra fitted a distance modulus--redshift relation (equation~\ref{eq:sne})
 \begin{equation}
   \mu = 5.33\,\log_{10}(z) + 24.42,
   \label{eq:sne}
@@ -1164,7 +1164,7 @@ This is a non-trivial result: in purely correlational analyses, redshift and col
 \label{sec:live:galaxy}
 
 As an additional deployment, \astra was applied in discovery mode to a realistic galaxy survey of 3\,000 galaxies with properties drawn from SDSS scaling relations \citep{Elbaz2007,Mannucci2010}.
-Operating without prior hypotheses, \astra recovered: (i)~the star-forming main sequence ($\log \mathrm{SFR} = 0.59\,\log M_* - 5.45$, $r^2 = 0.72$); (ii)~the mass--metallicity relation; and (iii)~identified 150 outlier galaxies ($5$~per~cent) warranting follow-up investigation through multi-dimensional anomaly detection.
+Operating without prior hypotheses, \astra recovered: (i)~the star-forming main sequence ($\log \mathrm{SFR} = 0.59\,\log M_* - 5.45$, $r^2 = 0.72$); (ii)~the mass--metallicity relation; and (iii)~identified 150 outlier galaxies ($5$\,per\,cent) warranting follow-up investigation through multi-dimensional anomaly detection.
 This demonstrates \astra's capacity for automated pattern discovery and triage in survey-scale datasets.
 Full scripts and results are available in the online supplementary material (Example~6).
 
@@ -1237,7 +1237,7 @@ The system tested for an El Ni\~{n}o--Southern Oscillation (ENSO) modulation sig
   \item[(i)] \textbf{Infant mortality vs.\ GDP:} \astra identifies a strong negative relationship between infant mortality rate and GDP per capita ($R^{2} = 0.587$), with a logarithmic functional form providing the best fit---consistent with diminishing marginal returns of wealth on health outcomes.
   \item[(ii)] \textbf{Preston Curve:} Life expectancy increases with GDP per capita following a concave (logarithmic) relationship ($R^{2} = 0.686$), recovering the classic Preston Curve \citep{Preston1975}. The system correctly notes the flattening at high GDP, indicating saturation of the wealth--health relationship.
   \item[(iii)] \textbf{Life expectancy vs.\ health spending:} Health expenditure per capita is positively associated with life expectancy ($r = 0.62$, $p < 10^{-12}$), though \astra's causal module flags the likely bidirectional relationship (wealthier countries both spend more on health and have longer life expectancies, with GDP as a common cause).
-  \item[(iv)] \textbf{DPT vaccination coverage:} DPT3 vaccination coverage is negatively correlated with infant mortality ($r = -0.65$, $p < 10^{-15}$), consistent with the established effectiveness of childhood vaccination programmes.
+  \item[(iv)] \textbf{DPT vaccination coverage:} Diphtheria--pertussis--tetanus (DPT3) vaccination coverage is negatively correlated with infant mortality ($r = -0.65$, $p < 10^{-15}$), consistent with the established effectiveness of childhood vaccination programmes.
   \item[(v)] \textbf{Maternal mortality:} Maternal mortality ratio is strongly negatively associated with GDP per capita ($r = -0.58$, $p < 10^{-10}$) and with skilled birth attendance ($r = -0.71$, $p < 10^{-18}$), consistent with the role of healthcare infrastructure in reducing maternal deaths.
 \end{enumerate}
 
@@ -1307,7 +1307,7 @@ Astrophysics & HR main sequence & $r = 0.90$, $p < 10^{-100}$ & \checkmark & Gai
 Astrophysics & Causal direction ($z \to$ colour) & Correct orientation & \checkmark & Gaia+SDSS \\
 \midrule
 \multicolumn{5}{l}{\textit{Economics}} \\
-Economics & Okun's Law & $-1.8$\%/1\% GDP & \checkmark & World Bank \\
+Economics & Okun's Law & $-1.8$\,per\,cent/1\,per\,cent GDP & \checkmark & World Bank \\
 Economics & Trade--GDP correlation & $r = 0.41$, $p < 10^{-5}$ & \checkmark & World Bank \\
 Economics & Gini persistence & $r = 0.92$ (5-yr lag) & \checkmark & World Bank \\
 Economics & PPP convergence & Decadal convergence & \checkmark & World Bank \\
@@ -1320,7 +1320,7 @@ Economics & Phillips Curve & $r = -0.03$, $p = 0.62$ & $\times$ & World Bank \\
 \midrule
 \multicolumn{5}{l}{\textit{Climate Science}} \\
 Climate & CO$_{2}$--temp.\ correlation & $R^{2} = 0.936$ & \checkmark & GISS + NOAA \\
-Climate & Warming acceleration & 67\% faster post-1990 & \checkmark & GISS \\
+Climate & Warming acceleration & 67\,per\,cent faster post-1990 & \checkmark & GISS \\
 Climate & CO$_{2}$ growth acceleration & 1.0 $\to$ 2.4\,ppm\,yr$^{-1}$ & \checkmark & NOAA \\
 Climate & Decadal warming trend & $p < 0.001$ & \checkmark & GISS \\
 Climate & ENSO modulation & Inconclusive & -- & GISS \\
@@ -1360,7 +1360,7 @@ This 88\,per\,cent validation rate---achieved without domain-specific tuning and
 \subsection{What ASTRA Demonstrates}
 \label{sec:discussion:demonstrates}
 
-The six controlled astrophysical test cases, six live deployments, cross-domain validation, and stigmergic swarm intelligence collectively analyse data drawn from more than a dozen independent sources spanning five scientific domains, with 397~total discoveries and 38~validated hypotheses.
+The six controlled astrophysical test cases, six live deployments, cross-domain validation, and stigmergic swarm intelligence collectively analyse data drawn from more than a dozen independent sources spanning five scientific domains, with 397~total discoveries and 38~validated hypotheses (Fig.~\ref{fig:discoveries}).
 The astrophysical analyses process more than 27\,430 data points from nine sources, while the cross-domain validation draws on national-level panel data for 217 countries over six decades (World Bank), global temperature records spanning 143 years (NASA GISS), and atmospheric CO$_{2}$ measurements covering 65 years (NOAA Mauna Loa).
 Rather than repeating individual results, we reflect here on what these collective demonstrations reveal about \astra's strengths and limitations.
 
@@ -1496,7 +1496,7 @@ We have presented \astra (Autonomous System for Scientific Discovery in Astrophy
 Through six controlled astrophysical test cases, six live deployments on archival data, and cross-domain validation across economics, climate science, and epidemiology, we have demonstrated \astra's technical capabilities across 38 validated hypotheses in five scientific domains, with a stigmergic swarm intelligence layer coordinating autonomous hypothesis exploration through biologically-inspired agents (Fig.~\ref{fig:stigmergy}).
 
 The controlled test cases validate \astra's core analytical modules on real observational data.
-The scaling relations analysis (Test~1) recovers the ${\sim}0.1$~pc filament width and virial scaling ($r = 0.988$) from 24 Herschel filaments; the multi-wavelength fusion (Test~2) achieves Bayesian cross-matching in the CDFS with a $<$5~per~cent false match rate; and the pattern recognition (Test~3) identifies established galaxy relationships including the mass--metallicity relation and environmental quenching from 600 SDSS galaxies.
+The scaling relations analysis (Test~1) recovers the ${\sim}0.1$~pc filament width and virial scaling ($r = 0.988$) from 24 Herschel filaments; the multi-wavelength fusion (Test~2) achieves Bayesian cross-matching in the CDFS with a $<$5\,per\,cent false match rate; and the pattern recognition (Test~3) identifies established galaxy relationships including the mass--metallicity relation and environmental quenching from 600 SDSS galaxies.
 The causal inference demonstrator (Test~4) correctly recovers textbook causal relationships from 1000 Gaia stars, and the Bayesian model selection (Test~5) demonstrates the automatic Occam's razor, strongly preferring power-law and logarithmic models over linear and broken power-law alternatives.
 
 The discovery-mode test (Test~6) provides the strongest evidence of \astra's analytical capabilities.
@@ -1517,7 +1517,7 @@ The complete source code, documentation, and reproducible analysis notebooks are
 
 This work uses data from Gaia DR2 and EDR3, Herschel Gould Belt Survey, HST ACS, Chandra Deep Field South, SDSS, the NASA Exoplanet Archive, and the Pantheon+ supernova compilation.
 The cross-domain validation uses data from the World Bank Open Data repository (\url{https://data.worldbank.org}), the NASA Goddard Institute for Space Studies (GISS) Surface Temperature Analysis, and the NOAA Global Monitoring Laboratory Mauna Loa CO$_{2}$ record.
-We acknowledge the use of community software tools including \textsc{causal-learn}, \textsc{dowhy}, NumPy, SciPy, and scikit-learn.
+We acknowledge the use of community software tools including \textsc{causal-learn}, \textsc{dowhy}, \textsc{NumPy}, \textsc{SciPy}, and \textsc{scikit-learn}.
 
 The stigmergic swarm intelligence layer (Section~\ref{sec:methods:stigmergy}) builds upon foundational work on stigmergic intelligence and autonomous navigation by \citet{Dey2025} at OpenHub, Thailand.
 OpenHub served as a research partner for this work, contributing to the development and testing of ASTRA's autonomous research capabilities through the Taurus multi-agent orchestration platform (\url{https://taurus.cloud}).
