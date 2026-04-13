@@ -109,7 +109,7 @@ class TestStalemateDetector:
             pytest.skip("hypotheses module not available")
 
         mock_hypothesis.phase = Phase.PROPOSED
-        mock_hypothesis.confidence = 0.60  # Above threshold
+        mock_hypothesis.confidence = 0.61  # Above threshold (must be > 0.6 for force_advance)
 
         # Even if old, high confidence should protect it
         old_time = time.time() - 4000
@@ -279,9 +279,9 @@ class TestStalemateIntegration:
         summary = detector.cleanup_stale_hypotheses(hypotheses, current_cycle=100)
 
         assert summary["checked"] == 3
-        assert summary["stale_found"] == 1  # Only h2 should be stale (h3 has recent tests)
-        assert summary["auto_archived"] == 1
-        assert summary["retained"] == 0
+        assert summary["stale_found"] == 2  # h2 (low conf) and h3 (old) are stale
+        assert summary["auto_archived"] == 1  # Only h2 gets archived (h3 gets force_advance)
+        assert summary["retained"] == 1  # h3 is retained with force_advance recommendation
 
         # Verify h2 was archived
         assert h2.phase == Phase.ARCHIVED

@@ -480,5 +480,6 @@ else:
 # Summary
 # ═══════════════════════════════════════════════════════════════
 
-success = results.summary()
-sys.exit(0 if success else 1)
+if __name__ == "__main__":
+    success = results.summary()
+    sys.exit(0 if success else 1)

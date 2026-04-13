@@ -13992,8 +13992,8 @@ body::after {
   function renderSiKeyMetrics(data) {
     var imp = data.improvement || SI_SNAPSHOT.improvement;
     var el;
-    // Access via improvement object since that's how API returns it
-    var totalDisc = imp.total_discoveries || SI_SNAPSHOT.improvement?.total_discoveries || data.total_discoveries || 0;
+    // Use unique_discoveries (excluding duplicates) instead of total_discoveries
+    var totalDisc = imp.unique_discoveries || SI_SNAPSHOT.improvement?.unique_discoveries || data.unique_discovery_count || imp.total_discoveries || 0;
     var totalOut = imp.total_outcomes || SI_SNAPSHOT.improvement?.total_outcomes || data.total_outcomes || 0;
     el = document.getElementById('si-km-discoveries'); if(el) el.textContent = totalDisc;
     el = document.getElementById('si-km-outcomes'); if(el) el.textContent = totalOut;
@@ -14119,9 +14119,15 @@ body::after {
       hypotheses = s['hypotheses'] || await api('/api/hypotheses');
     } catch(e) { console.warn('Literature data fetch error:', e); }
 
-    renderPaperLibrary(papers);
+    // Extract papers array from response if wrapped
+    var papersArray = papers;
+    if (papers && papers.papers && Array.isArray(papers.papers)) {
+      papersArray = papers.papers;
+    }
+
+    renderPaperLibrary(papersArray);
     renderCitationNetwork(citGraph);
-    renderNoveltyScores(papers, hypotheses);
+    renderNoveltyScores(papersArray, hypotheses);
     renderLiteratureMetrics(citMetrics);
   }
 
