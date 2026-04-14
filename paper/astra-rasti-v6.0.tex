@@ -1,6 +1,16 @@
-% astra-rasti.tex — ASTRA RASTI Paper V6.0
+% astra-rasti.tex — ASTRA RASTI Paper V6.4
 % Original conversion from PDF text on 2026-04-04; enhanced to V2.0; revised to V2.1; V2.2 cross-domain
 % Uses RASTI document class (rasti.cls)
+%
+% V6.4 revisions (2026-04-14) — P0/P1 factual fixes from Scout verification:
+%   P0-1: Pantheon+: "1,701 Type Ia SNe" → "1,701 light curves of 1,550 distinct Type Ia SNe"
+%   P0-2: Downsizing: Brinchmann2004 → Cowie1996; "less efficiently" → "earlier, at higher redshift"
+%   P0-3: Sonic scale: Andre2010 → Arzoumanian2011 (who actually introduced sonic scale interpretation)
+%   P1-4: Arzoumanian2019 σ: clarified as ASTRA's fitted value; noted IQR=0.07 pc (not σ in dex)
+%   P1-5: Panopoulou2022: rewritten to properly represent their resolution-artifact conclusion
+%   P1-6: 4×width→IMF: Andre2010 → Andre2014; framed as ASTRA analysis citing the literature
+%   P1-7: Strateva2001: added note on u*-r* vs u-g; added Baldry2004 as primary bimodality ref
+%   Bib: added Cowie1996, Andre2014, Baldry2004
 %
 % V6.0 revisions (2026-04-08):
 %   - NEW: Section 2.9 Cognitive Architecture (knowledge graph, neuro-symbolic, meta-cognition)
@@ -462,7 +472,7 @@ Fig.~\ref{fig:stigmergy} shows the complete stigmergy dashboard view, including 
 
 \begin{figure*}
   \includegraphics[width=\textwidth]{figures/dashboard-verified-discoveries.png}
-  \caption{Verified scientific discoveries recovered by \astra during autonomous operation. Kepler's Third Law from 2\,839 exoplanets (slope 1.497 vs.\ theory 1.500, $R^{2} = 0.9982$); accelerating expansion from 1\,701 Type~Ia supernovae ($+6.6$\,per\,cent excess slope indicating dark energy); galaxy colour bimodality from 2\,000 SDSS galaxies (blue fraction declining from 50\,per\,cent to 10\,per\,cent over 3\,Gyr); stellar populations from Gaia EDR3; and causal inference correctly identifying redshift as causing colour changes.}
+  \caption{Verified scientific discoveries recovered by \astra during autonomous operation. Kepler's Third Law from 2\,839 exoplanets (slope 1.497 vs.\ theory 1.500, $R^{2} = 0.9982$); accelerating expansion from 1\,550 distinct Type~Ia supernovae (Pantheon+; $+6.6$\,per\,cent excess slope indicating dark energy); galaxy colour bimodality from 2\,000 SDSS galaxies (blue fraction declining from 50\,per\,cent to 10\,per\,cent over 3\,Gyr); stellar populations from Gaia EDR3; and causal inference correctly identifying redshift as causing colour changes.}
   \label{fig:discoveries}
 \end{figure*}
 
@@ -578,7 +588,7 @@ Figure~\ref{fig:scaling} shows the scaling relations identified by \astra.
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{figures/fig1-scaling-relations.pdf}
-  \caption{Scaling relations for 24 Herschel filaments identified by \astra. \emph{Top panel:} Width distribution showing a characteristic scale of $0.098 \pm 0.019$~pc, consistent with the ${\sim}0.1$~pc ``universal width'' reported by \citet{Arzoumanian2011} (though see \citealt{Panopoulou2022} for discussion of apparent universality). \emph{Bottom panel:} Line mass vs.\ velocity dispersion, showing the virial scaling relation with Pearson correlation $r = 0.988$, $p < 10^{-18}$.}
+  \caption{Scaling relations for 24 Herschel filaments identified by \astra. \emph{Top panel:} Width distribution showing a characteristic scale of $0.098 \pm 0.019$~pc, consistent with the ${\sim}0.1$~pc ``universal width'' reported by \citet{Arzoumanian2011} (though see \citealt{Panopoulou2022}, who argue this value may partly reflect instrumental resolution). \emph{Bottom panel:} Line mass vs.\ velocity dispersion, showing the virial scaling relation with Pearson correlation $r = 0.988$, $p < 10^{-18}$.}
   \label{fig:scaling}
 \end{figure*}
 
@@ -589,8 +599,8 @@ Figure~\ref{fig:scaling} shows the scaling relations identified by \astra.
 
 \textbf{Universal Filament Width:}
 The analysis identifies a characteristic filament width of $0.098 \pm 0.019$~pc, consistent with the ${\sim}0.1$~pc value reported by \citet{Arzoumanian2011} from a larger sample.
-The width distribution is well-described by a log-normal with $\sigma = 0.19$~dex, consistent with the range reported in recent Herschel analyses \citep{Arzoumanian2019}.
-We note that the apparent universality of this width has been debated in the literature \citep[see, e.g.,][for a discussion of resolution effects]{Panopoulou2022}.
+The width distribution is well-described by a log-normal with $\sigma = 0.19$~dex (this is \astra's fitted value); \citet{Arzoumanian2019} report a median width of 0.10~pc with an interquartile range of 0.07~pc from a larger Herschel sample, though the statistics are not directly comparable.
+However, the universality of this characteristic width has been challenged by \citet{Panopoulou2022}, who demonstrate that measured filament widths scale with distance and effective beam size, suggesting the 0.1~pc value may partly reflect instrumental resolution rather than an intrinsic physical scale.
 
 \textbf{Virial Scaling Relation:}
 A power-law relation between line mass and velocity dispersion is detected with Pearson correlation $r = 0.988$, $p < 10^{-18}$, consistent with virial equilibrium predictions.
@@ -613,8 +623,8 @@ In evaluating competing mechanisms for the observed characteristic width, \astra
 
 The results are consistent with several established results in the ISM filament literature:
 \begin{description}
-  \item The ${\sim}0.1$~pc characteristic width is consistent with the sonic scale identified by \astra's analysis, where turbulent and thermal pressures are comparable \citep{Andre2010}. The insensitivity of this scale to local temperature and density may explain the observed universality of filament widths.
-  \item This mechanism suggests a natural link between the filament fragmentation scale ($\approx 4\times$ width, or $\sim$0.4~pc) and the peak of the Stellar Initial Mass Function (IMF), as noted in the literature \citep{Andre2010}. Assuming typical densities, \astra estimates a core mass of $\sim$0.15~M$_\odot$, consistent with (within 25\,per\,cent of) the empirically observed IMF peak ($\sim$0.2~M$_\odot$).
+  \item The ${\sim}0.1$~pc characteristic width is consistent with the sonic scale identified by \astra's analysis, where turbulent and thermal pressures are comparable \citep{Arzoumanian2011}. The insensitivity of this scale to local temperature and density may explain the observed universality of filament widths.
+  \item This mechanism suggests a natural link between the filament fragmentation scale ($\approx 4\times$ width, or $\sim$0.4~pc) and the peak of the Stellar Initial Mass Function (IMF) --- a connection explored in the observational literature \citep[e.g.][]{Andre2014}. Assuming typical densities, \astra estimates a core mass of $\sim$0.15~M$_\odot$, consistent with (within 25\,per\,cent of) the empirically observed IMF peak ($\sim$0.2~M$_\odot$).
   \item The strong virial scaling relation ($r = 0.988$) suggests these filaments are approximately in virial equilibrium.
   \item Dimensional analysis correctly identifies the key physical quantities and their relationships without requiring prior specification of the expected functional form.
 \end{description}
@@ -729,7 +739,7 @@ We highlight five that correspond to well-established astrophysical relationship
 \textbf{2. Downsizing of Star Formation:}
 \begin{description}
   \item \emph{ASTRA identified:} Anti-correlation between stellar mass and specific star formation rate (sSFR) for $\log M_{\star}/M_{\odot} > 10$ ($r = -0.45$, $p < 10^{-14}$)
-  \item \emph{Literature:} Downsizing \citep{Brinchmann2004}, where more massive galaxies form stars less efficiently
+  \item \emph{Literature:} Downsizing \citep{Cowie1996}, where more massive galaxies formed their stars earlier, at higher redshift
   \item \emph{Significance:} \astra identifies this as a mass-dependent effect, correctly separating it from the star-forming main sequence
 \end{description}
 
@@ -1119,7 +1129,7 @@ This demonstrates \astra's ability to rediscover fundamental physical laws direc
 \subsection{Accelerating Expansion (Dark Energy Signature)}
 \label{sec:live:sne}
 
-From 1\,701 Type~Ia supernovae in the Pantheon+ compilation \citep{Brout2022}, \astra fitted a distance modulus--redshift relation (equation~\ref{eq:sne})
+From 1\,701 light curves of 1\,550 distinct Type~Ia supernovae in the Pantheon+ compilation \citep{Brout2022}, \astra fitted a distance modulus--redshift relation (equation~\ref{eq:sne})
 \begin{equation}
   \mu = 5.33\,\log_{10}(z) + 24.42,
   \label{eq:sne}
@@ -1132,7 +1142,7 @@ This test validates the framework's ability to identify subtle systematic trends
 \subsection{Galaxy Colour Bimodality}
 \label{sec:live:bimodality}
 
-Analysis of 2\,000 SDSS galaxies revealed a bimodal distribution in rest-frame $u{-}g$ colour, with GMM-fitted peaks at $u{-}g = 1.44$ (blue cloud) and $u{-}g = 1.92$ (red sequence), consistent with the colour separation reported by \citet{Strateva2001}.
+Analysis of 2\,000 SDSS galaxies revealed a bimodal distribution in rest-frame $u{-}g$ colour, with GMM-fitted peaks at $u{-}g = 1.44$ (blue cloud) and $u{-}g = 1.92$ (red sequence), confirming the broad bimodal colour structure of the galaxy population \citep{Baldry2004}. We note that \citet{Strateva2001} identified galaxy colour bimodality using $u^{*}{-}r^{*}$ (separator at $u^{*}{-}r^{*} = 2.22$), which is not directly comparable to our $u{-}g$ analysis.
 \astra identified the bimodality autonomously, correctly interpreting it as reflecting two distinct stellar-population histories: ongoing star formation in blue-cloud galaxies and quenched, passively evolving stellar populations in the red sequence.
 The blue fraction declines from ${\sim}50$\,per\,cent at low stellar masses ($\log M_{\star}/M_{\odot} \lesssim 10$) to ${\sim}10$\,per\,cent at high masses ($\log M_{\star}/M_{\odot} \gtrsim 11$), reflecting the well-known mass-dependent quenching of star formation \citep{Peng2010}.
 This result validates \astra's unsupervised pattern recognition on complex, multi-dimensional datasets.
@@ -1501,7 +1511,7 @@ The causal inference demonstrator (Test~4) correctly recovers textbook causal re
 The discovery-mode test (Test~6) provides the strongest evidence of \astra's analytical capabilities.
 Operating in knowledge isolation mode on synthetic molecular cloud data, \astra correctly identified all three causal drivers of star formation (Jeans mass, magnetic field, virial parameter), distinguished column density as a proxy rather than direct cause despite its highest univariate feature importance, and generated four testable predictions validated through intervention analysis.
 
-Six live deployments on archival data independently recover established physics without domain-specific guidance: Kepler's third law from 2\,839 exoplanets ($R^{2}=0.9982$), the dark energy signature from 1\,701 Type~Ia supernovae ($\chi^{2}/\mathrm{dof}=0.64$), galaxy colour bimodality ($u{-}g$ peaks at 1.44 and 1.92), the HR diagram main sequence ($r=0.90$ from 4\,984 Gaia stars), correct causal direction for redshift--colour, and automated confounder detection.
+Six live deployments on archival data independently recover established physics without domain-specific guidance: Kepler's third law from 2\,839 exoplanets ($R^{2}=0.9982$), the dark energy signature from 1\,550 distinct Type~Ia supernovae ($\chi^{2}/\mathrm{dof}=0.64$), galaxy colour bimodality ($u{-}g$ peaks at 1.44 and 1.92), the HR diagram main sequence ($r=0.90$ from 4\,984 Gaia stars), correct causal direction for redshift--colour, and automated confounder detection.
 The cross-domain validation extends these results beyond astrophysics: \astra recovers 9/10 economic hypotheses (Okun's Law, trade--GDP, and seven others; Phillips Curve correctly identified as non-significant), 4/5 climate hypotheses (CO$_{2}$--temperature $R^{2}=0.936$), 5/5 epidemiological hypotheses (Preston Curve $R^{2}=0.686$), and 5/8 cross-domain syntheses surviving FDR correction.
 
 These results establish four modes of evidence for \astra's capabilities: validation of known results on real data, discovery-mode operation under controlled conditions, live deployment at scale on archival data, and cross-domain generalization beyond astrophysics.
