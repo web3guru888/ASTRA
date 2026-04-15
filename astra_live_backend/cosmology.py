@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 ASTRA Live — Cosmological Models
 Real ΛCDM distance calculations for Hubble diagram analysis.
@@ -57,7 +71,12 @@ def comoving_distance(z: float, cosmo: dict = None, n_steps: int = 1000) -> floa
 
     zs = np.linspace(0, z, n_steps)
     integrand = 1.0 / e_z(zs, cosmo)
-    dc = (c / H0) * np.trapz(integrand, zs)
+    # Use trapezoid for NumPy 2.0+ compatibility (trapz was removed)
+    try:
+        dc = (c / H0) * np.trapezoid(integrand, zs)
+    except AttributeError:
+        # Fallback for older NumPy versions
+        dc = (c / H0) * np.trapz(integrand, zs)
     return dc
 
 

@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Astronomical Paper Library - RAG Query System
 ==============================================
@@ -351,3 +366,21 @@ ANSWER:"""
         for i, pdf_file in enumerate(pdf_files):
             # Check if already in library
             existing_papers = [p for p in self.library.papers.values()
+                             if p.filepath == str(pdf_file)]
+
+            if existing_papers:
+                continue
+
+            # Process PDF
+            try:
+                paper = self.process_pdf(pdf_file)
+                if paper:
+                    self.library.add_paper(paper)
+                    added_count += 1
+
+                    if added_count % num_at_time == 0:
+                        logger.info(f"Added {added_count} papers so far...")
+            except Exception as e:
+                logger.error(f"Error processing {pdf_file}: {e}")
+
+        return added_count

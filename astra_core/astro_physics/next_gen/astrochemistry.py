@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Astrochemistry Module
 
@@ -237,3 +251,24 @@ class ChemicalNetwork(ABC):
         Args:
             t_final: Final time (s)
             dt_output: Output time step (s)
+            method: Integration method
+
+        Returns:
+            Tuple of (time_points, concentration_arrays)
+        """
+        if dt_output is None:
+            dt_output = t_final / 100
+
+        t_eval = np.arange(0, t_final, dt_output)
+
+        # Simple Euler integration for now
+        n_species = len(self.species)
+        concentrations = np.zeros((len(t_eval), n_species))
+        concentrations[0] = self.initial_abundances
+
+        for i in range(1, len(t_eval)):
+            dt = t_eval[i] - t_eval[i-1]
+            dndt = self.compute_derivatives(concentrations[i-1])
+            concentrations[i] = concentrations[i-1] + dndt * dt
+
+        return t_eval, concentrations

@@ -73,8 +73,7 @@ data/
 paper/*.pdf
 paper/figures/*.pdf
 paper/figures/*.png
-
-astra_agent_expertise.db
-astra_knowledge.db
-astra_metacognition.db
-astra_state/
+*.db
+*.db-shm
+*.db-wal
+astra-live/index.html

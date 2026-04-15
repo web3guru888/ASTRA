@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Aletheia-STAN Enhanced Architecture for Mathematical Proofs
 
@@ -128,3 +142,51 @@ class AletheiaSTANSystem:
             'total_problems': 0,
             'successful_proofs': 0,
             'strategy_success': {s.value: 0 for s in ProofStrategy},
+            'avg_proof_time': 0.0,
+            'learning_rate': 0.1
+        }
+
+        # Learning from past problems
+        self.strategy_weights = {s.value: 1.0 for s in ProofStrategy}
+
+    def solve(self, problem: str, domain: str = "") -> Dict[str, Any]:
+        """
+        Solve a mathematical problem using adaptive strategies.
+
+        Args:
+            problem: Problem statement
+            domain: Math domain (algebra, geometry, calculus, etc.)
+
+        Returns:
+            Solution with proof steps
+        """
+        self.stats['total_problems'] += 1
+        start_time = time.time()
+
+        # Try strategies in order of weight
+        for strategy in sorted(ProofStrategy, key=lambda s: self.strategy_weights[s.value], reverse=True):
+            try:
+                result = self._try_strategy(problem, domain, strategy)
+                if result['success']:
+                    self.stats['successful_proofs'] += 1
+                    self.stats['strategy_success'][strategy.value] += 1
+                    # Update weights
+                    self.strategy_weights[strategy.value] *= (1 + self.stats['learning_rate'])
+                    return result
+            except Exception as e:
+                continue
+
+        return {
+            'success': False,
+            'problem': problem,
+            'error': 'All strategies failed'
+        }
+
+    def _try_strategy(self, problem: str, domain: str, strategy: ProofStrategy) -> Dict[str, Any]:
+        """Try a specific proof strategy."""
+        # Simplified implementation
+        return {
+            'success': False,
+            'strategy': strategy.value,
+            'problem': problem
+        }

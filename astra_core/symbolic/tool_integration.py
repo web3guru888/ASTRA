@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Tool Integration: External APIs and Computation Tools
 
@@ -141,3 +155,18 @@ class WikipediaAPI:
             'search': query,
             'limit': 5,
             'namespace': 0,
+            'format': 'json'
+        }
+
+        try:
+            response = requests.get(self.api_url, params=params, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+
+            # Return article titles (second element in response)
+            if len(data) > 1:
+                return data[1]
+            return []
+        except Exception as e:
+            logger.warning(f"Wikipedia search failed: {e}")
+            return []

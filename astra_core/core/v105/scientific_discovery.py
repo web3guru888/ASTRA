@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Scientific Discovery Accelerator for V105
 ==========================================
@@ -376,3 +390,51 @@ class ExperimentDesigner:
         return experiment
 
     def run_experiment(self,
+                       experiment_id: str,
+                       data_source: DataSource = None,
+                       config: ExperimentConfig = None) -> ExperimentResult:
+        """
+        Execute a designed experiment and collect results.
+
+        Args:
+            experiment_id: ID of experiment to run
+            data_source: Source of experimental data
+            config: Experiment configuration
+
+        Returns:
+            ExperimentResult with outcomes and analysis
+        """
+        if config is None:
+            config = ExperimentConfig()
+
+        # Get experiment design
+        experiment = self.get_experiment(experiment_id)
+        if not experiment:
+            raise ValueError(f"Experiment {experiment_id} not found")
+
+        # Collect data
+        if data_source is None:
+            data_source = self.default_data_source
+
+        data = data_source.query(experiment.data_query)
+
+        # Run statistical tests
+        results = []
+        for test in experiment.statistical_tests:
+            test_result = test.run(data)
+            results.append(test_result)
+
+        # Analyze outcomes
+        outcome = self.analyze_outcomes(results, experiment.expected_outcomes)
+
+        logger.info(f"Completed experiment {experiment_id}")
+        return ExperimentResult(
+            experiment_id=experiment_id,
+            results=results,
+            outcome=outcome,
+            metadata={
+                'data_size': len(data),
+                'tests_run': len(results),
+                'timestamp': time.time()
+            }
+        )

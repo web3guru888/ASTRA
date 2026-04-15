@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Adaptive Reasoning Controller for Scientific Discovery
 ======================================================
@@ -191,3 +205,32 @@ class UncertaintyTracker:
 class MetacognitiveMonitor:
     """
     Monitor reasoning quality using V41 metacognition.
+
+    Tracks confidence, uncertainty, and reasoning quality metrics.
+    """
+
+    def __init__(self):
+        self.confidence_history = []
+        self.uncertainty_history = []
+
+    def update(self, confidence: float, uncertainty: float):
+        """Update monitoring metrics."""
+        self.confidence_history.append(confidence)
+        self.uncertainty_history.append(uncertainty)
+
+    def get_status(self) -> Dict[str, Any]:
+        """Get current monitoring status."""
+        if not self.confidence_history:
+            return {
+                'current_confidence': 0.0,
+                'avg_confidence': 0.0,
+                'current_uncertainty': 0.0,
+                'trend': 'unknown'
+            }
+
+        return {
+            'current_confidence': self.confidence_history[-1],
+            'avg_confidence': sum(self.confidence_history) / len(self.confidence_history),
+            'current_uncertainty': self.uncertainty_history[-1],
+            'trend': 'improving' if len(self.confidence_history) > 1 and self.confidence_history[-1] > self.confidence_history[-2] else 'stable'
+        }

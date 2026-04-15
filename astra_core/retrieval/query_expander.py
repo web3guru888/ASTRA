@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Parallel Query Expansion (Priority 4)
 =====================================
@@ -274,3 +288,36 @@ class ParallelQueryExpander:
         with ThreadPoolExecutor(max_workers=min(self.max_workers, len(all_queries))) as executor:
             future_to_query = {
                 executor.submit(self._timed_retrieve, q, self.k_per_query): q
+                for q in all_queries
+            }
+
+            # Collect results
+            for future in as_completed(future_to_query):
+                q = future_to_query[future]
+                try:
+                    docs, query_time = future.result(timeout=10)
+                    all_docs.extend(docs)
+                    query_times[q] = query_time
+                except Exception as e:
+                    query_times[q] = 0
+
+        # Deduplicate and rerank
+        seen = set()
+        unique_docs = []
+        for doc in all_docs:
+            if doc.id not in seen:
+                seen.add(doc.id)
+                unique_docs.append(doc)
+
+        # Sort by score and take top-k
+        unique_docs.sort(key=lambda d: d.score, reverse=True)
+        final_docs = unique_docs[:self.top_k]
+
+        return QueryExpansionResult(
+            original_query=query,
+            expanded_queries=expanded.all_queries(),
+            documents=final_docs,
+            expansion_method=expanded.method,
+            execution_time=time.time() - start_time,
+            query_times=query_times
+        )

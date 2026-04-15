@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Astronomical Knowledge Graph
 
@@ -1178,3 +1192,20 @@ def bootstrap_uncertainty(data: np.ndarray,
     estimates = []
 
     for _ in range(n_bootstrap):
+        # Bootstrap sampling
+        sample = np.random.choice(data, size=len(data), replace=True)
+        estimate = estimator_func(sample)
+        estimates.append(estimate)
+
+    # Compute confidence interval
+    alpha = 1 - ci_level
+    lower = np.percentile(estimates, 100 * alpha / 2)
+    upper = np.percentile(estimates, 100 * (1 - alpha / 2))
+    point_estimate = estimator_func(data)
+
+    return {
+        'estimate': point_estimate,
+        'ci_lower': lower,
+        'ci_upper': upper,
+        'ci_level': ci_level
+    }

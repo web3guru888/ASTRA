@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 ASTRA Live — Hypothesis State Machine
 Real hypothesis lifecycle management with Bayesian confidence updates.
@@ -6,6 +20,7 @@ import time
 import math
 import json
 import numpy as np
+import threading
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 from typing import Optional
@@ -205,28 +220,112 @@ class Hypothesis:
 
 
 class HypothesisStore:
-    """Thread-safe hypothesis storage."""
+    """Thread-safe hypothesis storage with per-hypothesis locking."""
 
     def __init__(self):
         self.hypotheses: dict[str, Hypothesis] = {}
         self._next_id = 1
         self._id_prefix_map = {"H": 1, "CD": 1}
 
+        # Thread safety: per-hypothesis locks for concurrent updates
+        self._hypothesis_locks: dict[str, threading.Lock] = {}
+        self._store_lock = threading.RLock()  # Reentrant for nested operations
+        self._id_lock = threading.Lock()  # Protect ID generation
+
+    def _get_hypothesis_lock(self, hid: str) -> threading.Lock:
+        """Get or create a lock for the specified hypothesis."""
+        with self._store_lock:
+            if hid not in self._hypothesis_locks:
+                self._hypothesis_locks[hid] = threading.Lock()
+            return self._hypothesis_locks[hid]
+
+    def _ensure_hypothesis_lock(self, h: Hypothesis):
+        """Ensure a lock exists for this hypothesis (called during add)."""
+        with self._store_lock:
+            if h.id not in self._hypothesis_locks:
+                self._hypothesis_locks[h.id] = threading.Lock()
+
     def add(self, name: str, domain: str, description: str,
-            confidence: float = 0.5, prefix: str = "H") -> Hypothesis:
-        if prefix == "CD":
-            hid = f"CD-{self._id_prefix_map['CD']:03d}"
-            self._id_prefix_map['CD'] += 1
-        else:
-            hid = f"H{self._id_prefix_map['H']:03d}"
-            self._id_prefix_map['H'] += 1
-        h = Hypothesis(id=hid, name=name, domain=domain,
-                       description=description, confidence=confidence)
-        self.hypotheses[hid] = h
+            confidence: float = 0.5, prefix: str = "H") -> Optional[Hypothesis]:
+        """
+        Add a new hypothesis in a thread-safe manner. Returns existing hypothesis if duplicate name.
+
+        CRITICAL FIX: Prevents duplicate hypotheses by checking for existing names.
+        Thread-safe: uses store lock for duplicate checking and ID generation.
+        """
+        # Thread-safe duplicate check and ID generation
+        with self._store_lock:
+            # Check for duplicate by name (case-insensitive)
+            for existing_h in self.hypotheses.values():
+                if existing_h.name.lower().strip() == name.lower().strip():
+                    # Duplicate found - return the existing hypothesis instead of creating a new one
+                    return existing_h
+
+            # No duplicate found - proceed with thread-safe ID generation
+            if prefix == "CD":
+                with self._id_lock:  # Protect ID counter
+                    hid = f"CD-{self._id_prefix_map['CD']:03d}"
+                    self._id_prefix_map['CD'] += 1
+            else:
+                with self._id_lock:  # Protect ID counter
+                    hid = f"H{self._id_prefix_map['H']:03d}"
+                    self._id_prefix_map['H'] += 1
+
+            h = Hypothesis(id=hid, name=name, domain=domain,
+                           description=description, confidence=confidence)
+            self.hypotheses[hid] = h
+
+            # Ensure lock exists for this new hypothesis
+            self._ensure_hypothesis_lock(h)
+
         return h
 
     def get(self, hid: str) -> Optional[Hypothesis]:
+        """Get hypothesis by ID - thread-safe read operation."""
+        # Read-only operation, doesn't need lock for GIL-protected dict access
         return self.hypotheses.get(hid)
+
+    def update_confidence(self, hid: str, delta: float) -> bool:
+        """
+        Thread-safe confidence update using per-hypothesis locking.
+        Returns True if hypothesis exists and was updated, False otherwise.
+        """
+        lock = self._get_hypothesis_lock(hid)
+        with lock:
+            h = self.hypotheses.get(hid)
+            if h:
+                h.confidence = max(0.01, min(0.99, h.confidence + delta))
+                h.updated_at = time.time()
+                return True
+        return False
+
+    def update_phase(self, hid: str, new_phase: Phase) -> bool:
+        """
+        Thread-safe phase update using per-hypothesis locking.
+        Returns True if hypothesis exists and was updated, False otherwise.
+        """
+        lock = self._get_hypothesis_lock(hid)
+        with lock:
+            h = self.hypotheses.get(hid)
+            if h:
+                h.phase = new_phase
+                h.updated_at = time.time()
+                return True
+        return False
+
+    def add_test_result(self, hid: str, test_result: dict) -> bool:
+        """
+        Thread-safe test result addition using per-hypothesis locking.
+        Returns True if hypothesis exists and was updated, False otherwise.
+        """
+        lock = self._get_hypothesis_lock(hid)
+        with lock:
+            h = self.hypotheses.get(hid)
+            if h:
+                h.test_results.append(test_result)
+                h.updated_at = time.time()
+                return True
+        return False
 
     def all(self) -> list[Hypothesis]:
         return list(self.hypotheses.values())
@@ -317,42 +416,10 @@ def seed_initial_hypotheses(store: HypothesisStore):
         ("Stellar TESS-Gaia Cross-Match", "Astrophysics",
          "Link TESS host stars with Gaia astrometry for precise distance-luminosity calibration", 0.35, "TESS"),
         # Cross-domain — qualitative comparisons
-        ("Econ-Astro Funding Correlation", "Economics",
-         "Correlation between national R&D funding and astronomical discovery rates", 0.25, "CD"),
-        ("Survey Design Optimization", "Epidemiology",
-         "Apply epidemiological adaptive sampling to astronomical survey strategy", 0.30, "CD"),
-        # Economics — backed by World Bank API
-        ("GDP-Inequality Nexus", "Economics",
-         "World Bank cross-country analysis: GDP per capita trends, inequality dynamics, convergence hypothesis", 0.40, "EC"),
-        ("Trade Network Structure", "Economics",
-         "World Bank trade data: export concentration, trade openness vs GDP, Balassa-Samuelson effect", 0.35, "EC"),
-        ("Inflation-Growth Dynamics", "Economics",
-         "World Bank macro indicators: inflation persistence, Phillips curve, financial depth and growth", 0.35, "EC"),
-        # Climate Science — backed by NASA GISTEMP
-        ("CO2-Temperature Attribution", "Climate",
-         "NASA GISTEMP global temperature anomaly trend analysis: warming rate, acceleration, decadal patterns", 0.42, "CL"),
-        ("Extreme Weather Trends", "Climate",
-         "Temperature anomaly extremes: variance changes, hot/cold asymmetry, seasonal shifts", 0.35, "CL"),
-        ("Sea Level Acceleration", "Climate",
-         "Climate trend analysis: sea level proxies from temperature record, post-industrial acceleration", 0.30, "CL"),
-        # Epidemiology — backed by WHO GHO API
-        ("Preston Curve Evolution", "Epidemiology",
-         "WHO life expectancy vs income: test Preston curve shape, convergence, and outliers", 0.40, "EP"),
-        ("Vaccination-Mortality Reduction", "Epidemiology",
-         "WHO health indicators: life expectancy gains, cross-country disparity, normality of distribution", 0.38, "EP"),
-        ("Disease Burden Inequality", "Epidemiology",
-         "WHO data: life expectancy inequality across nations, IQR analysis, distribution shape", 0.35, "EP"),
-        # Cryptography — ECDLP mathematical research
-        ("Summation Polynomial Sparsity", "Cryptography",
-         "Semaev summation polynomial S_m for ECCp-131: analyze monomial structure for exploitable sparsity reducing Gröbner basis cost", 0.05, "ECDLP"),
-        ("Isogeny Graph DLP Reduction", "Cryptography",
-         "Search isogeny graph from ECCp-131 curve for isogenous curves with exploitable structure (anomalous, supersingular, small embedding degree)", 0.02, "ECDLP"),
-        ("Pollard Walk Statistical Structure", "Cryptography",
-         "Analyze Pollard rho iteration function on ECCp-131 for non-random behavior: cycle length distribution, autocorrelation, birthday paradox deviation", 0.10, "ECDLP"),
-        ("EC Endomorphism Ring Analysis", "Cryptography",
-         "Compute End(E) for ECCp-131: CM discriminant, non-trivial endomorphisms for Gallant-Lambert-Vanstone speedup", 0.03, "ECDLP"),
-        ("Lattice Reduction EC Relations", "Cryptography",
-         "Build lattice from EC point linear combinations, apply LLL/BKZ reduction to find short vectors encoding discrete logarithm", 0.03, "ECDLP"),
+        ("Survey Design Optimization", "Physics",
+         "Apply adaptive sampling optimization to astronomical survey strategy", 0.30, "CD"),
+        ("Mathematical Pattern Discovery", "Mathematics",
+         "Autonomous discovery of mathematical patterns using symbolic computation and formal verification", 0.25, "CD"),
     ]
 
     for name, domain, desc, conf, prefix in seeds:

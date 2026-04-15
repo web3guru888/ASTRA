@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Hypothesis Generation & Testing Engine for STAN V40
 
@@ -294,3 +308,48 @@ class HypothesisEngine:
 
     def generate_hypotheses(self, problem: str,
                            context: Dict = None) -> List[Hypothesis]:
+        """Generate multiple hypotheses for a given problem."""
+        context = context or {}
+        hypotheses = []
+
+        # Use each generator to create hypotheses
+        for generator in self.generators:
+            try:
+                gen_hypotheses = generator.generate(problem, context)
+                hypotheses.extend(gen_hypotheses)
+            except Exception as e:
+                # Log error and continue with other generators
+                continue
+
+        # Score and rank hypotheses
+        scored_hypotheses = []
+        for hyp in hypotheses:
+            score = self._score_hypothesis(hyp, problem, context)
+            hyp.confidence = score
+            scored_hypotheses.append(hyp)
+
+        # Sort by confidence
+        scored_hypotheses.sort(key=lambda h: h.confidence, reverse=True)
+
+        self.hypotheses_generated += len(scored_hypotheses)
+
+        return scored_hypotheses
+
+    def _score_hypothesis(self, hypothesis: Hypothesis,
+                          problem: str, context: Dict) -> float:
+        """Score a hypothesis based on various criteria."""
+        score = 0.5  # Base score
+
+        # Boost for explanatory power
+        if hypothesis.explanation:
+            score += 0.1
+
+        # Boost for testability
+        if hypothesis.test_prediction:
+            score += 0.1
+
+        # Boost for novelty
+        if hypothesis.novelty_score:
+            score += hypothesis.novelty_score * 0.2
+
+        return min(1.0, score)

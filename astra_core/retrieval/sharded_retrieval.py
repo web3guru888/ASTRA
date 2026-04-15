@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Sharded & Scattered Retrieval (Priority 3)
 ==========================================
@@ -251,3 +265,27 @@ class ShardedRetriever:
             future_to_shard = {
                 executor.submit(self._timed_retrieve, shard, query, self.k_per_shard): shard
                 for shard in selected_shards
+            }
+
+            # Collect results
+            for future in as_completed(future_to_shard):
+                shard = future_to_shard[future]
+                try:
+                    docs, shard_time = future.result(timeout=10)
+                    shard_results[shard] = docs
+                    shard_times[shard] = shard_time
+                    all_docs.extend(docs)
+                except Exception as e:
+                    shard_results[shard] = []
+                    shard_times[shard] = 0
+
+        # Rerank globally
+        if len(all_docs) > self.top_k:
+            all_docs = self._rerank(all_docs, query)[:self.top_k]
+
+        return QueryResult(
+            query=query,
+            documents=all_docs,
+            execution_time=time.time() - start_time,
+            shard_times=shard_times
+        )

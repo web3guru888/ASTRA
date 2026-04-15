@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Language Grounding System - Grounding language in embodied experience
 
@@ -541,3 +555,59 @@ class LanguageGroundingEngine:
         self.grounding_cache = {}
 
     def build_concept_representation(self, concept: str, sensory_patterns: Dict) -> MultimodalRepresentation:
+        """
+        Build a multimodal representation for a concept.
+
+        Args:
+            concept: Concept name
+            sensory_patterns: Sensory pattern data
+
+        Returns:
+            Multimodal representation
+        """
+        # Create representation from sensory patterns
+        representation = MultimodalRepresentation(
+            concept=concept,
+            visual_features=sensory_patterns.get('visual', []),
+            auditory_features=sensory_patterns.get('auditory', []),
+            tactile_features=sensory_patterns.get('tactile', []),
+            semantic_features=sensory_patterns.get('semantic', [])
+        )
+
+        # Cache the representation
+        self.grounding_cache[concept] = representation
+
+        return representation
+
+    def ground_phrase(self, phrase: str) -> Dict[str, Any]:
+        """
+        Ground a phrase to sensorimotor experience.
+
+        Args:
+            phrase: Phrase to ground
+
+        Returns:
+            Grounding information
+        """
+        # Check cache
+        if phrase in self.grounding_cache:
+            return {
+                'phrase': phrase,
+                'grounded': True,
+                'representation': self.grounding_cache[phrase]
+            }
+
+        # Try to extract concepts from phrase
+        words = phrase.lower().split()
+        concepts = [w for w in words if len(w) > 3]
+
+        representations = []
+        for concept in concepts:
+            if concept in self.grounding_cache:
+                representations.append(self.grounding_cache[concept])
+
+        return {
+            'phrase': phrase,
+            'grounded': len(representations) > 0,
+            'representations': representations
+        }

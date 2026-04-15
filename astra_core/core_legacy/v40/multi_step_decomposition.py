@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Multi-Step Decomposition Engine for STAN V40
 
@@ -657,3 +671,19 @@ class CompositionEngine:
             # Get ready sub-problems
             ready = decomposition.get_ready_subproblems()
             if not ready:
+                break  # No more ready sub-problems
+
+            # Solve each ready sub-problem
+            for sub_problem in ready:
+                if sub_problem.id not in solved_ids:
+                    try:
+                        result = solver(sub_problem)
+                        if result.is_solved():
+                            solved_ids.add(sub_problem.id)
+                    except Exception as e:
+                        # Log error and continue
+                        pass
+
+        # Finalize composition
+        decomposition.update_solved_status(solved_ids)
+        decomposition.final_composition = self._compose_solutions(solved_ids)

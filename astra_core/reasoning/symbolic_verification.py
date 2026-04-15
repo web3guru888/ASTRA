@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Symbolic Verification for GPQA
 ===============================
@@ -507,3 +521,26 @@ class OrderOfMagnitudeChecker:
         if not numbers:
             return ConstraintCheck(
                 constraint_type=ConstraintType.MATHEMATICAL,
+                passed=True,
+                message="No numbers to verify",
+                confidence=1.0
+            )
+
+        # Check magnitudes against physical constraints
+        for num_str in numbers:
+            value = float(num_str)
+            # Check if value is within reasonable bounds
+            if abs(value) > 1e30:  # Arbitrary large number
+                return ConstraintCheck(
+                    constraint_type=ConstraintType.MATHEMATICAL,
+                    passed=False,
+                    message=f"Value {value} seems unreasonably large",
+                    confidence=0.9
+                )
+
+        return ConstraintCheck(
+            constraint_type=ConstraintType.MATHEMATICAL,
+            passed=True,
+            message="All magnitudes seem reasonable",
+            confidence=0.8
+        )

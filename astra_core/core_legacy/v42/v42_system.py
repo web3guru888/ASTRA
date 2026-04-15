@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 V42 Complete System Integration
 ================================
@@ -260,3 +274,84 @@ class V42CompleteSystem:
         """Generate final answer based on analysis."""
         # Simplified answer generation
         return f"Answer to '{question}' in {domain} based on V42 analysis."
+
+
+def create_v42_standard(config: V42Config = None, mode: V42Mode = V42Mode.STANDARD):
+    """
+    Factory function to create a V42 system.
+
+    Args:
+        config: V42 configuration (uses default if None)
+        mode: V42 operation mode
+
+    Returns:
+        V42CompleteSystem: Configured V42 system instance
+    """
+    if config is None:
+        config = V42Config()
+
+    system = V42CompleteSystem(config=config, mode=mode)
+    return system
+
+
+def create_v42_fast(config: V42Config = None, mode: V42Mode = V42Mode.STANDARD):
+    """
+    Factory function to create a fast V42 system (optimized for speed).
+
+    Args:
+        config: V42 configuration (uses default if None)
+        mode: V42 operation mode
+
+    Returns:
+        V42CompleteSystem: Configured V42 system instance
+    """
+    if config is None:
+        config = V42Config()
+        # Optimize for speed
+        config.enable_search = False
+        config.enable_adaptive_compute = True
+
+    system = V42CompleteSystem(config=config, mode=mode)
+    return system
+
+
+def create_v42_deep(config: V42Config = None, mode: V42Mode = V42Mode.DEEP):
+    """
+    Factory function to create a deep V42 system (optimized for accuracy).
+
+    Args:
+        config: V42 configuration (uses default if None)
+        mode: V42 operation mode (defaults to DEEP)
+
+    Returns:
+        V42CompleteSystem: Configured V42 system instance
+    """
+    if config is None:
+        config = V42Config()
+        # Optimize for depth
+        config.max_reasoning_depth = 10
+        config.enable_search = True
+
+    system = V42CompleteSystem(config=config, mode=mode)
+    return system
+
+
+def create_v42_gpqa(config: V42Config = None, mode: V42Mode = V42Mode.GPQA):
+    """
+    Factory function to create a GPQA-optimized V42 system.
+
+    Args:
+        config: V42 configuration (uses default if None)
+        mode: V42 operation mode (defaults to GPQA)
+
+    Returns:
+        V42CompleteSystem: Configured V42 system instance
+    """
+    if config is None:
+        config = V42Config()
+        # Optimize for GPQA
+        config.gpqa_optimized = True
+        config.domain_strategies = True
+
+    system = V42CompleteSystem(config=config, mode=mode)
+    return system

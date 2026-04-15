@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Consciousness Simulator for STAR-Learn V2.5
 
@@ -344,3 +358,48 @@ class StreamOfConsciousness:
             MentalProcess.REASONING: 'premise',
             MentalProcess.IMAGINATION: 'scenario',
             MentalProcess.EMOTION: 'emotion',
+            MentalProcess.INTENTION: 'action',
+            MentalProcess.METACOGNITION: 'thought'
+        }
+
+        # Get the appropriate placeholder for this process
+        placeholder = placeholder_map.get(process, 'context')
+        return template.format(**{placeholder: context})
+
+    def simulate_consciousness(self, duration: float, dt: float = 0.1) -> List[Thought]:
+        """
+        Simulate conscious experience over time.
+
+        Args:
+            duration: Simulation duration (seconds)
+            dt: Time step (seconds)
+
+        Returns:
+            List of thoughts generated during simulation
+        """
+        thoughts = []
+        t = 0
+
+        while t < duration:
+            # Update mental state
+            self._update_mental_state(dt)
+
+            # Generate thought if above threshold
+            if self.consciousness_level > self.consciousness_threshold:
+                process = self._select_mental_process()
+                thought = self._generate_thought(process, "")
+                thoughts.append(thought)
+
+            t += dt
+
+        return thoughts
+
+    def _update_mental_state(self, dt: float):
+        """Update mental state based on current conditions."""
+        # Update consciousness level (simplified)
+        self.consciousness_level += (0.7 - self.consciousness_level) * 0.1
+
+    def _select_mental_process(self) -> MentalProcess:
+        """Select a mental process based on current state."""
+        # Simplified: random selection
+        return np.random.choice(list(MentalProcess))

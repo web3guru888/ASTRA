@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 LLM-Based Code Generator for ARC Tasks
 Uses the LLM to analyze tasks and generate specific transformation code.
@@ -102,3 +117,15 @@ def generate_task_description(task_id: str,
 CODE_TEMPLATES = {
     "color_map": """
 # Color mapping transformation
+def solve(grid):
+    # Apply color mapping
+    color_map = {0: 1, 1: 2, 2: 3, 3: 4, 4: 5}
+    return [[color_map.get(cell, cell) for cell in row] for row in grid]
+""",
+    "rotation": """
+# Rotation transformation
+def solve(grid):
+    # Rotate 90 degrees clockwise
+    return [list(row) for row in zip(*grid[::-1])]
+"""
+}

@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Sensorimotor System - Interface for embodied interaction with the world
 
@@ -230,3 +244,29 @@ class SensorimotorInterface:
     def execute(self, action: WorldAction) -> ActionResult:
         """
         Execute a complete action in the world.
+
+        Args:
+            action: Action to execute
+
+        Returns:
+            Result of the action execution
+        """
+        # Process sensory input for the action
+        sensory_state = self.process_input(action.sensory_data)
+
+        # Execute the motor command
+        motor_output = self.motor_system.execute_command(action.motor_command)
+
+        # Update internal state
+        self.update_state(sensory_state, motor_output)
+
+        return ActionResult(
+            success=True,
+            sensory_state=sensory_state,
+            motor_output=motor_output
+        )
+
+    def update_state(self, sensory_state: SensoryState, motor_output: MotorOutput):
+        """Update internal state based on sensory and motor information."""
+        self.current_sensory_state = sensory_state
+        self.current_motor_output = motor_output

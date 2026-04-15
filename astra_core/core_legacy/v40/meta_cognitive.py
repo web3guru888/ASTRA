@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Meta-Cognitive Controller for STAN V40
 
@@ -542,3 +556,27 @@ class MetaCognitiveController:
         results: List[StrategyResult] = []
 
         for strategy in strategies:
+            # Allocate sub-budget for this strategy
+            sub_budget = budget / len(strategies)
+
+            # Execute strategy
+            try:
+                result = self.strategy_executor.execute(
+                    strategy, question, category, sub_budget
+                )
+                results.append(result)
+            except Exception as e:
+                # Log error and continue with other strategies
+                logger.warning(f"Strategy {strategy.name} failed: {e}")
+                results.append(StrategyResult(
+                    strategy=strategy.name,
+                    success=False,
+                    confidence=0.0,
+                    answer=None,
+                    error=str(e)
+                ))
+
+        # 5. Aggregate results
+        final_result = self.result_aggregator.aggregate(results)
+
+        return final_result

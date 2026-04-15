@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Data Visualization Module for Astrophysics
 
@@ -28,6 +42,24 @@ try:
     import matplotlib.pyplot as plt
     import matplotlib.colors as mcolors
     from matplotlib.patches import Circle, Rectangle
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    plt = None
+    mcolors = None
+    Circle = None
+    Rectangle = None
+
+# NumPy 2.0 compatibility: trapz was renamed to trapezoid
+def _trapz_compat(y, x=None, dx=1.0, axis=-1):
+    """Compatibility wrapper for np.trapz (removed in NumPy 2.0)."""
+    try:
+        return np.trapezoid(y, x=x, dx=dx, axis=axis)
+    except AttributeError:
+        # Fallback for NumPy < 2.0
+        return np.trapz(y, x=x, dx=dx, axis=axis)
+
+try:
     from matplotlib.gridspec import GridSpec
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
@@ -338,7 +370,7 @@ class SpectrumVisualizer:
 
         # Integrate line region
         line_mask = np.abs(self.spectrum.wavelength - line_center) < continuum_width/2
-        integrated_flux = np.trapz(self.spectrum.flux[line_mask],
+        integrated_flux = _trapz_compat(self.spectrum.flux[line_mask],
                                     self.spectrum.wavelength[line_mask])
 
         # Equivalent width

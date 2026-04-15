@@ -1,0 +1,201 @@
+# ============================================================
+# Athena++ Configuration File: 3D Filament Fragmentation
+# Purpose: Validate linear theory core spacing predictions
+# Expected runtime: ~30 hours on 16 cores
+# ============================================================
+
+<job>
+problem_id   = filament_fragmentation  # Job identifier
+# <output>/output/munmax.%.04d.dat</output>  # Min/max output file (disabled)
+
+# ========================================================================
+# Mesh Configuration: 0.8 pc × 0.4 pc × 0.4 pc domain
+# Resolution: 128 × 64 × 64 = 524,288 cells
+# ========================================================================
+<mesh>
+nx1      = 128      # Grid cells in x (width)
+x1min    = -0.2     # Left boundary (pc)
+x1max    = 0.2      # Right boundary (pc)
+
+ix1_bc   = reflecting    # Inner x boundary
+ox1_bc   = reflecting    # Outer x boundary
+
+nx2      = 64       # Grid cells in y (height)
+x2min    = -0.2     # Bottom boundary (pc)
+x2max    = 0.2      # Top boundary (pc)
+
+ix2_bc   = reflecting    # Inner y boundary
+ox2_bc   = reflecting    # Outer y boundary
+
+nx3      = 128      # Grid cells in z (length along filament)
+x3min    = -0.4     # Back boundary (pc)
+x3max    = 0.4      # Front boundary (pc)
+
+ix3_bc   = periodic      # Inner z boundary
+ox3_bc   = periodic      # Outer z boundary
+
+# Meshblock configuration for parallel efficiency
+nbvar    = 64       # Target cells per meshblock
+# <meshblock>
+# nx1      = 64
+# nx2      = 32
+# nx3      = 64
+# </meshblock>
+</mesh>
+
+# ========================================================================
+# Hydrodynamics Configuration
+# ========================================================================
+<hydro>
+iso_sound_speed = 0.188  # cs = 0.188 km/s for T=10 K
+# eos = isothermal
+</hydro>
+
+# ========================================================================
+# Self-Gravity Configuration
+# ========================================================================
+<gravity>
+gravity   = self    # Self-gravity
+grav_mean_rho = 1.67e-18   # Mean density (g/cm³) for n_H2 = 1000 cm⁻³
+# Gravity boundary conditions (potential)
+igr_bc   = dirichlet    # Inner r boundary
+ogr_bc   = dirichlet    # Outer r boundary
+
+# FFT-based Poisson solver parameters
+# <fft>
+# guard = 2
+# normalize = 1
+# </fft>
+</gravity>
+
+# ========================================================================
+# Field Configuration (Optional: Magnetic Fields)
+# Comment out entire <field> section for pure hydro run
+# ========================================================================
+# <field>
+# b_initial = uniform    # Initial magnetic field configuration
+# bx1       = 0.0        # B_x (microG) - field along filament
+# bx2       = 0.0        # B_y (microG)
+# bx3       = 0.0        # B_z (microG)
+#
+# # Magnetic field boundary conditions
+# ix1_bc   = outflow     # B-field inner x
+# ox1_bc   = outflow     # B-field outer x
+# ix2_bc   = outflow     # B-field inner y
+# ox2_bc   = outflow     # B-field outer y
+# ix3_bc   = periodic    # B-field inner z
+# ox3_bc   = periodic    # B-field outer z
+# </field>
+
+# ========================================================================
+# Integrator Configuration
+# ========================================================================
+<integrator>
+vl_enolver = rk2     # Time integrator: rk2 (2nd order RK)
+# integrator = vl2    # van Leer integrator
+</integrator>
+
+# ========================================================================
+# Time Configuration
+# ========================================================================
+<time>
+tlim       = 12.56   # Time limit (code units) = 4.0 Myr
+n cycles   = 1000000  # Maximum cycles
+# dt        = 0.0001   # Fixed timestep (optional)
+# cfl_no   = 0.3      # CFL number (for adaptive dt)
+# arch_cfl = 0.3      # Archive output CFL
+# start_t  = start  # Start from restart file
+</time>
+
+# ========================================================================
+# Output Configuration: Snapshots every 0.1 Myr
+# ========================================================================
+<output>
+# file_type = rst     # Restart files (disabled)
+# file_type = dat     # Tabular formatted data
+# file_type = hst     # History data
+file_type = hdf5     # HDF5 data files
+
+# Output frequency (by time or by cycle)
+dt         = 2.51e-4    # Output interval = 0.1 Myr
+# variable  = dt      # Use dt for variable output
+# num       = 40      # Total outputs: 40 snapshots over 4 Myr
+
+# Output directory structure
+# output   = /path/to/output/directory
+# id       = 0        # Output file number offset
+
+# Output variables for HDF5
+# <output1>
+# file_type = hdf5
+# dt = 2.51e-4       # Every 0.1 Myr
+# variables = prim, cons, d
+# </output1>
+
+# History output (time series)
+# <output2>
+# file_type = hst
+# dt = 1.0          # Every time unit
+# variables = time, mass, 1-momentum, 2-momentum, 3-momentum, total_energy
+# </output2>
+</output>
+
+# ========================================================================
+# Problem Generator: Filament Initial Conditions
+# ========================================================================
+<problem>
+# Problem-specific parameters for filament_fragmentation
+rho0      = 1.67e-18   # Initial density (g/cm³) for n_H2 = 1000 cm⁻³
+pert      = 0.05        # Perturbation amplitude (5%)
+n_waves   = 5          # Number of perturbation waves in domain
+lambda    = 0.16       # Perturbation wavelength (pc) = 0.8/5
+
+# Filament profile parameters
+r_filament = 0.04      # Filament radius (pc) = 0.04 pc
+rho_center = 2.0       # Central density enhancement
+rho_edge   = 1.0       # Edge density (normalized)
+
+# Physics parameters
+temp      = 10.0       # Temperature (K)
+mu        = 2.33       # Mean molecular weight
+gamma     = 1.0        # Effective gamma for isothermal EOS
+
+# External pressure (optional)
+# P_ext_kbcm = 0.0     # External pressure in K/cm³
+</problem>
+
+# ========================================================================
+# Magnetic Field Configuration (if enabled)
+# ========================================================================
+# <b_field>
+# beta_plasma = 1.0     # Plasma beta parameter
+# # OR specify uniform field strength
+# B0        = 5.0       # Initial field strength (microG)
+# </b_field>
+
+# ========================================================================
+# Special Units for ISM Physics
+# ========================================================================
+# Units:
+#   Length: pc (3.086e18 cm)
+#   Velocity: km/s (1e5 cm/s)
+#   Density: g/cm³ (physical)
+#   Time: unit will be derived from above
+#   Code units: rho0 * (L/L0)³
+#   Gravitational constant will be set consistently
+
+# ========================================================================
+# AMR Configuration (Optional - disable for uniform grid)
+# ========================================================================
+# <amr>
+# # Adaptive Mesh Refinement (disabled for uniform grid)
+# level     = 0
+# </amr>
+
+# ========================================================================
+# Debugging and Monitoring
+# ========================================================================
+# <debug>
+# wt        = 0        # Wallclock time (seconds)
+#          # Output at specified intervals for monitoring
+# </debug>

@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Setup Script for Astronomical Paper Library
 ===========================================
@@ -130,3 +145,18 @@ def main():
         return
 
     if args.add_dir:
+        # Add papers from directory
+        count = library.add_papers_from_directory(
+            args.add_dir,
+            num_at_time=args.num_at_time
+        )
+        print(f"Added {count} papers from {args.add_dir}")
+        return
+
+    # Initialize library
+    library.initialize()
+
+    # Print library stats
+    stats = library.get_stats()
+    print(f"Library initialized with {stats['num_papers']} papers")
+    print(f"Library path: {args.library_path}")

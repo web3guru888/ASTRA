@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 SED Fitting Engine for ASTRO-SWARM
 ===================================
@@ -628,3 +643,14 @@ class SEDFitter:
         filter_list = [filter_dict[name] for name in filter_names if name in filter_dict]
 
         def chi_squared(theta):
+            """Chi-squared function for optimization."""
+            # Convert theta to actual parameter values
+            params = dict(zip(free_params, theta))
+
+            # Calculate model flux for each filter
+            chi2 = 0.0
+            for i, filt in enumerate(filter_list):
+                model_flux = filt.get_flux(params)
+                chi2 += ((flux_obs[i] - model_flux) / flux_err[i])**2
+
+            return chi2
