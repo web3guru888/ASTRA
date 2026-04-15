@@ -19,6 +19,7 @@ Learns physics from simple to complex, building intuition progressively.
 Curriculum-based approach with stages from basic mechanics to expert-level physics.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field

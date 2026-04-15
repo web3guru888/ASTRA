@@ -32,6 +32,7 @@ Version: 1.0.0
 Motivation: Memory persistence issue raised after PN_24March review incident
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any, Set, Tuple
 from enum import Enum

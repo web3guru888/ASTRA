@@ -28,6 +28,7 @@ Date: 2025-12-11
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass

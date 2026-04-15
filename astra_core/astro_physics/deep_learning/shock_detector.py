@@ -40,6 +40,7 @@ Author: STAN Evolution Team
 Date: 2025-03-18
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

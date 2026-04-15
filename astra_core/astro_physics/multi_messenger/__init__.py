@@ -23,6 +23,7 @@ Date: 2025-03-18
 Version: 1.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .gw_em_correlation import (
     GWEMCorrelator,
     TemporalCorrelation,

@@ -29,6 +29,7 @@ Version: 8.0.0
 Date: March 20, 2026
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .first_principles_discovery import FirstPrinciplesDiscovery
 from .physics_grounded_analogy import PhysicsGroundedAnalogy
 from .constraint_discovery import AutomaticConstraintDiscovery

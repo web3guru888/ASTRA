@@ -42,6 +42,7 @@ Example Use:
     # Faster and more precise than monolithic search
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Callable

@@ -35,6 +35,7 @@ Date: 2025-11-27
 Version: 37.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any

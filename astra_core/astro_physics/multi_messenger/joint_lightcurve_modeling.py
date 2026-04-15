@@ -29,6 +29,7 @@ Author: STAN Evolution Team
 Date: 2025-03-18
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any, Callable
 from dataclasses import dataclass, field

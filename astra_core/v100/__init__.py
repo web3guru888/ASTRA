@@ -33,6 +33,7 @@ Version: 100.0.0
 Date: March 18, 2026
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __version__ = "100.0.0"
 
 # =============================================================================

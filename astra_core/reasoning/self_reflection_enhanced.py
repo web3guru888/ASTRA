@@ -22,6 +22,7 @@ Enables the system to reason about its own reasoning:
 - Failure analysis and improvement suggestions
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 from dataclasses import dataclass, field

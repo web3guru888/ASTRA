@@ -28,6 +28,7 @@ Key innovations:
 4. Precision-weighted prediction errors
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable, Union
 from enum import Enum

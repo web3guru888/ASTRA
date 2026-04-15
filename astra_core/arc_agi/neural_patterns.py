@@ -24,6 +24,7 @@ Implements neural-inspired pattern recognition:
 - Learned transformation priorities
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any
 from dataclasses import dataclass, field

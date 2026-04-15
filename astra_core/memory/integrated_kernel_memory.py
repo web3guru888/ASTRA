@@ -28,6 +28,7 @@ This addresses the "apparently irrelevant" problem by:
 4. Context-aware compression that maintains cross-temporal coherence
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable, Union
 from enum import Enum

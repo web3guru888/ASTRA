@@ -25,6 +25,7 @@ Key capabilities:
 - Abstract pattern learning from multiple examples
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 import hashlib

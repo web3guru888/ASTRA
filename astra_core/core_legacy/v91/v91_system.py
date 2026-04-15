@@ -25,6 +25,7 @@ The next leap beyond V90, addressing the remaining AGI bottlenecks:
 This represents the most complete AGI implementation to date.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Union, Tuple
 from dataclasses import dataclass, field
 import numpy as np

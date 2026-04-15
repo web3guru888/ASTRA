@@ -43,6 +43,7 @@ Version: 1.0.0
 Motivation: PN_24March review incident (54 MHz, 29 PNe, 12 detections - all WRONG)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any
 from enum import Enum

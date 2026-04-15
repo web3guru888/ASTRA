@@ -24,6 +24,7 @@ Implements multi-pass solving with:
 - Constraint-based repair
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass, field

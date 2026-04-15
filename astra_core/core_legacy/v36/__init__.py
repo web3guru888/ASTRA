@@ -18,6 +18,7 @@ V36 Core System - Symbolic Causal Reasoning & Meta-Cognitive Scientific Discover
 This package contains all V36 core modules.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v36_system import (
     V36CompleteSystem,
     ProhibitiveConstraintEngine,

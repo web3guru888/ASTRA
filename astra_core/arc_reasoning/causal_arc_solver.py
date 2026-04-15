@@ -19,6 +19,7 @@ Causal ARC Solver - Uses STAN's causal reasoning to understand transformations.
 Applies causal discovery to identify the true relationships between input and output.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any
 from dataclasses import dataclass

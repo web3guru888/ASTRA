@@ -20,6 +20,7 @@ Comprehensive System Test for STAN-XI-ASTRO - V2
 Tests all advanced capabilities and their integration using actual module paths.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import logging
 from pathlib import Path

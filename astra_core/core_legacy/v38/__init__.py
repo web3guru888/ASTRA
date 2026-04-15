@@ -28,6 +28,7 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v38_system import V38CompleteSystem
 
 # Re-export V37 for convenience

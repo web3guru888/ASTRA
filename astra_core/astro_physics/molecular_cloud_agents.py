@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+from __future__ import annotations  # defer annotation evaluation
 """
 Documentation for multi_scale_inference module.
 

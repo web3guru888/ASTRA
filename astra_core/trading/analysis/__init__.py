@@ -13,4 +13,5 @@
 # limitations under the License.
 
 """Trading Analysis Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .causal_analysis import MarketCausalAnalyzer, CausalSignal, CausalBacktester

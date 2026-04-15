@@ -18,6 +18,7 @@ Ablation Study Visualization Tools
 Create visualizations and reports from ablation study results.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import json
 import os
 from typing import Dict, List, Any, Optional

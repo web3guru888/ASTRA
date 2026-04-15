@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Astronomical Database Access (stub)"""
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any
 from dataclasses import dataclass
 

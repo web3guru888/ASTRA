@@ -54,6 +54,7 @@ Version: 3.1.0 (V44)
 """
 
 # Core components (using relative imports)
+from __future__ import annotations  # defer annotation evaluation
 from .core import AstroSwarmSystem
 from .physics import PhysicsEngine, AstrophysicalConstraints
 from .knowledge_graph import AstronomicalKnowledgeGraph

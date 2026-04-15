@@ -38,6 +38,7 @@ Version: 1.0.0
 Date: 2025-12-27
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import logging
 from dataclasses import dataclass, field
@@ -234,3 +235,25 @@ class MetacognitiveMonitor:
             'current_uncertainty': self.uncertainty_history[-1],
             'trend': 'improving' if len(self.confidence_history) > 1 and self.confidence_history[-1] > self.confidence_history[-2] else 'stable'
         }
+
+
+# =============================================================================
+# Compatibility stubs for names referenced in discovery_orchestrator.py
+# =============================================================================
+
+class AdaptiveReasoningController:
+    """Controller for adaptive scientific reasoning (stub)."""
+    def __init__(self, *args, **kwargs):
+        self.state = ReasoningState() if 'ReasoningState' in dir() else None
+        self.phase = DiscoveryPhase.EXPLORATION if hasattr(DiscoveryPhase, 'EXPLORATION') else None
+
+    def update_phase(self, phase):
+        self.phase = phase
+
+    def get_strategy(self):
+        return {}
+
+
+def get_adaptive_reasoning_controller(*args, **kwargs) -> AdaptiveReasoningController:
+    """Factory function for AdaptiveReasoningController (stub)."""
+    return AdaptiveReasoningController(*args, **kwargs)

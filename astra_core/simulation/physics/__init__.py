@@ -13,4 +13,5 @@
 # limitations under the License.
 
 """Physics Simulation Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .simulator import PhysicsSimulator, Particle, AstronomySimulator

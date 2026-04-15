@@ -24,6 +24,7 @@ proof verification rather than just answer generation.
 Date: 2025-12-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 from typing import Dict, List, Optional, Any, Tuple, Set
 from dataclasses import dataclass, field

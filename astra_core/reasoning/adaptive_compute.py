@@ -28,6 +28,7 @@ Key features:
 Expected improvement: +2-3% on GPQA Diamond
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import re
 from dataclasses import dataclass, field

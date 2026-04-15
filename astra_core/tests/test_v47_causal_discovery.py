@@ -25,6 +25,7 @@ Tests:
 5. Module integration and interconnections
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import numpy as np
 import pandas as pd

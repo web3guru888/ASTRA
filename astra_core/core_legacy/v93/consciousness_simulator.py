@@ -31,6 +31,7 @@ Capabilities:
 - Global Workspace Theory simulation
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Set
 from dataclasses import dataclass, field

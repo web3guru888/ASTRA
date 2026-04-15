@@ -34,6 +34,7 @@ Author: STAN-XI ASTRO V100 Development Team
 Version: 100.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple, Union
 from enum import Enum, auto

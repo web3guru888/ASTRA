@@ -28,6 +28,7 @@ Date: 2026-03-17
 Version: 105.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 import time

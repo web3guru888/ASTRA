@@ -26,6 +26,7 @@ Key features:
 5. Integrates with physics constraints
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Set
 from dataclasses import dataclass, field

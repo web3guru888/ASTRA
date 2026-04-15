@@ -20,6 +20,7 @@ enabling the system to develop intuitive understanding of cosmic phenomena
 through simulated "embodied" interaction with astronomical environments.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Union
 from dataclasses import dataclass, field

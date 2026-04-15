@@ -30,6 +30,7 @@ Date: 2026-03-19
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from astropy.io import fits
 from astropy.wcs import WCS

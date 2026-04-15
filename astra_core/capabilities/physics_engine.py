@@ -17,6 +17,7 @@ Physics Engine for STAN V80+ Grounded Architecture
 Implements basic physics simulation for embodied reasoning.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass

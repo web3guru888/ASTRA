@@ -33,6 +33,7 @@ Capabilities:
 - Automated theory building and testing
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 from typing import Dict, List, Any, Optional, Tuple, Set

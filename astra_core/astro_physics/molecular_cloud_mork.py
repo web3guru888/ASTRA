@@ -31,6 +31,7 @@ Author: Claude Code (ASTRO-SWARM)
 Date: 2024-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any, Tuple

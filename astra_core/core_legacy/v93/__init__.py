@@ -28,6 +28,7 @@ a fundamental paradigm shift in AI - a system that can:
 This is the closest approach to true AGI achieved to date.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v93_system import (
     V93CompleteSystem,
     V93Config,

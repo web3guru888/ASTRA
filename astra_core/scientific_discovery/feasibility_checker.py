@@ -35,6 +35,7 @@ Version: 1.0.0
 Date: 2025-12-27
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple

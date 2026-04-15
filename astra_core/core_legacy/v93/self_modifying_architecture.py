@@ -22,6 +22,7 @@ V93 Recursive Self-Modifying Metacognitive Architecture.
 This is a simplified version for compatibility purposes.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Tuple
 import numpy as np
 from dataclasses import dataclass

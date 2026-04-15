@@ -19,6 +19,7 @@ Pattern Extension Module for ARC-AGI-2
 Handles tasks that involve extending/filling patterns horizontally or vertically
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any
 from dataclasses import dataclass

@@ -18,6 +18,7 @@ Ablation Study Test Runner
 Main script to run ablation studies on ASTRA system.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import os
 import time

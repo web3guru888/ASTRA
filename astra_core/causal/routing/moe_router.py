@@ -29,6 +29,7 @@ Key principles applied:
 5. Adaptive routing based on task patterns
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Tuple, Optional, Any, Callable
 from dataclasses import dataclass, field
 from enum import Enum

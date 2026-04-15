@@ -19,6 +19,7 @@ This engine implements learning through real-world interaction, moving beyond
 simulation to true embodied experience and understanding.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field

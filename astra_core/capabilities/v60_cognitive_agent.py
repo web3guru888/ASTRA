@@ -26,6 +26,7 @@ A unified cognitive agent architecture integrating:
 This represents a paradigm shift from reasoning engine to cognitive agent.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable, Union
 from enum import Enum

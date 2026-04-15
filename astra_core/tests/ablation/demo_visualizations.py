@@ -18,6 +18,7 @@
 Quick demonstration of ablation study visualizations
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import matplotlib.pyplot as plt
 import numpy as np
 

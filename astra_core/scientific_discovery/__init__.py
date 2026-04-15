@@ -36,9 +36,10 @@ Date: 2025-12-27
 # =============================================================================
 # Research Paper Processing
 # =============================================================================
+from __future__ import annotations  # defer annotation evaluation
 from .research_papers import (
     PDFProcessor,
-    CitationNetwork,
+    CitationGraph as CitationNetwork,
     LiteratureMiner,
     PaperAnalyzer,
     Paper,

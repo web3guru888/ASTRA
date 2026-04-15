@@ -39,6 +39,7 @@ Version: 4.0.0
 Date: 2026-03-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
@@ -578,4 +579,3 @@ def validate_concept_coherence(concept: Dict[str, Any],
         'total': len(validation_examples),
         'is_valid': coherence >= 0.7
     }
-                continue

@@ -22,6 +22,7 @@ Date: 2025-12-11
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Optional, Dict, Any
 from astra_core.reasoning.unified_world_model import UnifiedWorldModel, CausalGraph, CausalEdge, Belief, BeliefType, Hypothesis
 

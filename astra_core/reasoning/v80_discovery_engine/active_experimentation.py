@@ -22,6 +22,7 @@ Implements autonomous hypothesis generation and testing:
 - Hypothesis falsification testing
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any, Callable
 from dataclasses import dataclass, field

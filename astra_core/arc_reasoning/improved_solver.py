@@ -19,6 +19,7 @@ Improved ARC-AGI-2 Solver
 Implements comprehensive transformation detection with composition support.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any, Callable
 from dataclasses import dataclass, field

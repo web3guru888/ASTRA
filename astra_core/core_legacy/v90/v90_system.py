@@ -23,6 +23,7 @@ self-awareness.
 Key Innovation: The system can think about its own thinking.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Union, Tuple
 from dataclasses import dataclass, field
 import numpy as np

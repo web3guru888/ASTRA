@@ -24,6 +24,7 @@ Implements autonomous self-improvement through:
 - Meta-learning of learning strategies
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Set
 from dataclasses import dataclass, field

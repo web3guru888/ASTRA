@@ -25,6 +25,7 @@ Integrates:
 This is the main entry point for the enhanced STAN-XI-ASTRO system.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass, field
 import logging

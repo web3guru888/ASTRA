@@ -24,6 +24,7 @@ Algorithms:
 - VAR-LiNGAM (linear non-Gaussian)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 from typing import Dict, List, Optional, Tuple

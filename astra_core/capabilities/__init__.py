@@ -43,6 +43,7 @@ Date: 2025-12-11
 Version: 39.1
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import logging
 logger = logging.getLogger(__name__)
 

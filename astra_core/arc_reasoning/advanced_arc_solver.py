@@ -19,6 +19,7 @@ Advanced ARC Solver - Statistical Pattern Matching + Program Synthesis + Object-
 Innovative approach addressing neural, DSL, object, cross-task, and pipeline requirements.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any, Callable
 from dataclasses import dataclass, field

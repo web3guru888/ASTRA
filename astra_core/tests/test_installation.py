@@ -16,6 +16,7 @@
 Quick installation test for STAN-CORE V4.0 Unified
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 
 

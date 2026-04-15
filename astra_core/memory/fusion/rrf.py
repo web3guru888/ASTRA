@@ -19,6 +19,7 @@ Combines rankings from multiple sources for unified retrieval.
 Fusion weights: Graph (0.4) > Ontology (0.3) > Vector (0.3)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import List, Dict, Tuple, Any, Optional
 from collections import defaultdict
 

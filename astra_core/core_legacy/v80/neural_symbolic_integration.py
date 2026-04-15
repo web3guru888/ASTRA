@@ -22,6 +22,7 @@ for the V80 Grounded Neural-Symbolic Architecture.
 This is a simplified version for compatibility purposes.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Tuple
 import numpy as np
 

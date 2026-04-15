@@ -28,6 +28,7 @@ This decomposition enables:
 - Scientific discovery guidance
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Callable, Any, Tuple
 from enum import Enum

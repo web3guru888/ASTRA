@@ -25,6 +25,7 @@ Units: CGS unless otherwise noted
 Date: 2026-04-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 
 # =============================================================================

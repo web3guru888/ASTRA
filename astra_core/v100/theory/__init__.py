@@ -16,6 +16,7 @@
 V100 Theory Synthesis Module
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .theory_synthesis import (
     TheorySynthesisEngine,
     TheoryFramework,

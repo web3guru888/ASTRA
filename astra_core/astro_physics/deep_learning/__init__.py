@@ -30,6 +30,7 @@ Capabilities:
 - Cross-modal learning (multi-wavelength data fusion)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import torch
 import torch.nn as nn

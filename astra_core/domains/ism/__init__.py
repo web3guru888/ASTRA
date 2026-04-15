@@ -30,6 +30,7 @@ Date: 2025-12-23
 Version: 1.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import logging

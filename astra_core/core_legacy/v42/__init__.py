@@ -28,6 +28,7 @@ Integrates all GPQA-optimized improvements:
 Target: 90%+ on GPQA Diamond (up from 76.8%)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v42_system import (
     V42CompleteSystem,
     V42Config,

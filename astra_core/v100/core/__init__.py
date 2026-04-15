@@ -27,6 +27,7 @@ Author: STAN-XI ASTRO V100 Development Team
 Version: 100.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v100_system import (
     V100DiscoveryEngine,
     V100Config,

@@ -16,6 +16,7 @@
 Helper utilities
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from typing import Callable, Any
 from functools import wraps

@@ -13,4 +13,5 @@
 # limitations under the License.
 
 """Market Simulation Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .simulator import MarketSimulation, OrderBook, Order, TraderAgent

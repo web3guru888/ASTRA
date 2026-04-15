@@ -19,6 +19,7 @@ Stores embeddings and enables fast similarity search.
 Uses Metal Accelerate framework for M1 acceleration.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass

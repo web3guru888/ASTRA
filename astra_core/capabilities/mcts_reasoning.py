@@ -32,6 +32,7 @@ Expected improvement: +2-3% on GPQA Diamond
 Date: 2025-12-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import math
 import random
 import hashlib

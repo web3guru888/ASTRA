@@ -26,6 +26,7 @@ Key Features:
 - Cosmological reasoning about structure formation
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Union
 from dataclasses import dataclass

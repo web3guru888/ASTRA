@@ -23,6 +23,7 @@ This enhanced version includes:
 5. Real-world data integration capabilities
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field

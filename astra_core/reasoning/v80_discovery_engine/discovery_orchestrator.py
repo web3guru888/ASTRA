@@ -24,6 +24,7 @@ Coordinates all discovery engine components:
 - Subtle pattern detection
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field

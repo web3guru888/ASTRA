@@ -26,6 +26,7 @@ Provides advanced mathematical capabilities for scientific reasoning:
 Expected improvement: +2-3% on Physics/Chemistry questions
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 from dataclasses import dataclass, field

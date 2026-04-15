@@ -18,6 +18,7 @@ Date utilities for STAN-CORE V4.0
 Centralized date handling to ensure all content shows correct current date.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from datetime import datetime
 
 # Current date constants - updated for deployment

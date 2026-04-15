@@ -27,6 +27,7 @@ to drive self-teaching. The curriculum adapts based on:
 This ensures the system always has appropriate challenges to learn from.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field

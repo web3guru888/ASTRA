@@ -24,6 +24,7 @@ Tests the autonomous self-teaching capabilities including:
 - Benchmark evaluation
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import pytest
 import numpy as np
 import sys

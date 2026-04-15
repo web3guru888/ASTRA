@@ -30,6 +30,7 @@ Date: 2025-12-11
 Version: 39.1
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple, Set
 from difflib import SequenceMatcher

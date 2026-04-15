@@ -14,6 +14,7 @@
 
 """Stub module for causal.counterfactual.engine"""
 
+from __future__ import annotations  # defer annotation evaluation
 __all__ = ['Engine']
 
 class Engine:

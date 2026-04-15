@@ -25,6 +25,7 @@ Date: 2025-12-11
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any
 from dataclasses import dataclass
 

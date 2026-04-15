@@ -19,6 +19,7 @@ Interactive ARC Solver
 Describes what it sees and asks for guidance on transformations.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Optional, Any, Tuple
 from dataclasses import dataclass

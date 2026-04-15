@@ -26,6 +26,7 @@ This enables the system to improve its own learning process
 autonomously, creating a recursive self-improvement loop.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Any, Tuple, Callable
 from dataclasses import dataclass, field

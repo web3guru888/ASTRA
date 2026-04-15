@@ -19,6 +19,7 @@ Font-safe PDF generation utilities for reportlab.
 Fixes black square issues caused by Unicode characters not in standard fonts.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 def safe_text(text):
     """
     Convert special Unicode characters to ASCII-safe alternatives for reportlab.

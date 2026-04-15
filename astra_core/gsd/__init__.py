@@ -32,6 +32,7 @@ Version: 1.0.0
 Date: 2026-01-03
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __version__ = "1.0.0"
 
 # =============================================================================

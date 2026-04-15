@@ -25,6 +25,7 @@ This module discovers phenomena from first principles by:
 - Using renormalization group methods for scale-invariant discoveries
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any, Callable
 from dataclasses import dataclass, field

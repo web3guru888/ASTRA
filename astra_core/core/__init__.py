@@ -18,6 +18,7 @@ STAN-CORE V4.0 Unified System
 Main entry point for STAN-CORE V4.0. Integrates all components.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Optional, Dict, Any, List
 import warnings
 

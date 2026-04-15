@@ -28,6 +28,7 @@ This dramatically improves sampling efficiency for astrophysical inference
 where parameter degeneracies and multimodality are common.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Callable, Any, Tuple
 from enum import Enum

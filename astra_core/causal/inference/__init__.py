@@ -19,6 +19,7 @@ This module provides simulation-based inference methods for cases where
 likelihoods are intractable, which is common in astrophysics.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .simulation_based_inference import (
     SBIMethod,
     SimulatorConfig,

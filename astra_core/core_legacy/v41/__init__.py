@@ -26,6 +26,7 @@ These systems work together to enable AGI-like reasoning,
 learning, and problem-solving capabilities.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .self_reflection import (
     SelfReflectionModule,
     Contradiction,

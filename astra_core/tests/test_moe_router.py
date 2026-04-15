@@ -24,6 +24,7 @@ This script demonstrates:
 4. Learning from routing outcomes
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import os
 import time

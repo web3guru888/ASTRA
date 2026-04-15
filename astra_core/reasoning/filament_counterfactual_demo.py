@@ -22,6 +22,7 @@ Date: 2025-12-11
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))

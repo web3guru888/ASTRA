@@ -26,6 +26,7 @@ Key Features:
 - Gravitational interaction patterns
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field

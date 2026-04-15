@@ -21,6 +21,7 @@ Contains reusable pattern primitives that can be composed to solve complex tasks
 Implements both analysis (pattern detection) and synthesis (pattern application).
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass, field

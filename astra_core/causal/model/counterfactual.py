@@ -27,6 +27,7 @@ Key Functions:
 - attribution: Determine causal contribution of each factor
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, Optional, Tuple, List, Any
 from dataclasses import dataclass
 import numpy as np

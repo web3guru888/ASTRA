@@ -19,6 +19,7 @@ Provides abstract base class and configuration for all domain modules.
 Enables plug-and-play domain expansion with hot-swapping capabilities.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional, Callable

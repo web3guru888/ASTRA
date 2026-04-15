@@ -20,6 +20,7 @@ Implements: Deep Visual Understanding, Abstraction, Composition, Analogy, Counte
 Aims for 100% accuracy by truly understanding task concepts.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any, Callable
 from dataclasses import dataclass, field

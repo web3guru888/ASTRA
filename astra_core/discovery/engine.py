@@ -19,6 +19,7 @@ Automated hypothesis generation, experimental design,
 and theory construction.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum

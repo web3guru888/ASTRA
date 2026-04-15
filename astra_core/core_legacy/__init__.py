@@ -22,6 +22,7 @@ Versions:
 - V93: Recursive Self-Modifying Metacognitive Architecture
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import logging
 
 # V50 Discovery Engine (primary system)

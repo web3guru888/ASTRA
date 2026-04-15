@@ -24,6 +24,7 @@ problems requiring statistical interpretation and numerical analysis.
 Date: 2025-12-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 from typing import Dict, List, Optional, Any, Tuple, Set, Union

@@ -26,6 +26,7 @@ Key capabilities:
 - Predictive extension: Generate novel predictions from theories
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Set, Optional, Any, Callable, Tuple
 from enum import Enum, auto

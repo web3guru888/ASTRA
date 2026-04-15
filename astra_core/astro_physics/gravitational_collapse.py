@@ -16,3 +16,5 @@
 
 
 # Custom optimization variant 46
+
+from __future__ import annotations  # defer annotation evaluation

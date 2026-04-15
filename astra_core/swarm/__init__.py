@@ -36,6 +36,7 @@ Version: 2.0
 """
 
 # Core MORK models
+from __future__ import annotations  # defer annotation evaluation
 from .models import (
     AgentNamespace,
     BiologicalField,

@@ -30,6 +30,7 @@ This is a major architectural enhancement that goes beyond simple geometric
 transformations to true semantic understanding of visual patterns.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any, Callable
 from dataclasses import dataclass, field

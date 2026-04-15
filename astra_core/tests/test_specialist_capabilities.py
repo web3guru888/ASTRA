@@ -25,6 +25,7 @@ Date: 2025-12-23
 Version: 1.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import logging
 from pathlib import Path

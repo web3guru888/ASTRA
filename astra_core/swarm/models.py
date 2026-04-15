@@ -19,6 +19,7 @@ Defines data structures for MORK integration based on CSIG-main.
 Implements BiologicalField and AgentNamespace for stigmergic field persistence.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from enum import Enum
 from typing import Optional
 from dataclasses import dataclass

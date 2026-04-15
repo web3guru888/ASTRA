@@ -22,6 +22,7 @@ Specializes in solar system science including:
 - Space mission data analysis
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any
 import logging

@@ -30,6 +30,7 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple, Any
 from dataclasses import dataclass, field

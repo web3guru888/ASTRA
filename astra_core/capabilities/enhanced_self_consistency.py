@@ -27,6 +27,7 @@ Version: 1.0.0
 """
 
 # Re-export from reasoning package
+from __future__ import annotations  # defer annotation evaluation
 from astra_core.reasoning.enhanced_self_consistency import (
     EnhancedSelfConsistency,
     ConsistencyResult,

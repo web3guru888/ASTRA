@@ -31,6 +31,7 @@ Components:
 Date: 2025-12-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Callable, Tuple, Set
 from enum import Enum

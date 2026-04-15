@@ -20,6 +20,7 @@ through embodied learning, sensorimotor integration, and grounded cognition.
 Enhanced for astrophysics applications with cosmic-scale embodied understanding.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .embodied_learning_engine import EmbodiedLearningEngine
 from .sensorimotor_system import SensorimotorInterface, WorldAction, Experience
 from .developmental_learning import DevelopmentalLearning, PlayfulExplorer

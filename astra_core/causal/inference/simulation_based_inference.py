@@ -29,6 +29,7 @@ Reference:
 - Cranmer, K. et al. (2015). Approximating likelihood ratios with calibrated discriminative classifiers.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 from typing import Dict, List, Optional, Tuple, Union, Callable, Any

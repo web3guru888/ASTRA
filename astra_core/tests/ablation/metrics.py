@@ -18,6 +18,7 @@ Evaluation Metrics for Ablation Studies
 Defines metrics to evaluate the impact of ablations on ASTRA's performance.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Callable, Optional
 from enum import Enum

@@ -14,6 +14,7 @@
 
 """Stub module for core.v43"""
 
+from __future__ import annotations  # defer annotation evaluation
 __all__ = ['V43System']
 
 class V43System:

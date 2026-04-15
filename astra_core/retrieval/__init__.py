@@ -35,6 +35,7 @@ Version: 1.0
 Date: 2026-01-04
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .hybrid_search import (
     HybridRetriever,
     TfidfRetriever,

@@ -19,6 +19,7 @@ LLM-Guided ARC Solver
 Uses LLM reasoning to understand tasks and generate transformation programs.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Optional, Any, Tuple
 from dataclasses import dataclass

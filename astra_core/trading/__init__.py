@@ -16,6 +16,7 @@
 Trading Package
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .analysis.causal_analysis import (
     MarketCausalAnalyzer,
     CausalSignal,

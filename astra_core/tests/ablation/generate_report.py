@@ -19,6 +19,7 @@ Generate comprehensive reports from ablation study results
 suitable for inclusion in academic papers.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import json
 import os
 from typing import Dict, List, Any, Optional

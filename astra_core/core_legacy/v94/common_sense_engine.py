@@ -19,6 +19,7 @@ This implements common sense reasoning that humans develop through embodied expe
 including intuitive physics, social reasoning, and everyday knowledge about how the world works.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Union
 from dataclasses import dataclass, field

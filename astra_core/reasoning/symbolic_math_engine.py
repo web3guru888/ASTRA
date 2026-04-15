@@ -24,6 +24,7 @@ by enabling actual mathematical operations rather than pattern matching.
 Date: 2025-12-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 from typing import Dict, List, Optional, Any, Tuple, Union, Set

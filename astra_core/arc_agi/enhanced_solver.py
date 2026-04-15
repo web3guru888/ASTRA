@@ -24,6 +24,7 @@ Integrates all advanced components:
 - Iterative refinement with error correction
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass

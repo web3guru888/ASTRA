@@ -18,6 +18,7 @@ This module is a stub implementation for graceful degradation.
 The full implementation would be in a complete version of ASTRA.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __all__ = []
 
 # Placeholder classes/functions

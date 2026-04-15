@@ -23,6 +23,7 @@ Components:
 - AletheiaProofSystem: Basic 3-agent architecture
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .aletheia_stan_architecture import (
     AletheiaSTANSystem,
     ProofStrategy,

@@ -29,6 +29,7 @@ Date: 2025-12-10
 Version: 39.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v39_system import (
     V39CompleteSystem,
     V39EnhancementStats,

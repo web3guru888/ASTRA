@@ -26,6 +26,7 @@ Date: 2025-12-11
 Version: 42.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import uuid
 import math

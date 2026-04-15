@@ -36,6 +36,7 @@ Version: 1.0.0
 Date: 2025-12-27
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import json
 import logging
@@ -205,3 +206,34 @@ class PDFProcessor:
         except Exception as e:
             logger.error(f"Error extracting text from PDF: {e}")
             return ""
+
+
+# =============================================================================
+# Compatibility stubs for names referenced in __init__.py
+# (full implementations planned in future development cycles)
+# =============================================================================
+
+class LiteratureMiner:
+    """Extract key findings and hypotheses from literature (stub)."""
+    def __init__(self, *args, **kwargs):
+        pass
+    def mine(self, papers):
+        return []
+
+
+class PaperAnalyzer:
+    """Analyse paper content and extract structured information (stub)."""
+    def __init__(self, *args, **kwargs):
+        pass
+    def analyze(self, paper):
+        return {}
+
+
+def extract_paper_metadata(text: str) -> dict:
+    """Extract metadata fields from paper text (stub)."""
+    return {}
+
+
+def build_citation_network(papers: list) -> CitationGraph:
+    """Build a citation graph from a list of Paper objects (stub)."""
+    return CitationGraph(num_nodes=len(papers))

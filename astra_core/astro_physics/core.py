@@ -25,6 +25,7 @@ The central coordinator that integrates:
 This system is designed for astronomical applications with physics-aware inference.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))

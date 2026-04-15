@@ -25,6 +25,7 @@ This module automatically discovers constraints from data:
 - Lagrangian inference
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Callable, Any
 from dataclasses import dataclass, field

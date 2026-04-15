@@ -23,6 +23,7 @@ Date: 2026-03-28
 Version: 7.22
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, Any, Optional, List
 import logging
 

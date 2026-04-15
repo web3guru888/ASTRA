@@ -30,6 +30,7 @@ Date: 2026-02-12
 Version: 2.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import time
 from typing import Dict, List, Any, Optional, Tuple

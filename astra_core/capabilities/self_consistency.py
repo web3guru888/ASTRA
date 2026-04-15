@@ -25,6 +25,8 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation (fixes np.ndarray in signatures)
+
 import re
 import math
 from dataclasses import dataclass, field

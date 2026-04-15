@@ -21,6 +21,7 @@ using few-shot learning and knowledge transfer from existing domains.
 Extends existing V50 meta-learning with domain transfer capabilities.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Any, Optional
 from dataclasses import dataclass, field

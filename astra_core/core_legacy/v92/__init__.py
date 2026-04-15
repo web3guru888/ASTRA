@@ -21,6 +21,7 @@ scientific discovery system capable of generating hypotheses, discovering
 causal relationships, applying mathematical intuition, and designing experiments.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v92_system import (
     V92CompleteSystem,
     V92Config,

@@ -16,6 +16,7 @@
 Meta-Cognitive Package
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .monitoring.monitor import CognitiveMonitor, ProcessState
 
 __all__ = [

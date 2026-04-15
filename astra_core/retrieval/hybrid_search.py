@@ -36,6 +36,7 @@ Example Use:
     # Returns both conceptual documents AND exact error code matches
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import numpy as np
 from dataclasses import dataclass, field

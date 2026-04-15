@@ -37,6 +37,7 @@ Example Use:
     # 90% token reduction, higher accuracy, faster generation
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Callable

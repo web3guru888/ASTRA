@@ -33,6 +33,7 @@ All calculations assume FITS-like 2D/3D arrays with proper WCS calibration.
 Author: STAN V43 Astrophysics Module
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import math
 from dataclasses import dataclass, field
 from enum import Enum, auto

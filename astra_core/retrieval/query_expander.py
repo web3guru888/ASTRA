@@ -37,6 +37,7 @@ Example Use:
     # Returns 7-9 query variations for parallel retrieval
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import re
 from dataclasses import dataclass, field

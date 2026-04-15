@@ -18,6 +18,7 @@ Test script to validate Phase 2-4 enhancements
 This script tests the new domain system, physics engine, and validation framework.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import logging
 from pathlib import Path

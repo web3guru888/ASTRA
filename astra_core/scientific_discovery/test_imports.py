@@ -19,6 +19,7 @@ Test script to verify import fixes for astra_core modules.
 This verifies that the relative import fixes work correctly.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import logging
 from pathlib import Path

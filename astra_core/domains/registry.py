@@ -19,6 +19,7 @@ Provides hot-swappable domain modules with automatic loading,
 dependency resolution, and lifecycle management.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import importlib
 import logging
 from typing import Dict, List, Optional, Any

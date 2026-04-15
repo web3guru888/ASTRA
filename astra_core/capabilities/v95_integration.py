@@ -27,6 +27,7 @@ Use this to:
 Date: 2026-02-20
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, Any, Optional, Callable
 from functools import wraps
 

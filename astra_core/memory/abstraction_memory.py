@@ -22,6 +22,7 @@ Version: 4.0.0
 Date: 2026-03-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Optional, Any, Set, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
@@ -776,5 +777,3 @@ def detect_change_points(data: np.ndarray, min_size: int = 10, penalty: float = 
             i += 1
 
     return change_points
-                scores.append((var, 0))
-                continue

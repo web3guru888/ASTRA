@@ -21,6 +21,7 @@ Supports both local storage and remote MORK server.
 Based on CSIG-main mork-client-csig implementation.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import json
 import pickle
 from pathlib import Path

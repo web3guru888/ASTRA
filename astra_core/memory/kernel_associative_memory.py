@@ -27,6 +27,7 @@ This implementation addresses these issues through:
 - Multi-scale temporal retention
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple, Set, Callable
 from enum import Enum
@@ -1482,5 +1483,3 @@ def gaussian_process_predict(X_train: np.ndarray,
         'std': np.sqrt(np.maximum(y_var, 0)),
         'covariance': K_ss - v.T @ v
     }
-                scores.append((var, 0))
-                continue

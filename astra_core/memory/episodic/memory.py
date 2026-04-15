@@ -19,6 +19,7 @@ Stores specific experiences with temporal, spatial, and contextual information.
 Enables retrieval of past experiences and learning from them.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional, Set
 from datetime import datetime

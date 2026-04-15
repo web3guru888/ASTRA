@@ -22,6 +22,7 @@ Date: 2025-12-11
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from enum import Enum
 from typing import Dict, Any, Callable, List
 from collections import defaultdict

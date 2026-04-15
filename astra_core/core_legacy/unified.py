@@ -50,6 +50,7 @@ Core Integrated Capabilities:
 The system automatically selects optimal capabilities based on the task.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __version__ = "3.1.0-ASTRO"
 
 from typing import Dict, List, Any, Optional, Union, Tuple

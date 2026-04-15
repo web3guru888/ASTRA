@@ -31,6 +31,7 @@ Key improvements over V41:
 Target: 90%+ on GPQA Diamond (up from 76.8% with V41)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import hashlib
 from dataclasses import dataclass, field

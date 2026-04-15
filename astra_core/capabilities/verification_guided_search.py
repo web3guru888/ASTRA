@@ -22,6 +22,7 @@ This module implements guided search with verification loops.
 Enhanced through self-evolution cycle 81524.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Tuple
 from enum import Enum

@@ -18,6 +18,7 @@ Market Simulation Engine
 Agent-based market simulation with realistic order book dynamics.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 from typing import Dict, List, Optional, Tuple, Any

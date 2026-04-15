@@ -24,6 +24,7 @@ independently without coordination or result sharing.
 Date: 2025-12-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from typing import Dict, List, Optional, Any, Tuple, Set, Callable
 from dataclasses import dataclass, field

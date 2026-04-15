@@ -19,6 +19,7 @@ This system provides the bridge between abstract reasoning and physical interact
 enabling the system to learn through sensorimotor experience.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Union
 from dataclasses import dataclass, field

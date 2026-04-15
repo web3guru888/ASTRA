@@ -17,6 +17,7 @@ Memory Subsystem Init Files
 """
 
 # Episodic memory
+from __future__ import annotations  # defer annotation evaluation
 from .memory import EpisodicMemory, Experience
 
 

@@ -23,6 +23,7 @@ Implements program synthesis via systematic search with:
 - Analogical transfer from solved tasks
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass, field

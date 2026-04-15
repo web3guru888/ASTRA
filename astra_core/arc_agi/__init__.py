@@ -28,6 +28,7 @@ A comprehensive solver for the ARC-AGI benchmark using:
 - Analogical transfer from solved tasks
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .grid_dsl import (
     Grid, GridObject, BoundingBox,
     Color, Direction, Symmetry,

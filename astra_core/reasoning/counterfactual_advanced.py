@@ -17,6 +17,7 @@
 Advanced counterfactual reasoning for astrophysics
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional
 

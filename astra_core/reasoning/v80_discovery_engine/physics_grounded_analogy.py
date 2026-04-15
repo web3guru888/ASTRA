@@ -25,6 +25,7 @@ This module validates analogies by checking:
 - Conservation laws: Are the same invariants present?
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field

@@ -28,6 +28,7 @@ Version: 50.0.0
 Date: 2025-12-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v50_discovery_engine import (
     V50DiscoveryEngine,
     V50Config,

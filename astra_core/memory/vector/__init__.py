@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Vector Store Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .store import VectorStore
 
 

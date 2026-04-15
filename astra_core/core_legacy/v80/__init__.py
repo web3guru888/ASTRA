@@ -25,6 +25,7 @@ Key Features:
 - Telescope observation grounding
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v80_astro_system import V80AstroSystem, V80AstroConfig
 from .astro_grounding import AstroGroundedConcept, CelestialObject
 from .cosmic_operations import CosmicCompose, CosmicTransform, AstronomicalCompare

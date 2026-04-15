@@ -13,4 +13,5 @@
 # limitations under the License.
 
 """Meta-Cognitive Monitoring Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .monitor import CognitiveMonitor, ProcessState

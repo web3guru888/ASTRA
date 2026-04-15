@@ -26,6 +26,7 @@ Tests all internal links, dependencies, and module interconnections:
 6. Graceful degradation verification
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import os
 import warnings

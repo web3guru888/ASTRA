@@ -30,6 +30,7 @@ This represents a paradigm shift from "applying intelligence" to
 "synthesizing intelligence" - systems that discover their own methods.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Tuple

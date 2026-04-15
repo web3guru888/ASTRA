@@ -23,6 +23,7 @@ References:
 - Pearl, J. & Mackenzie, D. (2018). The Book of Why
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, Set, Optional, Callable, Any, List
 from enum import Enum

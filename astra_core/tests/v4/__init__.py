@@ -20,3 +20,5 @@ Test suite for the four revolutionary V4.0 capabilities.
 Version: 4.0.0
 Date: 2026-03-17
 """
+
+from __future__ import annotations  # defer annotation evaluation

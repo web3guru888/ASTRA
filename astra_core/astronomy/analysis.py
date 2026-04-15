@@ -14,6 +14,7 @@
 
 """Stub module for astronomy.analysis"""
 
+from __future__ import annotations  # defer annotation evaluation
 __all__ = ['Analyzer']
 
 class Analyzer:

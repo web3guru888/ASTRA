@@ -24,6 +24,7 @@ This script demonstrates the new enhanced features:
 Compares V1.0 (baseline) vs V2.0 (enhanced) performance.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))

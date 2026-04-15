@@ -30,6 +30,7 @@ Expected improvement: +5-7% on GPQA Diamond
 """
 
 # Tell pytest to skip this module (it's an implementation, not tests)
+from __future__ import annotations  # defer annotation evaluation
 __test__ = False
 
 import time

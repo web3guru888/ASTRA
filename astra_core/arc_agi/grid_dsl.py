@@ -21,6 +21,7 @@ Provides a comprehensive set of grid transformation primitives that can be
 composed to solve ARC-AGI tasks.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass, field

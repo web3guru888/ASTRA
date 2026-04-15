@@ -27,6 +27,7 @@ Key innovations:
 4. Sleep-inspired offline consolidation cycles
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Set, Tuple, Callable
 from enum import Enum

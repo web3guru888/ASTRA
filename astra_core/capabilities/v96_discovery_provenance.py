@@ -43,6 +43,7 @@ Date: 2026-03-22
 Motivation: Taurus hallucination incident - Section 3.5 integrity check
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Any
 from enum import Enum

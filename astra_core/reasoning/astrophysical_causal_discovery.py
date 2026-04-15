@@ -22,6 +22,7 @@ discovery with astrophysical constraints and interpretation.
 Author: STAN V43 Reasoning Module
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import math
 from dataclasses import dataclass, field
 from enum import Enum, auto

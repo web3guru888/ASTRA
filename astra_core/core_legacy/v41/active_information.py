@@ -22,6 +22,7 @@ Enables intelligent, targeted information gathering:
 - Sufficiency assessment to know when to stop seeking
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 from dataclasses import dataclass, field

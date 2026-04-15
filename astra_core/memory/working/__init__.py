@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Working Memory Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .memory import WorkingMemory
 
 

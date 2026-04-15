@@ -29,6 +29,7 @@ Key Features:
 - Phenomenal experience simulation
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v90_system import V90CompleteSystem, V90Config, V90MetacognitiveState
 from .metacognitive_core import MetacognitiveCore, MetacognitiveLevel
 from .global_workspace import GlobalWorkspace, ConsciousContent

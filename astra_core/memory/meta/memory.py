@@ -19,6 +19,7 @@ Monitoring and management of memory systems.
 Provides confidence assessment, source monitoring, etc.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Optional, Any
 from enum import Enum
 

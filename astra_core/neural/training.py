@@ -18,6 +18,7 @@ Neural Network Training Infrastructure
 Training utilities for neural network models on M1 Max.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Callable
 from abc import ABC, abstractmethod

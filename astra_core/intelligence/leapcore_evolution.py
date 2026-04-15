@@ -29,6 +29,7 @@ Date: 2025-11-27
 Version: 37.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Callable
 from dataclasses import dataclass, field

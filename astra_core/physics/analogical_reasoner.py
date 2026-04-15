@@ -19,6 +19,7 @@ Applies analogical reasoning to novel physical phenomena.
 Enables transfer of understanding from known to novel phenomena.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field

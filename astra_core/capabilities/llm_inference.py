@@ -22,6 +22,7 @@ Date: 2025-12-11
 Version: 40.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import os
 import json
 import asyncio

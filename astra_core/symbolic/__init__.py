@@ -40,6 +40,7 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .self_consistency import (
     SelfConsistencyEngine,
     EnhancedSelfConsistency,

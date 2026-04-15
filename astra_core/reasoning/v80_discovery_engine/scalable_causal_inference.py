@@ -25,6 +25,7 @@ This module implements scalable methods for large variable sets:
 - Sparse regression methods (PC algorithm with improvements)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Set, Any
 from dataclasses import dataclass, field

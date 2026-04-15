@@ -30,6 +30,7 @@ Features:
 - Local caching for offline use
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Tuple, Union

@@ -25,6 +25,7 @@ This approach prevents confirmation bias and ensures
 scientific rigor in astrophysical inference.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Callable, Any, Tuple, Set
 from enum import Enum

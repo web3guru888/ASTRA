@@ -32,6 +32,7 @@ Step-by-Step Retrieval" (arXiv:2506.08625)
 Expected improvement: +2-3% on GPQA Diamond
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import hashlib
 import time
 from dataclasses import dataclass, field

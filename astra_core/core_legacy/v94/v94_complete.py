@@ -20,6 +20,7 @@ with previous STAN versions, representing the paradigm shift from simulated
 intelligence to experienced intelligence.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Union, Callable
 import logging

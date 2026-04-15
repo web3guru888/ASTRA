@@ -57,6 +57,7 @@ Version: 3.0.0
 Date: 2026-03-16
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .self_rewarding import (
     SelfRewardingEngine,
     IntrinsicReward,

@@ -29,6 +29,7 @@ Key improvements over basic self-consistency:
 Expected improvement: +3-4% on GPQA Diamond
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import random
 import hashlib
 import time

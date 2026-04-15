@@ -13,4 +13,5 @@
 # limitations under the License.
 
 """Stub module"""
+from __future__ import annotations  # defer annotation evaluation
 __all__ = []

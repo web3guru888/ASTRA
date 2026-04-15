@@ -51,6 +51,7 @@ Version: 1.0.0
 Motivation: PN_analysis hallucination incident (fake Seaquist 1976 citation)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Set, Any, Union
 from enum import Enum

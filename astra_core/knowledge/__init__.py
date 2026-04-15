@@ -16,6 +16,7 @@
 Domain Knowledge - Priors and specifications for CLD, D1 (epidemiology), D2 (economics)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import json
 from pathlib import Path
 

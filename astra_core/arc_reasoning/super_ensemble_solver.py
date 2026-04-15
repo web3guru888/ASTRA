@@ -19,6 +19,7 @@ Super Ensemble ARC Solver - Combines ALL approaches with intelligent voting.
 This is the ultimate solver integrating every technique we've built.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any
 from dataclasses import dataclass

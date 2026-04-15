@@ -42,6 +42,7 @@ Usage:
         print(f"Correct value: {result.hallucination_match.correct_value}")
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .bootstrap_memory import (
     BootstrapMemory,
     MemoryPriority,

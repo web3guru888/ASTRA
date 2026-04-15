@@ -18,4 +18,5 @@ Tests for STAN-CORE V4.0
 Run tests with: python -m pytest tests/
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __version__ = "4.0.0"

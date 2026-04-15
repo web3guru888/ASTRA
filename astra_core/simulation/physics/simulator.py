@@ -19,6 +19,7 @@ Simulates physical phenomena for grounded understanding.
 Includes classical mechanics, electromagnetism, and astronomy.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass

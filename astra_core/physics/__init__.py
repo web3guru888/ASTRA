@@ -25,6 +25,7 @@ Integrates:
 Provides single API for physics operations with automatic differentiation.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Callable, Tuple, Union
 from dataclasses import dataclass, field

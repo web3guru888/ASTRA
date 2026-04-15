@@ -19,6 +19,7 @@ Ensemble ARC Solver - Combines multiple approaches for better coverage.
 Uses lenient acceptance to allow more transformations to be tried.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Any
 from dataclasses import dataclass

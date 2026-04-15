@@ -27,6 +27,7 @@ Date: 2025-12-17
 Version: 1.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import List, Dict, Any, Optional
 
 # Re-export from reasoning package

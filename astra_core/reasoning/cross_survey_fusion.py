@@ -26,6 +26,7 @@ This enables stronger constraints than any single survey alone,
 while properly accounting for systematics and correlations.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Callable, Any, Tuple, Set
 from enum import Enum

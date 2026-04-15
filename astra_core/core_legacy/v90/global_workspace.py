@@ -22,6 +22,7 @@ Multiple specialized modules broadcast to a global consciousness
 that becomes available for global processing.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import numpy as np
 from typing import Dict, List, Any, Optional

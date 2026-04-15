@@ -25,6 +25,7 @@ This test suite verifies:
 5. Permissionless hooks for corrections
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 import os
 import time

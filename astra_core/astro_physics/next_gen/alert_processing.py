@@ -21,6 +21,7 @@ and other time-domain surveys.
 Date: 2025-12-15
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Optional, Any, Tuple, Callable
 from dataclasses import dataclass, field

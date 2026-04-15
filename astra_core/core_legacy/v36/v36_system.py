@@ -27,6 +27,7 @@ Date: 2025-11-22
 Version: 36.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import json
 from enum import Enum

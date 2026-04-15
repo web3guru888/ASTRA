@@ -23,6 +23,7 @@ Implements all 5 enhanced swarm integration suggestions:
 5. Hypothesis engine integration with analogical reasoning
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 import hashlib

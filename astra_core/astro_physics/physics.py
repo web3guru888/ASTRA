@@ -26,6 +26,7 @@ The key insight: Swarm intelligence is powerful for EXPLORATION, and
 astronomical inference requires PHYSICS-BASED FITNESS FUNCTIONS to guide it.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Callable, Any
 from dataclasses import dataclass, field

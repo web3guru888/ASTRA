@@ -25,6 +25,7 @@ Date: January 10, 2026
 Updated: March 19, 2026 - Fixed table widths, font issues, figure placement
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from pathlib import Path

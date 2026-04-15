@@ -19,6 +19,7 @@ Implements the do-calculus for planning optimal interventions
 in causal systems.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, Set, Optional, List, Tuple
 import numpy as np
 from dataclasses import dataclass

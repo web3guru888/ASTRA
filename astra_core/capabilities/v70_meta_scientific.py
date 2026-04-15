@@ -28,6 +28,7 @@ This module enables STAN to:
 6. Synthesize cross-disciplinary insights
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Set, Tuple

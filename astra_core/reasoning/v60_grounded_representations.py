@@ -27,6 +27,7 @@ This enables genuine generalization to novel situations.
 Date: 2025-12-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Tuple, Set, Callable
 from enum import Enum

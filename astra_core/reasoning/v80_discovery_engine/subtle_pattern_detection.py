@@ -22,6 +22,7 @@ Detects subtle causal patterns across vast datasets:
 - Cross-survey pattern discovery
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field

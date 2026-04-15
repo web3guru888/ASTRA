@@ -16,6 +16,7 @@
 Simulation Package
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .physics.simulator import PhysicsSimulator, Particle, AstronomySimulator
 
 __all__ = [

@@ -26,6 +26,7 @@ Version: 1.0
 """
 
 # Import from reasoning package
+from __future__ import annotations  # defer annotation evaluation
 from astra_core.reasoning.v50_world_simulator import (
     WorldModelInterface,
     PhysicsEngine,

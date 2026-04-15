@@ -17,6 +17,7 @@ STAN ARC Reasoning Module
 """
 
 # Import next-generation solver
+from __future__ import annotations  # defer annotation evaluation
 try:
     from .next_gen_solver import (
         SemanticConcept,

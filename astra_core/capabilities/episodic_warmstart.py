@@ -28,6 +28,7 @@ Date: 2025-12-11
 Version: 39.1
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Tuple
 from enum import Enum
@@ -1246,5 +1247,3 @@ def update_confidence_based_on_feedback(current_confidence: float,
     new_confidence = max(0.0, min(1.0, new_confidence))
 
     return new_confidence
-                scores.append((var, 0))
-                continue

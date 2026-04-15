@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Semantic Memory Package"""
+from __future__ import annotations  # defer annotation evaluation
 from .memory import SemanticMemory, Concept
 
 

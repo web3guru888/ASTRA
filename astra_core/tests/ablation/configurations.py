@@ -19,6 +19,7 @@ Defines all ablation configurations to systematically test
 the contribution of each component to ASTRA's performance.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Set
 from enum import Enum

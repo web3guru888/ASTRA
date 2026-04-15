@@ -28,6 +28,7 @@ This module enables STAN to:
 6. Predict at multiple temporal horizons
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Tuple, Set

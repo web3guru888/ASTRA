@@ -26,6 +26,7 @@ V91 represents the most complete AGI implementation to date,
 addressing all bottlenecks identified in AGI research.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v91_system import (
     V91CompleteSystem, V91Config, V91MetacognitiveState,
     AGIReadinessLevel,

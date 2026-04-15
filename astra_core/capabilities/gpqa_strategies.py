@@ -28,6 +28,7 @@ Key features:
 Expected improvement: +1-2% on GPQA Diamond
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Tuple, Callable
 from enum import Enum

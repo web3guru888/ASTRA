@@ -19,6 +19,7 @@ Semantic Pattern Solver
 Detects and applies local semantic patterns like corners, edges, and region fills.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Optional, Any, Tuple, Set
 from dataclasses import dataclass

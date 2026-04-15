@@ -24,3 +24,5 @@ Enhanced through self-evolution cycle 35014.
 
 
 # Custom optimization variant 21
+
+from __future__ import annotations  # defer annotation evaluation

@@ -19,6 +19,7 @@ Stores general knowledge, concepts, and semantic relationships.
 Extends MORK ontology from STAN-CORE V3.0.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, Set, List, Any, Optional
 from enum import Enum

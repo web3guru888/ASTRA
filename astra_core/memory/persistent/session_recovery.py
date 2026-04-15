@@ -23,6 +23,7 @@ Date: 2026-03-24
 Version: 1.0.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any
 from pathlib import Path

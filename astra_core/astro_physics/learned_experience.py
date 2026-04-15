@@ -31,6 +31,7 @@ This module implements:
 4. Failure mode detection and recovery
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import json
 from pathlib import Path

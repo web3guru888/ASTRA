@@ -38,6 +38,7 @@ Example Use:
     # Success: 80% vs 60% for single execution
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import random
 from dataclasses import dataclass, field

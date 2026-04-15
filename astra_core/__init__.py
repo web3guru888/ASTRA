@@ -67,6 +67,7 @@ Version: 4.0.0 (Unified Architecture with V4 Causal Extensions + Phase 2-4 Enhan
 Date: March 19, 2026
 """
 
+from __future__ import annotations  # defer annotation evaluation
 __version__ = "4.0.0"
 
 # =============================================================================

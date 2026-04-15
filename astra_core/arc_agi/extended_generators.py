@@ -28,6 +28,7 @@ Adds 25+ new pattern generators covering:
 - Color-based filtering and mapping
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Tuple, Dict, Set, Optional, Callable, Any
 from dataclasses import dataclass, field

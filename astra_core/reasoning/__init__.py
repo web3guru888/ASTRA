@@ -91,6 +91,7 @@ Version: 44.0
 """
 
 # V39 Capabilities
+from __future__ import annotations  # defer annotation evaluation
 from .abductive_inference import (
     AbductiveInferenceEngine,
     Hypothesis,

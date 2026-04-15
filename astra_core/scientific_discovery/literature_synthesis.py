@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Literature Synthesis - Multi-paper hypothesis generation (stub)"""
+from __future__ import annotations  # defer annotation evaluation
 from typing import List, Dict, Any
 from dataclasses import dataclass, field
 

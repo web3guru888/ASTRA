@@ -16,6 +16,7 @@
 
 
 # Performance optimization: cython_wrapper
+from __future__ import annotations  # defer annotation evaluation
 try:
     import functools
     CYTHON_AVAILABLE = True

@@ -23,6 +23,7 @@ Key components:
 - ConditionalComputationEngine: Orchestrates execution with routing
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .moe_router import (
     MoECapabilityRouter,
     ConditionalComputationEngine,

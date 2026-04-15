@@ -16,6 +16,7 @@
 Utility functions for STAN-CORE V4.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .date_utils import get_current_year, get_report_date, REPORT_DATE
 from .helpers import progress_bar, timing
 

@@ -25,6 +25,7 @@ Integrates all V41 AGI-adjacent modules:
 Built on top of V40's capabilities.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import hashlib
 from dataclasses import dataclass, field

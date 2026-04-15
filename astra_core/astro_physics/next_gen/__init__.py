@@ -34,6 +34,7 @@ Date: 2025-12-15
 Version: 1.1
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .archive_query import (
     VOQueryEngine,
     TAP_Client,

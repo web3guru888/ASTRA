@@ -24,6 +24,7 @@ Author: STAN Evolution Team
 Date: 2025-03-17
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from scipy import stats
 from scipy import signal as scipy_signal

@@ -19,6 +19,7 @@ Monitors cognitive processes, calibrates confidence,
 and provides self-awareness capabilities.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass
 from enum import Enum

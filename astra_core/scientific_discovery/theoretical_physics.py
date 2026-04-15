@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Theoretical Physics (stub)"""
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Any
 import numpy as np
 from dataclasses import dataclass

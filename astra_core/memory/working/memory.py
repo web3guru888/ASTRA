@@ -19,6 +19,7 @@ Active maintenance and manipulation of information during reasoning.
 Based on Baddeley's model of working memory.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Any, Optional, Set
 from dataclasses import dataclass, field

@@ -19,6 +19,7 @@ This implements learning inspired by human cognitive development, progressing th
 stages similar to infant learning: sensorimotor, preoperational, and concrete operational.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field

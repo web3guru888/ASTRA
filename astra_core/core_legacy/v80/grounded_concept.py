@@ -23,6 +23,7 @@ Key Innovation: Concepts are not embeddings or symbols but
 compositional structures that can be directly manipulated.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Union
 from dataclasses import dataclass, field

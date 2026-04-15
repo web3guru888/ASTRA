@@ -24,6 +24,7 @@ Algorithms for learning causal structure from data:
 - Online Causal Learning: Incremental updates from streaming data
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .pc_algorithm import PCAlgorithm
 from .ges_algorithm import GESAlgorithm
 try:

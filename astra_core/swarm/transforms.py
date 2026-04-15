@@ -22,6 +22,7 @@ These transforms are domain-agnostic and apply to any stigmergic swarm system,
 including astronomical inference.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict
 from dataclasses import dataclass
 

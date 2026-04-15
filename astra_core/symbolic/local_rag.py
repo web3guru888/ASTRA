@@ -28,6 +28,7 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import hashlib
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field

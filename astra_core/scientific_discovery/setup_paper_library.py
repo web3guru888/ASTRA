@@ -27,6 +27,7 @@ Author: STAN_IX_ASTRO
 Date: January 10, 2026
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import os
 import sys
 import argparse

@@ -18,6 +18,7 @@ Causal Model Components
 Structural Causal Models and related classes for causal representation.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .scm import (
     StructuralCausalModel,
     Variable,

@@ -30,6 +30,7 @@ Key Enhancements:
 Target: 95%+ on GPQA Diamond (surpassing GPT-5.2 Pro at 93.2%)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v43_system import (
     V43CompleteSystem,
     V43Config,

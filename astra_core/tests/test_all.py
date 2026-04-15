@@ -18,6 +18,7 @@ STAN-CORE V4.0 Tests
 Run all tests with: python -m pytest tests/
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import pytest
 import numpy as np
 import pandas as pd

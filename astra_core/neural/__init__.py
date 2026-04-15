@@ -16,6 +16,7 @@
 Neural Network Training Infrastructure
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .training import (
     NeuralArchitecture,
     MultiLayerPerceptron,

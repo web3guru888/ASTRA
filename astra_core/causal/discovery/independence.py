@@ -21,11 +21,12 @@ X ⟂ Y | Z (X independent of Y given Z)
 Provides the foundation for causal discovery algorithms.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 import pandas as pd
 from scipy import stats
 from scipy.stats import pearsonr, spearmanr
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, Dict, Any, List
 from enum import Enum
 
 

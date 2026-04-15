@@ -21,6 +21,7 @@ Date: 2026-03-18
 Version: 1.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum

@@ -23,6 +23,7 @@ This package provides:
 Version: 37.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .pheromone_dynamics import (
     DigitalPheromoneField,
     PheromoneType,

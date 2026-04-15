@@ -19,6 +19,7 @@ This system connects abstract symbols (words, concepts) to concrete embodied exp
 providing the bridge between language and meaning through sensorimotor grounding.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Any, Union
 from dataclasses import dataclass, field

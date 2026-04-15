@@ -24,6 +24,7 @@ success/failure after answering questions.
 Date: 2025-12-11
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import json
 import time
 from typing import Dict, List, Optional, Any, Tuple, Set

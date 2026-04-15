@@ -19,6 +19,7 @@ Comprehensive Ensemble Solver
 Combines all solvers with intelligent selection based on task characteristics.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import List, Dict, Optional, Any, Tuple
 from dataclasses import dataclass

@@ -26,6 +26,7 @@ Date: 2025-12-11
 Version: 40.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Tuple, Set

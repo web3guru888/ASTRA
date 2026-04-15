@@ -27,6 +27,7 @@ Key Operations:
 - Abstract: Create hierarchical abstractions
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Union, Callable
 from dataclasses import dataclass

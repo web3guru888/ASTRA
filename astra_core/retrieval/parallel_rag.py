@@ -43,6 +43,7 @@ Example Use:
     result = rag.query("What are our power saving efforts?")
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Callable

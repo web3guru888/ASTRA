@@ -21,6 +21,7 @@ V36 with swarm intelligence and memory capabilities.
 Version: 37.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .v37_system import V37CompleteSystem
 
 # Alias for backward compatibility

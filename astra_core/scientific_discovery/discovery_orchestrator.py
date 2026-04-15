@@ -41,6 +41,7 @@ Version: 1.0.0
 Date: 2025-12-27
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import time
 import uuid
 import logging
@@ -333,3 +334,43 @@ class ScientificDiscoveryOrchestrator:
         # State tracking
         self.current_task: Optional[DiscoveryTask] = None
         self.discovery_history: List[DiscoveryResult] = []
+
+
+# =============================================================================
+# Factory and helper functions (compatibility stubs)
+# =============================================================================
+
+def create_discovery_system(*args, **kwargs) -> ScientificDiscoveryOrchestrator:
+    """Create a configured ScientificDiscoveryOrchestrator instance."""
+    return ScientificDiscoveryOrchestrator(*args, **kwargs)
+
+
+def autonomous_discovery(task: DiscoveryTask, *args, **kwargs) -> DiscoveryResult:
+    """Run autonomous discovery on a task (stub)."""
+    return DiscoveryResult(
+        task_id=getattr(task, 'task_id', 'stub'),
+        research_question=getattr(task, 'research_question', ''),
+        success=False
+    )
+
+
+def review_literature(query: str, *args, **kwargs) -> LiteratureReview:
+    """Review literature for a given query (stub)."""
+    return LiteratureReview(
+        num_papers_reviewed=0,
+        key_findings=[],
+        identified_gaps=[],
+        extracted_hypotheses=[],
+        citation_network_stats={},
+        synthesis_summary=''
+    )
+
+
+def propose_experiment(hypothesis: Hypothesis, *args, **kwargs) -> ExperimentProposal:
+    """Propose an experiment to test a hypothesis (stub)."""
+    return ExperimentProposal(
+        experiment_id='stub',
+        description='',
+        experiment_type='theoretical',
+        target_hypothesis=getattr(hypothesis, 'hypothesis_id', 'stub')
+    )

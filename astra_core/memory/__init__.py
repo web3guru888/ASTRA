@@ -43,6 +43,7 @@ Legacy components (V36-V39):
 """
 
 # V4.0 Memory Systems
+from __future__ import annotations  # defer annotation evaluation
 from .episodic.memory import EpisodicMemory, Experience
 from .semantic.memory import SemanticMemory, Concept
 from .vector.store import VectorStore

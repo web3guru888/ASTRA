@@ -22,6 +22,7 @@ Enables learning from specific problem-solving experiences:
 - Bayesian prior updating from experience
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import re
 import math
 import hashlib

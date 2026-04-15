@@ -29,6 +29,7 @@ V47+ Enhancements:
 - Simulation-based inference (likelihood-free inference)
 """
 
+from __future__ import annotations  # defer annotation evaluation
 from .model.scm import StructuralCausalModel, Variable, StructuralEquation
 from .model.intervention import Intervention, InterventionPlanner
 from .model.counterfactual import CounterfactualQuery, CounterfactualEngine

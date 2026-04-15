@@ -28,6 +28,7 @@ Implements the self-teaching iteration loop that:
 This is the core "autonomy" component that enables unsupervised learning.
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Optional, Any, Tuple, Callable
 from dataclasses import dataclass, field

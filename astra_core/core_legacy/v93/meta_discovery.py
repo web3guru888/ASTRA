@@ -29,6 +29,7 @@ Capabilities:
 - Create new knowledge representation schemes
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Set, Callable
 from dataclasses import dataclass, field

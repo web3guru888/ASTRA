@@ -28,6 +28,7 @@ Date: 2025-12-10
 Version: 38.0
 """
 
+from __future__ import annotations  # defer annotation evaluation
 import sys
 from pathlib import Path
 from dataclasses import dataclass, field
