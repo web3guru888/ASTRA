@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 ASTRA Live — Discovery Memory
 Persistent learning memory that tracks what works, what's been found,
@@ -256,14 +270,9 @@ class DiscoveryMemory:
         var_key = tuple(sorted(variables)) if variables else ()
         dedup_key = (finding_type, data_source, var_key)
 
-        # Check recent discoveries for duplicates (last 10 cycles worth)
-        # Use timestamp-based check instead of cycle since cycle is set by caller
-        now = time.time()
+        # Check ALL discoveries (not just recent) for duplicates
+        # This prevents the same discovery from being recorded multiple times
         for disc in self.discoveries:
-            # Only check recent discoveries (within 1 hour)
-            if now - disc.timestamp > 3600:
-                continue
-
             # Compare key characteristics
             disc_var_key = tuple(sorted(disc.variables)) if disc.variables else ()
             if (finding_type == disc.finding_type and
@@ -351,21 +360,50 @@ class DiscoveryMemory:
     # ── SQLite persistence helpers ─────────────────────────────────
 
     def _persist_discovery(self, rec: DiscoveryRecord):
-        """INSERT a discovery record into SQLite."""
+        """INSERT a discovery record into SQLite with deduplication."""
         try:
             conn = sqlite3.connect(self.db_path)
-            conn.execute(
-                """INSERT OR REPLACE INTO discoveries
-                   (id, timestamp, cycle, hypothesis_id, domain, finding_type,
-                    variables, statistic, p_value, description, data_source,
-                    strength, follow_ups_generated, verified, effect_size)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (rec.id, rec.timestamp, rec.cycle, rec.hypothesis_id,
-                 rec.domain, rec.finding_type, json.dumps(rec.variables),
-                 rec.statistic, rec.p_value, rec.description, rec.data_source,
-                 rec.strength, rec.follow_ups_generated, int(rec.verified),
-                 rec.effect_size),
-            )
+            conn.row_factory = sqlite3.Row
+
+            # Check for duplicate in database first
+            var_key = json.dumps(sorted(rec.variables)) if rec.variables else "[]"
+            dedup_check = conn.execute(
+                """SELECT id FROM discoveries
+                   WHERE finding_type = ? AND data_source = ? AND variables = ?
+                   LIMIT 1""",
+                (rec.finding_type, rec.data_source, var_key)
+            ).fetchone()
+
+            if dedup_check:
+                # Duplicate found - update existing record instead of inserting new one
+                existing_id = dedup_check["id"]
+                conn.execute(
+                    """UPDATE discoveries
+                       SET timestamp = ?, cycle = ?, hypothesis_id = ?, domain = ?,
+                           statistic = ?, p_value = ?, description = ?,
+                           strength = ?, verified = ?, effect_size = ?
+                       WHERE id = ?""",
+                    (rec.timestamp, rec.cycle, rec.hypothesis_id, rec.domain,
+                     rec.statistic, rec.p_value, rec.description,
+                     rec.strength, int(rec.verified), rec.effect_size,
+                     existing_id)
+                )
+                print(f"[DiscoveryMemory] Updated existing discovery {existing_id} instead of creating duplicate")
+            else:
+                # No duplicate - insert new record
+                conn.execute(
+                    """INSERT INTO discoveries
+                       (id, timestamp, cycle, hypothesis_id, domain, finding_type,
+                        variables, statistic, p_value, description, data_source,
+                        strength, follow_ups_generated, verified, effect_size)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (rec.id, rec.timestamp, rec.cycle, rec.hypothesis_id,
+                     rec.domain, rec.finding_type, var_key,
+                     rec.statistic, rec.p_value, rec.description, rec.data_source,
+                     rec.strength, rec.follow_ups_generated, int(rec.verified),
+                     rec.effect_size),
+                )
+
             conn.commit()
             conn.close()
         except Exception as e:
@@ -764,9 +802,12 @@ class DiscoveryMemory:
                 "improving": delta > 0,
             }
 
+        unique_count = self._get_unique_discovery_count()
+
         return {
             "status": "ok",
             "total_discoveries": len(self.discoveries),
+            "unique_discoveries": unique_count,
             "total_outcomes": len(self.method_outcomes),
             "hypotheses_generated_from_memory": self.generation_count,
             "metrics": improvement,
@@ -774,8 +815,12 @@ class DiscoveryMemory:
 
     def to_dict(self) -> dict:
         """Serialize for API response."""
+        # Compute unique discovery count (excluding duplicates)
+        unique_count = self._get_unique_discovery_count()
+
         return {
             "discovery_count": len(self.discoveries),
+            "unique_discovery_count": unique_count,
             "method_outcome_count": len(self.method_outcomes),
             "exploration_sources": list(self.exploration.keys()),
             "generation_count": self.generation_count,
@@ -785,3 +830,16 @@ class DiscoveryMemory:
                 self._variable_affinity.items(), key=lambda x: x[1], reverse=True
             )[:10]),
         }
+
+    def _get_unique_discovery_count(self) -> int:
+        """
+        Get the count of unique discoveries (excluding duplicates).
+
+        Uses the same deduplication logic as record_discovery().
+        """
+        seen_keys = set()
+        for disc in self.discoveries:
+            var_key = tuple(sorted(disc.variables)) if disc.variables else ()
+            dedup_key = (disc.finding_type, disc.data_source, var_key)
+            seen_keys.add(dedup_key)
+        return len(seen_keys)

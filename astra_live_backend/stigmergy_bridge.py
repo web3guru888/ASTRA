@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Stigmergy Bridge — Connects the pheromone/stigmergy subsystem to the live DiscoveryEngine.
 
@@ -478,16 +492,28 @@ class StigmergyBridge:
     # =========================================================================
 
     def stigmergy_gaps(self) -> Dict[str, float]:
-        """Get knowledge gap analysis from stigmergic memory."""
+        """Get knowledge gap analysis from stigmergic memory - only active domains."""
         gaps = self.stigmergic_memory.analyze_gaps()
-        # Extend with domains from our mixture map
-        for domain in ['Astrophysics', 'Economics', 'Climate', 'Epidemiology', 'Cross-Domain']:
+
+        # Only include domains that actually exist in the database
+        # Remove hardcoded Economics, Climate, Epidemiology that are no longer active
+        active_domains = ['Astrophysics', 'astronomy', 'astrophysics']
+
+        # Extend with active domains from our mixture map
+        for domain in active_domains:
             if domain.lower() not in gaps and domain not in gaps:
                 # Check pheromone field for this domain
                 mixture = self._domain_to_mixture(domain)
                 concs = self.pheromone_field.sense({'domain_mixture': mixture})
                 total_signal = sum(concs.values())
                 gaps[domain] = max(0.1, 1.0 - total_signal / 10.0)
+
+        # Remove any entries for inactive domains
+        inactive_domains = ['Economics', 'Climate', 'Epidemiology', 'Cross-Domain']
+        for domain in inactive_domains:
+            gaps.pop(domain, None)
+            gaps.pop(domain.lower(), None)
+
         return gaps
 
     # =========================================================================

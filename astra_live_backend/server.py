@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from astra_live_backend.safety.health import SystemHealthReport
 """
 ASTRA Live — FastAPI Server
@@ -617,7 +631,14 @@ async def serve_dashboard():
     if not dashboard_path.exists():
         await _ensure_dashboard_exists()
 
-    return FileResponse(dashboard_path)
+    return FileResponse(
+        dashboard_path,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        }
+    )
 
 
 # ── Phase 4: Operational Readiness Endpoints ──────────────────────
@@ -1016,11 +1037,23 @@ def api_discovery_memory():
 
 
 @app.get("/api/discovery-memory/discoveries")
-def api_discovery_discoveries(min_strength: float = 0.0, limit: int = 50):
-    """List recorded discoveries, optionally filtered by strength."""
+def api_discovery_discoveries(min_strength: float = 0.0, limit: int = 50, sort_by: str = "timestamp"):
+    """List recorded discoveries, optionally filtered by strength.
+
+    Args:
+        min_strength: Minimum strength threshold (default: 0.0)
+        limit: Maximum number to return (default: 50)
+        sort_by: Sort field - 'timestamp' for chronological, 'strength' for highest first (default: "timestamp")
+    """
     discoveries = [d for d in engine.discovery_memory.discoveries
                    if d.strength >= min_strength]
-    discoveries.sort(key=lambda d: d.strength, reverse=True)
+
+    # Sort by timestamp (chronological) by default for proper timeline display
+    if sort_by == "strength":
+        discoveries.sort(key=lambda d: d.strength, reverse=True)
+    else:
+        discoveries.sort(key=lambda d: d.timestamp)
+
     from dataclasses import asdict
     return [asdict(d) for d in discoveries[:limit]]
 
@@ -1258,7 +1291,21 @@ def api_variables():
 @app.get("/api/persistence")
 def api_persistence():
     """SQLite persistence stats."""
-    return engine.discovery_memory.get_persistence_stats()
+    # Handle both DiscoveryMemory and GraphPalaceMemory
+    if hasattr(engine.discovery_memory, 'get_persistence_stats'):
+        return engine.discovery_memory.get_persistence_stats()
+    elif hasattr(engine.discovery_memory, 'get_palace_status'):
+        # GraphPalaceMemory uses get_palace_status
+        return engine.discovery_memory.get_palace_status()
+    elif hasattr(engine.discovery_memory, 'to_dict'):
+        # Fallback to to_dict if available
+        return engine.discovery_memory.to_dict()
+    else:
+        # Ultimate fallback: return basic stats
+        return {
+            "discovery_count": len(getattr(engine.discovery_memory, 'discoveries', [])),
+            "memory_type": type(engine.discovery_memory).__name__
+        }
 
 
 @app.get("/api/engine/degradation-status")
@@ -2909,11 +2956,320 @@ async def api_conformal_ood(request: Request):
         )
 
 
+# ══════════════════════════════════════════════════════════════
+# GraphPalace Connections API  — Cross-Domain Discovery Network
+# ══════════════════════════════════════════════════════════════
+
+@app.get("/api/connections/network")
+async def get_connections_network():
+    """
+    Get cross-domain discovery network visualization data.
+
+    Returns:
+        - nodes: List of domain/topic nodes
+        - links: List of connections between nodes
+    """
+    try:
+        if not hasattr(engine, 'discovery_memory'):
+            return {"nodes": [], "links": []}
+
+        memory = engine.discovery_memory
+
+        # Check if GraphPalace is available
+        if not hasattr(memory, 'palace'):
+            return {"nodes": [], "links": []}
+
+        # Get domain statistics
+        hot_domains = memory.get_hot_domains(top_n=10)
+
+        # Create nodes
+        nodes = []
+        node_id = 0
+        domain_node_map = {}
+
+        for domain, score in hot_domains:
+            node_id_str = f"domain_{domain}"
+            nodes.append({
+                "id": node_id_str,
+                "label": domain,
+                "domain": domain,
+                "discoveries": int(score * 10),  # Approximate
+                "type": "domain"
+            })
+            domain_node_map[domain] = node_id_str
+            node_id += 1
+
+        # Add finding type nodes
+        finding_types = set()
+        for disc in memory.discoveries:
+            finding_types.add(disc.finding_type)
+
+        for ftype in finding_types:
+            nodes.append({
+                "id": f"type_{ftype}",
+                "label": ftype,
+                "domain": "general",
+                "discoveries": sum(1 for d in memory.discoveries if d.finding_type == ftype),
+                "type": "finding_type"
+            })
+            node_id += 1
+
+        # Create links (cross-domain connections)
+        links = []
+        domains = list(domain_node_map.keys())
+
+        for i, domain1 in enumerate(domains):
+            for domain2 in domains[i+1:]:
+                try:
+                    connections = memory.find_cross_domain_connections(domain1, domain2, k=2)
+
+                    for conn in connections:
+                        strength = conn.get("confidence", 0.5)
+                        links.append({
+                            "source": domain_node_map[domain1],
+                            "target": domain_node_map[domain2],
+                            "strength": strength,
+                            "topic": conn.get("topic", ""),
+                            "type": "cross_domain"
+                        })
+                except Exception:
+                    pass
+
+        return {
+            "nodes": nodes,
+            "links": links
+        }
+
+    except Exception as e:
+        return {"nodes": [], "links": [], "error": str(e)}
+
+
+@app.get("/api/connections/domains")
+async def get_connections_domains():
+    """
+    Get domain statistics for cross-domain analysis.
+
+    Returns:
+        - domains: List of domain statistics
+    """
+    try:
+        if not hasattr(engine, 'discovery_memory'):
+            return {"domains": []}
+
+        memory = engine.discovery_memory
+        hot_domains = memory.get_hot_domains(top_n=10)
+
+        domains = []
+        for domain, momentum in hot_domains:
+            # Count discoveries per domain
+            domain_discoveries = [d for d in memory.discoveries if d.domain == domain]
+
+            # Count connections (simplified)
+            connections = 0
+            if hasattr(memory, 'palace') and memory.palace:
+                try:
+                    for other_domain in hot_domains:
+                        if other_domain[0] != domain:
+                            cross = memory.find_cross_domain_connections(domain, other_domain[0], k=1)
+                            connections += len(cross)
+                except Exception:
+                    pass
+
+            # Only include domains with at least 1 discovery
+            if len(domain_discoveries) > 0:
+                domains.append({
+                    "name": domain,
+                    "discoveries": len(domain_discoveries),
+                    "connections": connections,
+                    "momentum": momentum,
+                    "strength": sum(d.strength for d in domain_discoveries) / len(domain_discoveries) if domain_discoveries else 0
+                })
+
+        return {"domains": domains}
+
+    except Exception as e:
+        return {"domains": [], "error": str(e)}
+
+
+@app.get("/api/connections/cross-domain")
+async def get_cross_domain_discoveries():
+    """
+    Get discoveries that span multiple domains.
+
+    Returns:
+        - discoveries: List of cross-domain discoveries
+    """
+    try:
+        if not hasattr(engine, 'discovery_memory'):
+            return {"discoveries": []}
+
+        memory = engine.discovery_memory
+
+        # Find discoveries with cross-domain potential
+        cross_discoveries = []
+
+        for disc in memory.discoveries:
+            if disc.strength > 0.6:  # Only strong discoveries
+                cross_domains = []
+
+                # Check if variables appear in other domains
+                for var in disc.variables:
+                    for other_disc in memory.discoveries:
+                        if (other_disc.id != disc.id and
+                            var in other_disc.variables and
+                            other_disc.domain != disc.domain):
+                            if other_disc.domain not in cross_domains:
+                                cross_domains.append(other_disc.domain)
+
+                if cross_domains:
+                    cross_discoveries.append({
+                        "id": disc.id,
+                        "domain": disc.domain,
+                        "finding_type": disc.finding_type,
+                        "description": disc.description,
+                        "strength": disc.strength,
+                        "variables": disc.variables,
+                        "cross_domains": cross_domains[:3]  # Top 3
+                    })
+
+        # Sort by strength
+        cross_discoveries.sort(key=lambda x: x["strength"], reverse=True)
+
+        return {"discoveries": cross_discoveries[:20]}
+
+    except Exception as e:
+        return {"discoveries": [], "error": str(e)}
+
+
+@app.get("/api/connections/tunnels")
+async def get_auto_tunnels():
+    """
+    Get GraphPalace auto-tunnel status.
+
+    Returns:
+        - tunnels: List of active auto-tunnels
+    """
+    try:
+        if not hasattr(engine, 'discovery_memory'):
+            return {"tunnels": []}
+
+        memory = engine.discovery_memory
+
+        if not hasattr(memory, 'palace'):
+            return {"tunnels": []}
+
+        # Get all wings
+        try:
+            wings = memory.palace.list_wings()
+        except Exception:
+            return {"tunnels": []}
+
+        tunnels = []
+
+        # Get actual domains from discoveries (not GraphPalace wings)
+        discovery_domains = list(set(d.domain for d in memory.discoveries))
+
+        # Check cross-domain connections
+        for i, domain1 in enumerate(discovery_domains[:5]):
+            for domain2 in discovery_domains[i+1:6]:
+                try:
+                    connections = memory.find_cross_domain_connections(domain1, domain2, k=2)
+
+                    for conn in connections:
+                        tunnels.append({
+                            "from_domain": domain1,
+                            "to_domain": domain2,
+                            "topic": conn.get("topic", ""),
+                            "confidence": conn.get("confidence", 0),
+                            "explanation": conn.get("explanation", "")
+                        })
+                except Exception:
+                    pass
+
+        return {"tunnels": tunnels[:20]}
+
+    except Exception as e:
+        return {"tunnels": [], "error": str(e)}
+
+
+@app.get("/api/connections/palace-status")
+async def get_palace_status():
+    """
+    Get GraphPalace memory system status.
+
+    Returns:
+        - GraphPalace status and statistics
+    """
+    try:
+        if not hasattr(engine, 'discovery_memory'):
+            return {"graphpalace_enabled": False}
+
+        memory = engine.discovery_memory
+
+        if hasattr(memory, 'get_palace_status'):
+            return memory.get_palace_status()
+        else:
+            return {"graphpalace_enabled": False}
+
+    except Exception as e:
+        return {"graphpalace_enabled": False, "error": str(e)}
+
+
+@app.post("/api/connections/search")
+async def semantic_search(request: Request):
+    """
+    Perform semantic search across discoveries using GraphPalace.
+
+    Body:
+        - query: str - Search query
+        - k: int - Number of results (default: 10)
+        - domain: str (optional) - Domain filter
+
+    Returns:
+        - results: List of semantic search results
+    """
+    try:
+        data = await request.json()
+        query = data.get("query", "")
+        k = data.get("k", 10)
+        domain = data.get("domain")
+
+        if not query:
+            return {"results": []}
+
+        if not hasattr(engine, 'discovery_memory'):
+            return {"results": []}
+
+        memory = engine.discovery_memory
+
+        if not hasattr(memory, 'semantic_search'):
+            return {"results": []}
+
+        results = memory.semantic_search(query, k=k, domain=domain)
+
+        return {"results": results, "query": query}
+
+    except Exception as e:
+        return {"results": [], "error": str(e)}
+
+
 if __name__ == "__main__":
     import uvicorn
+    import webbrowser
+    import threading
+    import time
+
+    def open_browser():
+        time.sleep(1.5)  # Wait for server to start
+        webbrowser.open("http://localhost:8787")
+
     print("=" * 60)
     print("  ASTRA Live — Autonomous Scientific Discovery")
     print("  Dashboard: http://0.0.0.0:8787")
     print("  API Docs:  http://0.0.0.0:8787/docs")
     print("=" * 60)
+
+    # Open browser in background thread
+    threading.Thread(target=open_browser, daemon=True).start()
+
     uvicorn.run(app, host="0.0.0.0", port=8787, log_level="info")
