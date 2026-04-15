@@ -28,6 +28,7 @@ import os
 import json
 import time
 import logging
+import threading
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 
@@ -140,6 +141,10 @@ class StigmergyBridge:
         self.gordon_updater = PheromoneUpdater()
         self.curiosity_calc = CuriosityValueCalculator()
 
+        # Thread safety: protect shared resources
+        self._metrics_lock = threading.RLock()  # Protect metrics and ab_test_results
+        self._deposits_lock = threading.Lock()   # Protect _recent_deposits
+
         # Metrics tracking
         self.metrics = {
             'total_deposits': 0,
@@ -213,8 +218,9 @@ class StigmergyBridge:
                 'domain': domain,
                 'reward': abs(effect_size),
             })
-            self.metrics['success_deposits'] += 1
-            self.metrics['last_success_time'] = time.time()
+            with self._metrics_lock:
+                self.metrics['success_deposits'] += 1
+                self.metrics['last_success_time'] = time.time()
             logger.info(f'SUCCESS pheromone: {domain}/{category} str={strength:.2f} p={p_value:.4f}')
         else:
             # FAILURE: hypothesis rejected or non-significant
@@ -232,18 +238,24 @@ class StigmergyBridge:
                 'domain': domain,
                 'reward': 0.0,
             })
-            self.metrics['failure_deposits'] += 1
+            with self._metrics_lock:
+                self.metrics['failure_deposits'] += 1
             logger.info(f'FAILURE pheromone: {domain}/{category} str={strength:.2f} p={p_value:.4f}')
 
         # Always deposit exploration trail
         self.pheromone_field.deposit_exploration(domain_mixture, strength=0.5)
-        self.metrics['total_deposits'] += 1
+        with self._metrics_lock:
+            self.metrics['total_deposits'] += 1
 
         # Record in recent deposits
         self._record_deposit(deposit_id, domain, category, passed, strength)
 
-        # Auto-persist every 100 deposits
-        if self.metrics['total_deposits'] % 100 == 0:
+        # Auto-persist every 100 deposits (check without holding lock)
+        persist_needed = False
+        with self._metrics_lock:
+            if self.metrics['total_deposits'] % 100 == 0:
+                persist_needed = True
+        if persist_needed:
             self.persist_state()
 
         return deposit_id
@@ -267,7 +279,8 @@ class StigmergyBridge:
         Returns:
             List of (hypothesis, blended_score) sorted descending
         """
-        self.metrics['queries'] += 1
+        with self._metrics_lock:
+            self.metrics['queries'] += 1
         ranked = []
 
         for h, orig_score in zip(candidates, original_scores):
@@ -301,7 +314,8 @@ class StigmergyBridge:
             ranked.append((h, final_score))
 
         ranked.sort(key=lambda x: x[1], reverse=True)
-        self.metrics['pheromone_guided_selections'] += 1
+        with self._metrics_lock:
+            self.metrics['pheromone_guided_selections'] += 1
         return ranked
 
     # =========================================================================
@@ -330,7 +344,8 @@ class StigmergyBridge:
 
         # Add to stigmergic memory
         sig_id = self.stigmergic_memory.add_discovery(discovery)
-        self.metrics['novelty_deposits'] += 1
+        with self._metrics_lock:
+            self.metrics['novelty_deposits'] += 1
 
         logger.info(f'Discovery recorded: {domain} sig={sig_id}')
         return sig_id
@@ -407,11 +422,12 @@ class StigmergyBridge:
 
     def on_cross_domain_connection(self, domain_a: str, domain_b: str,
                                    role_a: str, role_b: str, similarity: float):
-        """Record a cross-domain analogy discovery."""
+        """Thread-safe record a cross-domain analogy discovery."""
         self.pheromone_field.deposit_analogy(
             domain_a, domain_b, role_a, role_b, similarity
         )
-        self.metrics['analogy_deposits'] += 1
+        with self._metrics_lock:
+            self.metrics['analogy_deposits'] += 1
         logger.info(f'ANALOGY deposited: {domain_a}<->{domain_b} sim={similarity:.2f}')
 
     # =========================================================================
@@ -435,25 +451,27 @@ class StigmergyBridge:
     # =========================================================================
 
     def record_ab_result(self, guided: bool, success: bool):
-        """Record A/B test result for pheromone vs baseline."""
+        """Thread-safe record A/B test result for pheromone vs baseline."""
         key = 'pheromone_guided' if guided else 'baseline'
-        self.ab_test_results[key]['total'] += 1
-        if success:
-            self.ab_test_results[key]['successes'] += 1
-            if guided:
-                self.metrics['last_success_time'] = time.time()
+        with self._metrics_lock:
+            self.ab_test_results[key]['total'] += 1
+            if success:
+                self.ab_test_results[key]['successes'] += 1
+                if guided:
+                    self.metrics['last_success_time'] = time.time()
 
     def get_ab_summary(self) -> Dict:
-        """Get A/B test summary with success rates."""
+        """Thread-safe get A/B test summary with success rates."""
         summary = {}
-        for key in ['pheromone_guided', 'baseline']:
-            total = self.ab_test_results[key]['total']
-            successes = self.ab_test_results[key]['successes']
-            summary[key] = {
-                'total': total,
-                'successes': successes,
-                'rate': successes / max(total, 1),
-            }
+        with self._metrics_lock:
+            for key in ['pheromone_guided', 'baseline']:
+                total = self.ab_test_results[key]['total']
+                successes = self.ab_test_results[key]['successes']
+                summary[key] = {
+                    'total': total,
+                    'successes': successes,
+                    'rate': successes / max(total, 1),
+                }
         return summary
 
     # =========================================================================
@@ -462,14 +480,15 @@ class StigmergyBridge:
 
     def check_circuit_breaker(self) -> bool:
         """
-        Check if pheromone guidance should be reduced.
+        Thread-safe check if pheromone guidance should be reduced.
         Triggers if guided performance is >20% worse than baseline.
 
         Returns:
             True if circuit breaker triggered
         """
-        guided = self.ab_test_results['pheromone_guided']
-        baseline = self.ab_test_results['baseline']
+        with self._metrics_lock:
+            guided = self.ab_test_results['pheromone_guided'].copy()
+            baseline = self.ab_test_results['baseline'].copy()
 
         if guided['total'] < 20 or baseline['total'] < 20:
             return False  # Not enough data
@@ -611,8 +630,9 @@ class StigmergyBridge:
         return self.pheromone_field.to_dict()
 
     def get_recent_deposits(self, limit: int = 50) -> List[Dict]:
-        """Get recent deposit history."""
-        return self._recent_deposits[-limit:]
+        """Thread-safe get recent deposit history."""
+        with self._deposits_lock:
+            return self._recent_deposits[-limit:].copy()
 
     def get_hotspots(self, pheromone_type: str = 'success',
                      top_k: int = 10) -> List[Dict]:
@@ -660,7 +680,7 @@ class StigmergyBridge:
 
     def _record_deposit(self, deposit_id: str, domain: str,
                         category: str, success: bool, strength: float):
-        """Record deposit in recent history ring buffer."""
+        """Thread-safe record deposit in recent history ring buffer."""
         entry = {
             'deposit_id': deposit_id,
             'domain': domain,
@@ -669,18 +689,23 @@ class StigmergyBridge:
             'strength': round(strength, 3),
             'timestamp': time.time(),
         }
-        self._recent_deposits.append(entry)
-        if len(self._recent_deposits) > self._max_recent:
-            self._recent_deposits = self._recent_deposits[-self._max_recent:]
+        with self._deposits_lock:
+            self._recent_deposits.append(entry)
+            if len(self._recent_deposits) > self._max_recent:
+                self._recent_deposits = self._recent_deposits[-self._max_recent:]
 
 
 # Module-level singleton (lazily initialized)
 _bridge_instance: Optional[StigmergyBridge] = None
+_bridge_lock = threading.Lock()  # Protect singleton initialization
 
 
 def get_stigmergy_bridge(pheromone_weight: float = 0.3) -> StigmergyBridge:
-    """Get or create the singleton StigmergyBridge."""
+    """Thread-safe get or create the singleton StigmergyBridge."""
     global _bridge_instance
     if _bridge_instance is None:
-        _bridge_instance = StigmergyBridge(pheromone_weight=pheromone_weight)
+        with _bridge_lock:
+            # Double-check pattern
+            if _bridge_instance is None:
+                _bridge_instance = StigmergyBridge(pheromone_weight=pheromone_weight)
     return _bridge_instance

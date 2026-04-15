@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Generate a self-contained ASTRA Live dashboard with all API data embedded inline.
 This makes the dashboard work at any URL without needing a live API connection.
@@ -32,7 +46,9 @@ def fetch_all_data():
         # Stigmergy endpoints
         'pheromones/status', 'stigmergy/gaps', 'swarm/status', 'pheromones/ab-test', 'stigmergy/gordon',
         # Self-improve endpoints
-        'discovery-memory', 'discovery-memory/discoveries'
+        'discovery-memory', 'discovery-memory/discoveries',
+        # Verified discoveries
+        'verification/verified'
     ]
     for ep in endpoints:
         try:
@@ -137,6 +153,8 @@ def build_dashboard_html(snapshot_data):
     // Self-improve endpoints
     if (path.includes('/discovery-memory') && path.includes('/discoveries')) return s["discovery-memory/discoveries"];
     if (path.includes('/discovery-memory')) return s["discovery-memory"];
+    // Verified discoveries
+    if (path.includes('/verification/verified')) return s["verification/verified"];
     return null;
   }
 

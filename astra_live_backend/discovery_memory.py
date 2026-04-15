@@ -26,10 +26,15 @@ import json
 import math
 import sqlite3
 import os
+import queue
 import numpy as np
+import threading
+import logging
 from dataclasses import dataclass, field, asdict
 from collections import defaultdict, deque, Counter
 from typing import Optional, List, Dict, Tuple
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -102,9 +107,16 @@ class DiscoveryMemory:
         # Domain momentum: which domains are currently "hot"
         self._domain_momentum: dict[str, float] = defaultdict(float)
 
-        # ── SQLite persistence ──────────────────────────────────────
+        # ── Thread Safety ─────────────────────────────────────────
+        self._affinity_lock = threading.Lock()  # Protect variable_affinity updates
+        self._momentum_lock = threading.Lock()   # Protect domain_momentum updates
+        self._memory_lock = threading.RLock()     # Protect in-memory deques
+
+        # ── SQLite Connection Pool ─────────────────────────────────────
         self.db_path = db_path
+        self._connection_pool = queue.Queue(maxsize=10)
         self._init_db()
+        self._init_connection_pool(5)  # Start with 5 connections
         self._load_from_db(max_records)
 
     # ── Database init & load ─────────────────────────────────────
@@ -251,6 +263,38 @@ class DiscoveryMemory:
 
         conn.close()
 
+    def _init_connection_pool(self, pool_size: int = 5):
+        """Initialize SQLite connection pool for thread-safe concurrent access."""
+        for _ in range(pool_size):
+            try:
+                conn = sqlite3.connect(self.db_path, check_same_thread=False)
+                conn.row_factory = sqlite3.Row
+                conn.execute("PRAGMA journal_mode=WAL")
+                self._connection_pool.put(conn)
+            except Exception as e:
+                logger.warning(f"Failed to create connection pool entry: {e}")
+
+    def _get_connection(self) -> sqlite3.Connection:
+        """Get a connection from the pool (blocking with timeout)."""
+        try:
+            conn = self._connection_pool.get(timeout=5.0)
+            return conn
+        except queue.Empty:
+            # Fallback: create new connection if pool is exhausted
+            logger.warning("Connection pool exhausted, creating fallback connection")
+            conn = sqlite3.connect(self.db_path, check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL")
+            return conn
+
+    def _return_connection(self, conn: sqlite3.Connection):
+        """Return a connection to the pool."""
+        try:
+            self._connection_pool.put_nowait(conn)
+        except queue.Full:
+            # Pool is full, just close the connection
+            conn.close()
+
     # ── Recording ────────────────────────────────────────────────────
 
     def record_discovery(self, hypothesis_id: str, domain: str, finding_type: str,
@@ -360,12 +404,12 @@ class DiscoveryMemory:
     # ── SQLite persistence helpers ─────────────────────────────────
 
     def _persist_discovery(self, rec: DiscoveryRecord):
-        """INSERT a discovery record into SQLite with deduplication."""
+        """Thread-safe INSERT a discovery record into SQLite with deduplication using connection pool."""
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
-            conn.row_factory = sqlite3.Row
+            conn = self._get_connection()
 
-            # Check for duplicate in database first
+            # Check for duplicate in database first (with connection lock)
             var_key = json.dumps(sorted(rec.variables)) if rec.variables else "[]"
             dedup_check = conn.execute(
                 """SELECT id FROM discoveries
@@ -388,7 +432,7 @@ class DiscoveryMemory:
                      rec.strength, int(rec.verified), rec.effect_size,
                      existing_id)
                 )
-                print(f"[DiscoveryMemory] Updated existing discovery {existing_id} instead of creating duplicate")
+                logger.info(f"[DiscoveryMemory] Updated existing discovery {existing_id} instead of creating duplicate")
             else:
                 # No duplicate - insert new record
                 conn.execute(
@@ -405,14 +449,17 @@ class DiscoveryMemory:
                 )
 
             conn.commit()
-            conn.close()
         except Exception as e:
-            print(f"[DiscoveryMemory] SQLite persist discovery error: {e}")
+            logger.error(f"[DiscoveryMemory] SQLite persist discovery error: {e}")
+        finally:
+            if conn:
+                self._return_connection(conn)
 
     def _persist_method_outcome(self, outcome: MethodOutcome):
-        """INSERT a method outcome into SQLite."""
+        """Thread-safe INSERT a method outcome into SQLite using connection pool."""
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             conn.execute(
                 """INSERT INTO method_outcomes
                    (method_name, hypothesis_id, domain, timestamp, cycle,
@@ -426,14 +473,17 @@ class DiscoveryMemory:
                  int(outcome.success)),
             )
             conn.commit()
-            conn.close()
         except Exception as e:
-            print(f"[DiscoveryMemory] SQLite persist outcome error: {e}")
+            logger.error(f"[DiscoveryMemory] SQLite persist outcome error: {e}")
+        finally:
+            if conn:
+                self._return_connection(conn)
 
     def _persist_variable_affinity(self, variable: str, score: float):
-        """UPDATE or INSERT variable affinity score for cross-session persistence."""
+        """Thread-safe UPDATE or INSERT variable affinity score using connection pool."""
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             existing = conn.execute(
                 "SELECT discovery_count FROM variable_affinity WHERE variable_name = ?",
                 (variable,)
@@ -456,14 +506,17 @@ class DiscoveryMemory:
                     (variable, score, now),
                 )
             conn.commit()
-            conn.close()
         except Exception as e:
-            print(f"[DiscoveryMemory] SQLite persist affinity error: {e}")
+            logger.error(f"[DiscoveryMemory] SQLite persist affinity error: {e}")
+        finally:
+            if conn:
+                self._return_connection(conn)
 
     def _persist_domain_momentum(self, domain: str, score: float):
-        """UPDATE or INSERT domain momentum score for cross-session persistence."""
+        """Thread-safe UPDATE or INSERT domain momentum score using connection pool."""
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             existing = conn.execute(
                 "SELECT discovery_count FROM domain_momentum WHERE domain_name = ?",
                 (domain,)
@@ -486,16 +539,19 @@ class DiscoveryMemory:
                     (domain, score, now),
                 )
             conn.commit()
-            conn.close()
         except Exception as e:
-            print(f"[DiscoveryMemory] SQLite persist momentum error: {e}")
+            logger.error(f"[DiscoveryMemory] SQLite persist momentum error: {e}")
+        finally:
+            if conn:
+                self._return_connection(conn)
 
     def record_generated_hypothesis(self, source_discovery_id: str,
                                      hypothesis_text: str, domain: str):
-        """Record a hypothesis generated from a discovery (persisted to SQLite)."""
+        """Thread-safe record a hypothesis generated from a discovery using connection pool."""
         self.generation_count += 1
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             conn.execute(
                 """INSERT INTO generated_hypotheses
                    (timestamp, source_discovery_id, hypothesis_text, domain)
@@ -503,9 +559,11 @@ class DiscoveryMemory:
                 (time.time(), source_discovery_id, hypothesis_text, domain),
             )
             conn.commit()
-            conn.close()
         except Exception as e:
-            print(f"[DiscoveryMemory] SQLite persist hypothesis error: {e}")
+            logger.error(f"[DiscoveryMemory] SQLite persist hypothesis error: {e}")
+        finally:
+            if conn:
+                self._return_connection(conn)
 
     # ── Phase 10.5: Importance-Weighted Memory Compaction ──────────
 
@@ -582,17 +640,20 @@ class DiscoveryMemory:
                 self.discoveries.append(d)
 
             # Remove from SQLite too
+            conn = None
             try:
-                conn = sqlite3.connect(self.db_path)
+                conn = self._get_connection()
                 placeholders = ",".join("?" * len(evict_ids))
                 conn.execute(
                     f"DELETE FROM discoveries WHERE id IN ({placeholders})",
                     list(evict_ids)
                 )
                 conn.commit()
-                conn.close()
             except Exception as e:
-                print(f"[DiscoveryMemory] Compaction DB cleanup error: {e}")
+                logger.error(f"[DiscoveryMemory] Compaction DB cleanup error: {e}")
+            finally:
+                if conn:
+                    self._return_connection(conn)
 
             compacted = True
 
@@ -616,16 +677,19 @@ class DiscoveryMemory:
         return compacted
 
     def get_persistence_stats(self) -> Dict:
-        """Return SQLite persistence statistics."""
+        """Thread-safe return SQLite persistence statistics using connection pool."""
+        conn = None
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             disc_count = conn.execute("SELECT COUNT(*) FROM discoveries").fetchone()[0]
             out_count = conn.execute("SELECT COUNT(*) FROM method_outcomes").fetchone()[0]
             hyp_count = conn.execute("SELECT COUNT(*) FROM generated_hypotheses").fetchone()[0]
-            conn.close()
             db_size = os.path.getsize(self.db_path) if os.path.exists(self.db_path) else 0
         except Exception as e:
             return {"error": str(e), "db_path": self.db_path}
+        finally:
+            if conn:
+                self._return_connection(conn)
 
         return {
             "db_path": self.db_path,

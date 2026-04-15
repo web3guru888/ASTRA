@@ -1,3 +1,17 @@
+# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 ASTRA Live — Discovery Engine
 Real ORIENT → SELECT → INVESTIGATE → EVALUATE → UPDATE pipeline.
@@ -40,7 +54,7 @@ from .alignment import AlignmentChecker
 from .anomaly import AnomalyDetector
 from .safety.circuit_breakers import SafetyMonitor
 from .stalemate_detector import StalemateDetector, create_stalemate_detector
-from .discovery_memory import DiscoveryMemory
+from .graphpalace_memory import GraphPalaceMemory as DiscoveryMemory
 from .hypothesis_generator import HypothesisGenerator
 from .adaptive_strategist import AdaptiveStrategist
 from .degradation import DegradationDetector
@@ -49,6 +63,16 @@ from .provenance import ProvenanceTracker
 from .stigmergy_bridge import StigmergyBridge, get_stigmergy_bridge
 from .swarm_agents import SwarmCoordinator
 from .theory_engine import get_theory_engine
+
+# Astrophysical Verifier (Aletheia-inspired)
+from .astrophysics_verifier import (
+    AstrophysicalVerifier,
+    Verdict,
+    VerificationLayer,
+    verify_hypothesis,
+    quick_verify,
+    create_exit_condition_checker,
+)
 
 # Automatic discovery verification
 try:
@@ -201,6 +225,10 @@ class DiscoveryEngine:
 
         # Theory Engine — Phases 1-3 theoretical framework infrastructure
         self.theory_engine = get_theory_engine(cycle_interval=5)
+
+        # Astrophysical Verifier — Aletheia-inspired multi-layer verification
+        self.astrophysics_verifier = AstrophysicalVerifier()
+        self.exit_condition_checker = create_exit_condition_checker()
 
         # Advanced theory discovery modules (Phase 12: Theoretical Innovation)
         # These run periodically (every 10 cycles) to generate novel theoretical insights
@@ -2340,6 +2368,68 @@ class DiscoveryEngine:
                           f"FDR correction for {h.id}: {fdr['n_significant']}/{len(all_p_values)} "
                           f"tests significant after BH correction (α*={fdr['corrected_alpha']:.4f})", h.id)
 
+            # Astrophysical Verification (Aletheia-inspired)
+            # Multi-layer verification: statistical, physical, observational, systematic
+            data_sources = self._infer_data_sources_for_hypothesis(h)
+            try:
+                verdict = self.astrophysics_verifier.verify(
+                    h,
+                    test_results=h.test_results,
+                    data_sources=data_sources
+                )
+
+                # Log verification results
+                layer_scores_str = ", ".join([
+                    f"{layer.value}={score:.2f}" for layer, score in verdict.layer_scores.items()
+                ])
+                self._log("EVALUATE", "VERIFY",
+                          f"Astrophysical verification for {h.id}: overall={verdict.overall_confidence:.2f}, "
+                          f"{layer_scores_str}, flaws={len(verdict.flaws)}", h.id)
+
+                # Check for critical flaws or abandonment conditions
+                if verdict.should_abandon:
+                    reason = verdict.abandon_reason.value if verdict.abandon_reason else "unknown"
+                    self._log("EVALUATE", "ABANDON",
+                              f"❌ Abandoning {h.id} ({h.name}): {reason}. "
+                              f"Flaws: {len(verdict.flaws)} critical", h.id)
+                    h.phase = Phase.ARCHIVED
+                    h.updated_at = time.time()
+                    # Record abandonment in discovery memory
+                    self.discovery_memory.record_method_outcome(
+                        method_name="astrophysical_verification",
+                        hypothesis_id=h.id,
+                        domain=h.domain,
+                        cycle=self.cycle_count,
+                        data_points=h.data_points_used,
+                        tests_run=len(h.test_results),
+                        significant_results=0,
+                        novelty_signals=0,
+                        confidence_delta=-h.confidence,
+                        success=False,
+                    )
+                    continue  # Skip to next hypothesis
+
+                # Log revision hints if available
+                if verdict.revision_hints:
+                    for hint in verdict.revision_hints[:3]:  # Log top 3 hints
+                        self._log("EVALUATE", "REVISION",
+                                  f"💡 Hint for {h.id}: {hint}", h.id)
+
+                # Store verification verdict with hypothesis
+                if not hasattr(h, 'verification_verdict'):
+                    h.verification_verdict = []
+                h.verification_verdict.append({
+                    'cycle': self.cycle_count,
+                    'overall_confidence': verdict.overall_confidence,
+                    'layer_scores': {layer.value: score for layer, score in verdict.layer_scores.items()},
+                    'num_flaws': len(verdict.flaws),
+                    'critical_flaws': len([f for f in verdict.flaws if f.severity == 'critical']),
+                })
+
+            except Exception as e:
+                self._log("EVALUATE", "VERIFY",
+                          f"⚠️ Verification failed for {h.id}: {e}", h.id)
+
             self.hypotheses_tested += 1
 
         # After evaluation, check if any unexplored novelty signals warrant follow-up
@@ -2381,6 +2471,37 @@ class DiscoveryEngine:
             "generic": ["gmag", "bp_rp"],
         }
         return source_vars.get(category, ["variable_1", "variable_2"])
+
+    def _infer_data_sources_for_hypothesis(self, h: Hypothesis) -> list:
+        """Infer which astronomical datasets are relevant for a hypothesis."""
+        category = self.strategist.classify_hypothesis(h)
+        desc = h.description.lower()
+
+        # Map categories to primary data sources
+        category_sources = {
+            "hubble": ["pantheon"],
+            "galaxy": ["sdss_dr18"],
+            "exoplanet": ["nasa_exoplanet"],
+            "stellar": ["gaia_dr3"],
+            "star_formation": ["sdss_dr18"],
+            "crossdomain": ["gaia_dr3", "tess"],
+        }
+
+        sources = category_sources.get(category, [])
+
+        # Additional keyword-based detection
+        source_keywords = {
+            'planck': ['planck', 'cmb', 'cosmic microwave', 'power spectrum'],
+            'ligo': ['ligo', 'gravitational wave', 'gw', 'chirp', 'black hole merger'],
+            'tess': ['tess', 'transit', 'light curve'],
+            'ztf': ['ztf', 'transient', 'sn '],
+        }
+
+        for source, keywords in source_keywords.items():
+            if any(kw in desc for kw in keywords) and source not in sources:
+                sources.append(source)
+
+        return sources if sources else ['unknown']
 
     def _evaluate_hubble(self, h: Hypothesis):
         """Evaluate Hubble tension with real Pantheon+ data and ΛCDM cosmology."""
