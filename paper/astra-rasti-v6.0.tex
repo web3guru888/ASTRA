@@ -831,6 +831,8 @@ This test case should be understood as a basic demonstration of causal discovery
 
 For genuine scientific value, causal inference would need to be applied to problems where the causal structure is genuinely non-obvious, such as: disentangling magnetic field, turbulence, and thermal support contributions to molecular cloud core stability; identifying causal drivers of the star formation main sequence; or determining causal sequences in galaxy quenching processes.
 Such applications would require careful consideration of confounding variables, latent variables, and domain-specific constraints beyond what is demonstrated here.
+Recent work illustrates both the power and the care required: \citet{Desmond2026} applies causal discovery to 450,000 galaxies to characterise the causal structure linking galaxy and halo properties, while \citet{Davis2026} use cosmological simulations to demonstrate that SMBH--galaxy causal relations invert direction across cosmic time---with implications for high-redshift black hole mass estimates that standard scaling relations would miss.
+These results demonstrate that causal discovery in astrophysics, when applied to problems with genuinely non-obvious causal structure, can yield physically significant insights unavailable from correlational analysis alone.
 
 % ======================================================================
 \section{Test Case 5: Bayesian Model Selection}
@@ -1447,6 +1449,12 @@ However, the effectiveness of curiosity-driven exploration relative to human-dir
 \textbf{Compared to Specialized Tools:}
 Domain-specific tools (photometric redshift codes, period-finding algorithms, cross-matching pipelines) excel at their specific tasks.
 \astra does not aim to replace them but to provide integrated workflows that combine multiple analysis types with consistent uncertainty handling and physical validation.
+
+\textbf{Compared to ML-Enhanced Bayesian Frameworks:}
+Recent work has demonstrated dramatic speedups in Bayesian parameter estimation through integration of generative models with traditional samplers.
+\citet{Liang2026} combine flow matching with parallel tempering MCMC (\textsc{FluxMC}), achieving convergence in under five hours for gravitational-wave parameter estimation problems where traditional methods fail to converge after hundreds of hours.
+\astra's Bayesian inference module uses a complementary strategy---nested sampling with learned harmonic mean estimation \citep{SpurioMancini+2023}---optimised for astrophysical model comparison rather than high-dimensional posterior exploration.
+Critically, \astra extends beyond parameter estimation by coupling Bayesian inference to causal discovery, dimensional analysis, and physical validation within a single framework; \textsc{FluxMC} and similar systems target a single domain without these integrative layers.
 
 \textbf{Compared to Manual Pipelines:}
 Astronomers routinely combine multiple tools manually, creating opportunities for inconsistent uncertainty treatment and reproducibility challenges.
