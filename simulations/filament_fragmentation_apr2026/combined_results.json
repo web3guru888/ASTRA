@@ -1,0 +1,105 @@
+{
+  "analysis_date": "2026-04-16",
+  "analysis_time": "21:36 UTC",
+  "observer": "Glenn J. White (Open University)",
+  "prepared_by": "astra-pa",
+  "context": "HGBS filament fragmentation paper \u2014 \u03bb/W = 2.1 \u00b1 0.1",
+  "tension_model": {
+    "formula": "lambda_W = 4 * c_s / sqrt(c_s^2 + v_A_par^2)",
+    "beta_exact_match": 0.761,
+    "beta_constraint": "0.5 <= beta <= 1.0",
+    "observed_lam_W": 2.1,
+    "observed_err": 0.1
+  },
+  "mhd_grid": {
+    "M1_b0p1": {
+      "Mach_target": 1,
+      "beta": 0.1,
+      "vA": 4.4758,
+      "Mach": 1.2297,
+      "MA": 0.2747,
+      "ME_KE": 13.2805,
+      "lam_W_tension": 0.8722,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "V2 JSON",
+      "is_new": false
+    },
+    "M1_b1p0": {
+      "Mach_target": 1,
+      "beta": 1.0,
+      "vA": 1.45,
+      "Mach": 1.1862,
+      "MA": 0.8181,
+      "ME_KE": 1.4973,
+      "lam_W_tension": 2.2709,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "V2 JSON",
+      "is_new": false
+    },
+    "M3_b0p1": {
+      "Mach_target": 3,
+      "beta": 0.1,
+      "vA": 4.5269,
+      "Mach": 2.9329,
+      "MA": 0.6478,
+      "ME_KE": 2.3868,
+      "lam_W_tension": 0.8628,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "V2 JSON",
+      "is_new": false
+    },
+    "M3_b0p5": {
+      "Mach_target": 3,
+      "beta": 0.5,
+      "vA": 2.2524,
+      "Mach": 1.7824,
+      "MA": 0.7913,
+      "ME_KE": 1.597,
+      "lam_W_tension": 1.6231,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "hst",
+      "is_new": true
+    },
+    "M3_b0p75": {
+      "Mach_target": 3,
+      "beta": 0.75,
+      "vA": 1.9499,
+      "Mach": 0.7872,
+      "MA": 0.4037,
+      "ME_KE": 6.1359,
+      "lam_W_tension": 1.8253,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "hst",
+      "is_new": true
+    },
+    "M3_b1p0": {
+      "Mach_target": 3,
+      "beta": 1.0,
+      "vA": 1.7656,
+      "Mach": 1.9432,
+      "MA": 1.1007,
+      "ME_KE": 0.8258,
+      "lam_W_tension": 1.9713,
+      "lam_W_IM92": 4.0,
+      "in_target_range": false,
+      "source": "V2 JSON",
+      "is_new": false
+    }
+  },
+  "suite18_summary": {
+    "n_total": 18,
+    "n_resolved": 0,
+    "n_single_core": 16,
+    "n_no_cores": 2,
+    "mean_W": 0.6829,
+    "std_W": 0.417,
+    "box_size_pc": "~20 pc",
+    "finding": "All simulations box-limited (N_cores <= 1); fragmentation scale exceeds box",
+    "implication": "Simulations need larger boxes or lower density contrast to resolve core spacing"
+  }
+}
