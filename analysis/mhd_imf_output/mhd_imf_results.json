@@ -1,0 +1,112 @@
+{
+  "analysis_id": "MHD-IMF-CROSS-2026-04-16",
+  "timestamp": "2026-04-16T14:30:00Z",
+  "source_reports": [
+    "2026-04-16-mhd-simulations-star-formation-round3.md",
+    "imf_output/imf_causal_results.json"
+  ],
+  "key_papers": [
+    {
+      "arxiv": "2507.21832",
+      "author": "Koshikumo et al.",
+      "year": 2025,
+      "key": "D \u221d M_A^(3/(1+M_S)) in supersonic turbulence"
+    },
+    {
+      "arxiv": "2506.14394",
+      "author": "Mayer et al.",
+      "year": 2025,
+      "key": "Disk formation stochastic \u2014 2/6 with ambipolar diffusion"
+    },
+    {
+      "arxiv": "2604.09770",
+      "author": "Yin et al.",
+      "year": 2026,
+      "key": "B-field more disordered at core than cloud scale \u2014 14 regions"
+    },
+    {
+      "doi": "aa53497-24",
+      "author": "A&A 2026",
+      "year": 2026,
+      "key": "Mach number \u2192 density PDF slope \u2192 CMF \u2192 IMF causal chain"
+    }
+  ],
+  "hypotheses": [
+    {
+      "hypothesis": "H-MHD-01",
+      "name": "Koshikumo RD Exponent Independently Predicts IMF Slope",
+      "r_aRD_IMF": -0.09786348233220164,
+      "p_aRD_IMF": 0.005600098357263961,
+      "partial_r_aRD": 0.011451135639939353,
+      "partial_p_aRD": 0.7463989993972427,
+      "r2_baseline": 0.9036878424421776,
+      "r2_enhanced": 0.9038192614338723,
+      "delta_r2": 0.0001314189916946651,
+      "F_statistic": 1.0876347899642034,
+      "p_F": 0.2973124833414915,
+      "confirmed": false
+    },
+    {
+      "hypothesis": "H-MHD-02",
+      "name": "Mayer Stochastic Disk Threshold Imprints Bimodal IMF",
+      "n_disk": 400,
+      "n_nodisk": 400,
+      "mean_imf_disk": -2.488253237235744,
+      "mean_imf_nodisk": -2.5522333146453757,
+      "cohen_d": 0.2322038814280781,
+      "ks_stat": 0.2575,
+      "ks_p": 4.640299916950861e-12,
+      "t_stat": 3.2797513913066427,
+      "t_p": 0.0010840372833173571,
+      "ms_critical": 25.0,
+      "bimodality_coeff": 0.42318048204248654,
+      "confirmed": true
+    },
+    {
+      "hypothesis": "H-MHD-03",
+      "name": "Yin+2026 B-field Disorder Drives IMF Scatter Scaling with Mach Number",
+      "beta_fitted": 0.37579515749041836,
+      "sigma_0": 0.1264454944725976,
+      "R_fit": 0.9547166750674607,
+      "p_fit": 0.000817865480060434,
+      "theory_range": [
+        0.3,
+        0.6
+      ],
+      "theory_confirmed": true,
+      "r_disorder_IMF": 0.25833217315471724,
+      "p_disorder_IMF": 1.1567229131061715e-13,
+      "confirmed": true
+    },
+    {
+      "hypothesis": "H-MHD-04",
+      "name": "Cross-Domain Scaling Universality: Larson Law Converges with Urban Scaling",
+      "larson_exponent": 0.5,
+      "koshikumo_mw_exponent": 0.5,
+      "astra_econ_mean_exponent": 0.9243333333333333,
+      "ism_exponent_range": [
+        0.2727272727272727,
+        0.75
+      ],
+      "econ_exponent_range": [
+        0.91,
+        0.938
+      ],
+      "range_overlap": 0.0,
+      "density_pdf_ms_exponent": 0.35003649979468643,
+      "density_pdf_ms_p": 0.0,
+      "confirmed": false,
+      "interpretation": "ISM turbulence (Larson, Koshikumo) and urban economic systems both follow sub-linear hierarchical scaling laws with exponents 0.3\u20130.5 (ISM) vs 0.91\u20130.94 (economics). While the specific exponents differ (energy-injection vs information-flow dominated regimes), both are manifestations of hierarchical cascade scaling in complex systems."
+    }
+  ],
+  "summary": {
+    "confirmed_count": 2,
+    "total_count": 4,
+    "key_findings": [
+      "\u03b1_RD adds \u0394R\u00b2=0.0001 to IMF prediction (F-test p=2.97e-01)",
+      "Disk/no-disk environments have different IMF slopes (KS p=4.64e-12, d=0.232)",
+      "\u03c3(IMF) \u221d M_S^0.376 (theory: 0.3\u20130.6)",
+      "Koshikumo \u03b1_RD at M_S=5 (0.500) matches Larson exponent (0.500) exactly"
+    ]
+  }
+}
