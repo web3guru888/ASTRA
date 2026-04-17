@@ -112,6 +112,7 @@
 
 % --- Packages ---
 \usepackage{graphicx}
+\graphicspath{{figures/}{../figures/}}
 \usepackage{amsmath}
 \usepackage{amssymb}
 % newtxtext,newtxmath removed — RASTI class handles fonts internally
@@ -165,18 +166,18 @@ Yet these tools operate largely in isolation: astronomers must manually stitch t
 \astra (Autonomous System for Scientific Discovery in Astrophysics) addresses this integration challenge.
 Rather than replacing any single tool, \astra provides a unified framework that chains established algorithms into coherent, physics-aware analytical workflows.
 The system combines:
-\begin{description}
-  \item Numerical data processing and statistical analysis
-  \item Causal reasoning with structural causal models
-  \item Physical validation through dimensional analysis and conservation laws
-  \item Multi-wavelength data fusion with uncertainty propagation
-  \item Hypothesis generation from pattern recognition
-  \item Bayesian model selection with evidence computation
-  \item Stigmergic swarm intelligence for autonomous exploration--exploitation balancing
-  \item Cognitive architecture with dynamic knowledge graph and neuro-symbolic reasoning
-  \item Multi-agent scientific debate for hypothesis evaluation and consensus
-  \item Theory framework with automated consistency checking and abductive reasoning
-\end{description}
+\begin{enumerate}
+  \item[(i)] Numerical data processing and statistical analysis
+  \item[(ii)] Causal reasoning with structural causal models
+  \item[(iii)] Physical validation through dimensional analysis and conservation laws
+  \item[(iv)] Multi-wavelength data fusion with uncertainty propagation
+  \item[(v)] Hypothesis generation from pattern recognition
+  \item[(vi)] Bayesian model selection with evidence computation
+  \item[(vii)] Stigmergic swarm intelligence for autonomous exploration--exploitation balancing
+  \item[(viii)] Cognitive architecture with dynamic knowledge graph and neuro-symbolic reasoning
+  \item[(ix)] Multi-agent scientific debate for hypothesis evaluation and consensus
+  \item[(x)] Theory framework with automated consistency checking and abductive reasoning
+\end{enumerate}
 
 This integrated approach ensures that physical validation, causal reasoning, and uncertainty quantification are applied consistently throughout multi-step analyses.
 While individual components use established algorithms (\pc algorithm for causal discovery, nested sampling for Bayesian evidence, the Buckingham $\pi$ theorem for dimensional analysis; \citealt{Buckingham1914}), their integration within a single framework enables analyses that would otherwise require manual combination of multiple separate tools.
@@ -215,7 +216,7 @@ The system integrates multiple specialized components through a coordinated fram
 
 \textbf{What \astra Demonstrates:}
 The six astrophysical test cases show that \astra can: discover physical laws from data with theoretical validation; fuse multi-wavelength observations with proper uncertainty handling; identify established astrophysical relationships through pattern recognition; distinguish causation from correlation; perform rigorous Bayesian model comparison; and operate in knowledge isolation mode to discover patterns and generate testable predictions beyond knowledge retrieval.
-The cross-domain validation (Section~\ref{sec:crossdomain}) further demonstrates that these capabilities generalize to economics, climate science, and epidemiology, testing approximately 43 hypotheses and validating 38 across five scientific domains.
+The cross-domain validation (Section~\ref{sec:crossdomain}) further demonstrates that these capabilities generalize to economics, climate science, and epidemiology, testing approximately 43 hypotheses and validating 37 at $\alpha=0.05$ (with one borderline result at $p=0.08$) across five scientific domains.
 
 \textbf{What \astra Does Not Claim:}
 \astra is not presented as achieving artificial general intelligence or AGI-like performance.
@@ -350,7 +351,7 @@ The system uses established scientific Python libraries (\textsc{NumPy}, \textsc
 Key dependencies and their versions are specified in the repository's \texttt{requirements.txt}; the principal packages are \textsc{causal-learn} (causal discovery), \textsc{dynesty} (nested sampling), \textsc{astropy} (astronomical utilities), and \textsc{scikit-learn} (machine learning).
 All results in this paper can be reproduced from the provided Jupyter notebooks using these dependencies.
 
-The complete system is publicly available at: \url{https://github.com/Tilanthi/ASTRA} \citep{White2026}.
+The complete system is publicly available at: \url{https://github.com/web3guru888/ASTRA} \citep{White2026}.
 This repository includes: complete source code and installation instructions; system architecture documentation with detailed design diagrams; API documentation and user manual; extended validation with 15~comprehensive test cases; example notebooks and tutorials; and reproducible code for all results presented in this paper.
 The first five test cases can be reproduced using the following Jupyter notebooks:
 \texttt{test02\_scaling\_relations.ipynb} (Section~\ref{sec:tc1}),
@@ -788,7 +789,7 @@ Recent direct evidence confirms that the IMF varies within the Milky Way at a st
 
 \textbf{IMF Causal Driver Analysis:}
 To illustrate \astra's causal inference capability directly on the IMF non-universality question, we constructed an 800-cluster synthetic dataset calibrated to the MW open cluster observations of \citet{Steinhardt2026}, the SMC JWST photometry of \citet{Cohen2026}, and the binary bias analysis of \citet{Rosen2026}.
-The \pc algorithm (Fisher $Z$ independence test, $\alpha=0.05$) autonomously discovers 11 directed causal edges (Fig.~\ref{fig:imf_causal_dag}), identifying the density PDF slope ($\Sigma_{\rm PDF}$) as the primary causal driver of the observed IMF slope ($\beta=0.251$, $R^2=0.702$), with Mach number acting on the IMF through $\Sigma_{\rm PDF}$ rather than directly.
+The \pc algorithm (Fisher $Z$ independence test, $\alpha=0.05$) autonomously discovers 11 directed causal edges (Fig.~\ref{fig:imf_causal_dag}), identifying the density PDF slope ($\Sigma_{\mathrm{PDF}}$) as the primary causal driver of the observed IMF slope ($\beta=0.251$, $R^2=0.702$), with Mach number acting on the IMF through $\Sigma_{\mathrm{PDF}}$ rather than directly.
 Binary fraction introduces a systematic bias of $\Delta\alpha=0.045$ that exceeds the statistical measurement uncertainty for all sample sizes currently studied ($N > 100$ clusters), quantitatively confirming the `confidently wrong' threshold identified by \citet{Rosen2026}.
 Metallicity does not show a statistically significant direct effect on IMF slope ($p=0.062$, $\alpha=0.05$ threshold), but a fraction ${\approx}23$\,per\,cent of its marginal association with IMF slope is attributable to the Jeans mass pathway, qualitatively consistent with the causal chain inferred by \citet{Cohen2026} from JWST SMC photometry.
 We emphasise that this analysis uses a synthetic dataset calibrated to current observational constraints, not a direct analysis of observed cluster catalogues; it serves as a demonstration of \astra's causal discovery workflow on a physically motivated problem with genuinely non-obvious causal structure.
@@ -796,7 +797,7 @@ We emphasise that this analysis uses a synthetic dataset calibrated to current o
 \begin{figure*}
   \centering
   \includegraphics[width=0.80\textwidth]{figures/fig-imf-causal-dag.png}
-  \caption{Causal directed acyclic graph (DAG) for the drivers of observed IMF slope, discovered autonomously by \astra's \pc causal inference module from a synthetic 800-cluster dataset calibrated to \citet{Steinhardt2026}, \citet{Cohen2026}, and \citet{Rosen2026}. Arrow directions indicate the inferred causal direction (Fisher $Z$ test, $\alpha = 0.05$). The density PDF slope ($\Sigma_{\rm PDF}$) emerges as the primary causal driver ($\beta = 0.251$, $R^2 = 0.702$); Mach number acts on the IMF \emph{through} $\Sigma_{\rm PDF}$ rather than directly. Binary fraction introduces a systematic IMF slope bias of $\Delta\alpha = 0.045$, consistent with the `confidently wrong' range of \citet{Rosen2026}. Metallicity does not directly drive IMF slope at $p < 0.05$, but approximately 23\,per\,cent of its marginal association with IMF slope is attributable to the Jeans mass pathway, supporting the causal chain of \citet{Cohen2026}.}
+  \caption{Causal directed acyclic graph (DAG) for the drivers of observed IMF slope, discovered autonomously by \astra's \pc causal inference module from a synthetic 800-cluster dataset calibrated to \citet{Steinhardt2026}, \citet{Cohen2026}, and \citet{Rosen2026}. Arrow directions indicate the inferred causal direction (Fisher $Z$ test, $\alpha = 0.05$). The density PDF slope ($\Sigma_{\mathrm{PDF}}$) emerges as the primary causal driver ($\beta = 0.251$, $R^2 = 0.702$); Mach number acts on the IMF \emph{through} $\Sigma_{\mathrm{PDF}}$ rather than directly. Binary fraction introduces a systematic IMF slope bias of $\Delta\alpha = 0.045$, consistent with the `confidently wrong' range of \citet{Rosen2026}. Metallicity does not directly drive IMF slope at $p < 0.05$, but approximately 23\,per\,cent of its marginal association with IMF slope is attributable to the Jeans mass pathway, supporting the causal chain of \citet{Cohen2026}.}
   \label{fig:imf_causal_dag}
 \end{figure*}
 
@@ -1479,8 +1480,9 @@ Domain-specific tools (photometric redshift codes, period-finding algorithms, cr
 \textbf{Compared to ML-Enhanced Bayesian Frameworks:}
 Recent work has demonstrated dramatic speedups in Bayesian parameter estimation through integration of generative models with traditional samplers.
 \citet{Liang2026} combine flow matching with parallel tempering MCMC (\textsc{FluxMC}), achieving convergence in under five hours for gravitational-wave parameter estimation problems where traditional methods fail to converge after hundreds of hours.
-\astra's Bayesian inference module uses a complementary strategy---nested sampling with learned harmonic mean estimation \citep{SpurioMancini+2023}---optimised for astrophysical model comparison rather than high-dimensional posterior exploration.
-Critically, \astra extends beyond parameter estimation by coupling Bayesian inference to causal discovery, dimensional analysis, and physical validation within a single framework; \textsc{FluxMC} and similar systems target a single domain without these integrative layers.
+Simulation-based inference (SBI) frameworks, particularly LtU-ILI \citep{Cranmer2024}, provide multi-backend posterior estimation (supporting \textsc{swyft}, \textsc{lampe}, and \textsc{BayesFlow}) for astrophysical applications from CMB analysis to weak lensing.
+\astra complements these approaches by coupling Bayesian inference to explicit causal discovery, dimensional analysis, and physical validation within a single framework; SBI pipelines such as \textsc{FluxMC} and LtU-ILI target parameter estimation without these integrative layers.
+\astra's Bayesian inference module uses nested sampling with learned harmonic mean estimation \citep{SpurioMancini+2023}---optimised for astrophysical model comparison rather than high-dimensional posterior exploration.
 
 \textbf{Compared to Manual Pipelines:}
 Astronomers routinely combine multiple tools manually, creating opportunities for inconsistent uncertainty treatment and reproducibility challenges.
@@ -1554,7 +1556,7 @@ These results establish four modes of evidence for \astra's capabilities: valida
 While individual components use established algorithms, their integration within a single framework---coordinated by a cognitive architecture with knowledge graph persistence, neuro-symbolic verification, and multi-agent hypothesis evaluation---enables analyses that would otherwise require manual combination of multiple separate tools and pipelines.
 \astra is a tool to assist the astronomer, not a replacement for domain expertise; definitive scientific discovery requires collaboration with domain experts and observational validation.
 
-The complete source code, documentation, and reproducible analysis notebooks are available at \url{https://github.com/Tilanthi/ASTRA} \citep{White2026}.
+The complete source code, documentation, and reproducible analysis notebooks are available at \url{https://github.com/web3guru888/ASTRA} \citep{White2026}.
 
 % ======================================================================
 \section*{Acknowledgements}
@@ -1583,7 +1585,7 @@ The author declares no conflict of interest.
 \section*{Data Availability}
 % ======================================================================
 
-The complete \astra source code and analysis notebooks are available at \url{https://github.com/Tilanthi/ASTRA}.
+The complete \astra source code and analysis notebooks are available at \url{https://github.com/web3guru888/ASTRA}.
 Six fully reproducible worked examples with data generation scripts, analysis code, and figure generation are provided in the online repository (\texttt{Example1--6/}).
 All data used in this paper are publicly available from the original survey archives as cited in the text.
 World Bank data are available at \url{https://data.worldbank.org}; NASA GISS temperature data at \url{https://data.giss.nasa.gov/gistemp/}; NOAA Mauna Loa CO$_{2}$ data at \url{https://gml.noaa.gov/ccgg/trends/}.
