@@ -1,0 +1,68 @@
+<comment>
+problem   = MHD driven turbulence — ASTRA resolution convergence test
+reference = Federrath et al. 2010, Stone et al. 2008
+config    = Mach 3, beta 0.1 (supersonic, magnetically dominated) — 256³
+purpose   = Resolution convergence vs 128³ run mhd_M03_beta0.1
+generated = ASTRA PA, 2026-04-17
+note      = Parameters IDENTICAL to mhd_M03_beta0.1 (128³) except:
+              nx1/nx2/nx3: 128 → 256  (8× volume)
+              meshblock unchanged at 32 → 512 meshblocks / 18 MPI ranks
+            HDF5 snapshots added every 0.05 t_cs for spatial diagnostics.
+            CAUTION: strong B field → small dt → ~2× more cycles than beta=1.0
+            Expected: KE saturates t≈1.5, MEz/(MEx+MEy)≈50-100, M_A≈0.6
+
+<job>
+problem_id = M03_b0.1_256
+
+<output1>
+file_type  = hst
+dt         = 0.005
+
+<output2>
+file_type  = hdf5
+variable   = prim
+id         = prim
+dt         = 0.05
+
+<time>
+cfl_number = 0.3
+nlim       = -1
+tlim       = 2.0
+
+<mesh>
+nx1        = 256
+x1min      = 0.0
+x1max      = 1.0
+ix1_bc     = periodic
+ox1_bc     = periodic
+
+nx2        = 256
+x2min      = 0.0
+x2max      = 1.0
+ix2_bc     = periodic
+ox2_bc     = periodic
+
+nx3        = 256
+x3min      = 0.0
+x3max      = 1.0
+ix3_bc     = periodic
+ox3_bc     = periodic
+
+<meshblock>
+nx1        = 32
+nx2        = 32
+nx3        = 32
+
+<hydro>
+iso_sound_speed = 1.0
+
+<problem>
+beta       = 0.1
+
+<turbulence>
+turb_flag  = 3
+dedt       = 4.5
+tcorr      = 0.5
+nlow       = 0
+nhigh      = 2
+expo       = 2.0
