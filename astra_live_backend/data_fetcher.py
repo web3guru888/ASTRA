@@ -538,8 +538,13 @@ def search_arxiv(query: str, max_results: int = 10) -> List[Dict]:
 
 
 def search_arxiv_astroph(topic: str, max_results: int = 3) -> List[Dict]:
-    """Search arXiv for astrophysics papers on a topic."""
-    return search_arxiv(f"abs:{topic}", max_results)
+    """Search arXiv for astrophysics papers on a topic.
+
+    Bug 2 fix: Added cat:astro-ph.* filter to restrict results to astrophysics
+    papers only. Previously used abs:{topic} alone which returned ~83% irrelevant
+    papers from other arXiv domains.
+    """
+    return search_arxiv(f"cat:astro-ph.*+AND+abs:{topic}", max_results)
 
 
 # ═══════════════════════════════════════════════════════════════

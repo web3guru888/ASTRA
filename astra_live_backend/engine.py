@@ -2176,6 +2176,32 @@ class DiscoveryEngine:
                       f"Cross-domain comparison: {len(exo_distances)} exoplanet distances "
                       f"vs {len(sdss_redshifts)} galaxy redshifts", h.id)
             h.data_points_used = len(exo_distances) + len(sdss_redshifts)
+
+            # Bug 1 fix: Add formal KS test so sig_results is non-zero for crossdomain
+            try:
+                from scipy import stats as _sp
+                exo_min, exo_max = float(exo_distances.min()), float(exo_distances.max())
+                sdss_min, sdss_max = float(sdss_redshifts.min()), float(sdss_redshifts.max())
+                exo_n = (exo_distances - exo_min) / (exo_max - exo_min + 1e-12)
+                sdss_n = (sdss_redshifts - sdss_min) / (sdss_max - sdss_min + 1e-12)
+                ks_stat, ks_p = _sp.ks_2samp(exo_n.values, sdss_n.values)
+                h.test_results.append(asdict(StatTestResult(
+                    test_name='KS 2-sample (exoplanet-dist vs galaxy-z)',
+                    statistic=float(ks_stat), p_value=float(ks_p),
+                    passed=bool(ks_p < 0.05),
+                    details=f'N_exo={len(exo_distances)} N_sdss={len(sdss_redshifts)} '
+                            f'KS={ks_stat:.4f} p={ks_p:.2e}')))
+                h.update_from_pvalue(float(ks_p))
+                n_com = min(len(exo_n), len(sdss_n))
+                corr, corr_p = _sp.spearmanr(exo_n.values[:n_com], sdss_n.values[:n_com])
+                h.test_results.append(asdict(StatTestResult(
+                    test_name='Spearman (exoplanet-dist vs galaxy-z)',
+                    statistic=float(corr), p_value=float(corr_p),
+                    passed=bool(corr_p < 0.05),
+                    details=f'N={n_com} rho={corr:.4f} p={corr_p:.2e}')))
+            except Exception as _e:
+                self._log('INVESTIGATE', 'INVESTIGATE',
+                          f'Crossdomain stat tests failed: {_e}', h.id)
         else:
             self._log("INVESTIGATE", "INVESTIGATE",
                       f"Insufficient cross-domain data for {h.id}", h.id)

@@ -119,6 +119,33 @@ def build_dashboard_html(snapshot_data):
         else:
             print("Warning: Could not find injection point for snapshot")
 
+    # Bug 4 fix: Update hardcoded discovery/outcome counts with live data
+    disc_count = (snapshot_data.get('discovery-memory') or {}).get('discovery_count', 0)
+    if not disc_count:
+        disc_count = ((snapshot_data.get('discovery-memory') or {})
+                      .get('improvement', {}).get('total_discoveries', 0))
+    out_count = ((snapshot_data.get('discovery-memory') or {})
+                 .get('improvement', {}).get('total_outcomes', 0))
+
+    if disc_count:
+        html = re.sub(
+            r'id="si-km-discoveries">[0-9]+</div>',
+            f'id="si-km-discoveries">{disc_count}</div>',
+            html)
+        html = re.sub(
+            r'id="methodology-disc-count">[0-9,]+</span>',
+            f'id="methodology-disc-count">{disc_count}</span>',
+            html)
+    if out_count:
+        html = re.sub(
+            r'id="si-km-outcomes">[0-9]+</div>',
+            f'id="si-km-outcomes">{out_count}</div>',
+            html)
+        html = re.sub(
+            r'id="methodology-outcomes-count">[0-9,]+</span>',
+            f'id="methodology-outcomes-count">{out_count}</span>',
+            html)
+
     return html
 
 

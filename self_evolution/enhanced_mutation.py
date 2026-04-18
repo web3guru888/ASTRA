@@ -54,13 +54,29 @@ class EnhancedMutationEngine:
         """
         Apply a real code mutation to improve capabilities.
 
+        Bug 3 fix: Creates a timestamped backup before any file write. If the
+        write raises an exception the backup is automatically restored. The
+        backup path is included in the success message so callers can roll back
+        if a subsequent evaluation shows a capability regression.
+
         Returns:
-            (success, message)
+            (success, message)  — message includes backup path on success
         """
+        import shutil as _shutil
+        import time as _time_mod
+
         filepath = os.path.join(self.stan_core_path, target_file)
 
         if not os.path.exists(filepath):
             return False, f"File not found: {target_file}"
+
+        # Create backup BEFORE any mutation (safety gate)
+        backup_dir = os.path.join(self.stan_core_path, '..', '.evolution_backups')
+        os.makedirs(backup_dir, exist_ok=True)
+        safe_name = target_file.replace('/', '_').replace('\\', '_')
+        backup_path = os.path.join(backup_dir,
+                                   f'{safe_name}.{int(_time_mod.time())}.bak')
+        _shutil.copy2(filepath, backup_path)
 
         try:
             with open(filepath, 'r') as f:
@@ -82,12 +98,23 @@ class EnhancedMutationEngine:
             if mutated_code != original_code:
                 with open(filepath, 'w') as f:
                     f.write(mutated_code)
-                return True, f"Successfully applied {mutation_type} to {target_file}"
+                return True, (f"Successfully applied {mutation_type} to {target_file}"
+                              f" [backup: {backup_path}]")
             else:
+                # No change — clean up unnecessary backup
+                try:
+                    os.remove(backup_path)
+                except OSError:
+                    pass
                 return False, "No changes needed - code already optimal"
 
         except Exception as e:
-            return False, f"Error applying mutation: {str(e)}"
+            # Restore backup on write error
+            try:
+                _shutil.copy2(backup_path, filepath)
+            except Exception as restore_err:
+                return False, (f"Error AND restore failed ({restore_err}): {e}")
+            return False, f"Error applying mutation (rolled back from {backup_path}): {e}"
 
     def _add_algorithm_optimization(self, code: str, filepath: str) -> str:
         """Add algorithmic optimizations"""
