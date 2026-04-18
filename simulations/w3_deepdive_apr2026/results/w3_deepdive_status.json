@@ -1,0 +1,58 @@
+{
+  "batch": "DONE",
+  "n_sims": 4,
+  "n_done": 4,
+  "n_failed": 0,
+  "elapsed_h": 0.221,
+  "started": "2026-04-18T19:07:44Z",
+  "results": {
+    "W3_M30_b07": {
+      "beta": 0.7,
+      "returncode": 0,
+      "elapsed_s": 796.2,
+      "final_stats": {
+        "t": 4.0,
+        "n_outputs": 11,
+        "C": 1.598,
+        "rho_max": 1.598
+      },
+      "status": "PASS"
+    },
+    "W3_M30_b08": {
+      "beta": 0.8,
+      "returncode": 0,
+      "elapsed_s": 796.4,
+      "final_stats": {
+        "t": 4.0,
+        "n_outputs": 11,
+        "C": 2.271,
+        "rho_max": 2.271
+      },
+      "status": "PASS"
+    },
+    "W3_M30_b09": {
+      "beta": 0.9,
+      "returncode": 0,
+      "elapsed_s": 796.6,
+      "final_stats": {
+        "t": 4.0,
+        "n_outputs": 11,
+        "C": 2.886,
+        "rho_max": 2.886
+      },
+      "status": "PASS"
+    },
+    "W3_M30_b10": {
+      "beta": 1.0,
+      "returncode": 0,
+      "elapsed_s": 796.8,
+      "final_stats": {
+        "t": 4.0,
+        "n_outputs": 11,
+        "C": 2.889,
+        "rho_max": 2.889
+      },
+      "status": "PASS"
+    }
+  }
+}
