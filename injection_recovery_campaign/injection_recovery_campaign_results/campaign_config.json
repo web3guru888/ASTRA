@@ -1,0 +1,91 @@
+{
+  "output_dir": "injection_recovery_results",
+  "map_config": {
+    "map_size": 256,
+    "pixel_scale": 2.0,
+    "distance_pc": 1950.0,
+    "beam_size_fwhm": 18.0
+  },
+  "extraction_config": {
+    "threshold_sigma": 3.0,
+    "min_pixels": 5,
+    "min_separation": 6
+  },
+  "campaign_1": {
+    "name": "baseline_bias",
+    "description": "Bias vs true spacing",
+    "parameter": "spacing_true",
+    "values": [
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0
+    ],
+    "fixed_params": {
+      "n_cores": 7,
+      "contrast": 10.0,
+      "noise_level": 1.0,
+      "background_type": "flat"
+    },
+    "n_repeats": 20,
+    "total_sims": 100
+  },
+  "campaign_2": {
+    "name": "core_number_dependence",
+    "description": "Bias vs number of cores",
+    "parameter": "n_cores",
+    "values": [
+      5,
+      7,
+      9,
+      11,
+      13
+    ],
+    "fixed_params": {
+      "spacing_true": 2.0,
+      "contrast": 10.0,
+      "noise_level": 1.0,
+      "background_type": "flat"
+    },
+    "n_repeats": 20,
+    "total_sims": 100
+  },
+  "campaign_3a": {
+    "name": "noise_robustness",
+    "description": "Bias vs noise level",
+    "parameter": "noise_level",
+    "values": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "fixed_params": {
+      "spacing_true": 2.0,
+      "n_cores": 7,
+      "contrast": 10.0,
+      "background_type": "flat"
+    },
+    "n_repeats": 20,
+    "total_sims": 60
+  },
+  "campaign_3b": {
+    "name": "background_robustness",
+    "description": "Bias vs background type",
+    "parameter": "background_type",
+    "values": [
+      "flat",
+      "gradient",
+      "clumpy"
+    ],
+    "fixed_params": {
+      "spacing_true": 2.0,
+      "n_cores": 7,
+      "contrast": 10.0,
+      "noise_level": 1.0
+    },
+    "n_repeats": 20,
+    "total_sims": 60
+  },
+  "total_simulations": 320
+}
