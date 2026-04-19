@@ -1,0 +1,44 @@
+{
+  "generated": "2026-04-19 05:13 UTC",
+  "option_b": {
+    "n_sims_total": 30,
+    "n_valid": 18,
+    "calibration_mean": 1.1072,
+    "calibration_std": 0.1175,
+    "calibration_range": [
+      0.8567,
+      1.3064
+    ],
+    "formula": "lambda_frag = (1.107 +/- 0.117) x lambda_MJ(theta,beta)"
+  },
+  "option_a_v1": {
+    "n_sims": 4,
+    "n_snaps_each": 5,
+    "finding": "lambda_dom = 2.0 lambda_J (seed scale L/n_modes). lambda_MJ,fiber never seeded."
+  },
+  "option_a_v2": {
+    "n_sims": 2,
+    "rho_c": 4.0,
+    "n_snaps_each": 10,
+    "max_N_cores": 1,
+    "finding": "Radial collapse wins. N_cores=1 throughout. FWHM->grid at t~0.14 t_J."
+  },
+  "option_a_v3": {
+    "n_sims": 2,
+    "rho_c": 2.0,
+    "n_snaps_each": 17,
+    "max_N_cores": 2,
+    "finding": "Brief 2-core transient at t=0.142 t_J (beta=0.70 only), then merges. Radial collapse wins by t~0.24 t_J."
+  },
+  "w3_prediction": {
+    "theta_deg": 50.0,
+    "beta": 0.85,
+    "lj_pc": 0.1,
+    "dist_kpc": 1.95,
+    "lmj_pc": 0.1543,
+    "lfrag_pc": 0.1708,
+    "lfrag_err_pc": 0.0181,
+    "lfrag_arcsec": 18.07,
+    "lfrag_arcsec_err": 1.92
+  }
+}
