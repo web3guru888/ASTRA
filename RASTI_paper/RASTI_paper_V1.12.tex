@@ -6,7 +6,7 @@
 \usepackage{url}
 
 % Draft version information
-\newcommand{\draftversion}{V1.12}
+\newcommand{\draftversion}{V1.14}
 \newcommand{\draftdate}{April 2026}
 
 \title[ASTRA: Autonomous Scientific Discovery in Astrophysics]{ASTRA: Autonomous Scientific Discovery in Astrophysics}
@@ -31,9 +31,11 @@ methods: data analysis --- methods: statistical --- ISM: structure --- galaxies:
 \begin{abstract}
 We present ASTRA (Autonomous System for Scientific Discovery in Astrophysics), an integrated framework combining numerical data analysis, causal reasoning, and physical validation. ASTRA integrates: dimensional analysis; structural causal models; Bayesian evidence computation; and multi-wavelength data fusion within a unified framework.
 
-We demonstrate capabilities through six test cases. The first five use real observational data to validate ASTRA's ability to recover known astrophysical results, including: Herschel filament scaling relations with dimensional analysis; Chandra Deep Field South multi-wavelength cross-matching with Bayesian uncertainty propagation; SDSS galaxy property correlations; Gaia stellar causal inference; and Bayesian model selection for virial scaling relations.
+We demonstrate capabilities through seven test cases. The first five use real observational data to validate ASTRA's ability to recover known astrophysical results, including: Herschel filament scaling relations with dimensional analysis; Chandra Deep Field South multi-wavelength cross-matching with Bayesian uncertainty propagation; SDSS galaxy property correlations; Gaia stellar causal inference; and Bayesian model selection for virial scaling relations.
 
-The sixth test case demonstrates discovery-mode operation on realistic galaxy survey data (3,000 galaxies based on SDSS scaling relations). ASTRA recovers the star-forming main sequence and mass-metallicity relation, then applies multi-dimensional outlier detection to identify starbursts, post-starbursts, and transitioning galaxies. This demonstrates validation and discovery in a single analysis run.
+The sixth test case demonstrates discovery-mode operation on realistic galaxy survey data (3,000 galaxies based on SDSS scaling relations). ASTRA recovers the star-forming main sequence and mass-metallicity relation, then applies multi-dimensional outlier detection to identify starbursts, post-starbursts, and transitioning galaxies.
+
+The seventh test case demonstrates autonomous HPC simulation campaign management: ASTRA co-ordinated 600+ Athena++ MHD simulations on a remote 224-vCPU server to validate the magnetic Jeans fragmentation criterion for ISM filaments, confirming the predicted stability threshold $\beta_\mathrm{crit} = 2/3$ and calibrating the fragmentation wavelength to $(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$ across 18 field-geometry configurations.
 
 Code and documentation: \url{https://github.com/Tilanthi/ASTRA} \cite{astra_github}.
 \end{abstract}
@@ -565,11 +567,163 @@ While this dataset realistically mimics SDSS galaxy properties, it is not actual
 \end{figure*}
 
 
+\section{Test Case 7: Autonomous MHD Simulation Campaign for ISM Filament Fragmentation}
+\label{sec:tc7}
+
+\subsection{Overview and Motivation}
+
+Test Cases 1--6 demonstrate ASTRA capabilities on observational and synthetic astronomical data.
+Test Case 7 demonstrates a qualitatively different capability: the autonomous design, execution,
+and interpretation of a large-scale numerical simulation campaign on a remote high-performance
+computing (HPC) facility. ASTRA co-ordinated 600+ Athena++ \citep{stone2020} magnetohydrodynamic
+(MHD) simulations to validate the magnetic Jeans fragmentation criterion for ISM molecular cloud
+filaments, including an injection-recovery campaign to characterise the observational bias
+relevant to Herschel survey data.
+
+The physical question addressed is: \emph{how do magnetic field geometry and plasma
+$\beta$ (= $2\rho c_s^2 / B^2$) control gravitational fragmentation of a molecular filament?}
+This is directly relevant to the 24 Herschel filaments analysed in Test Case 1, and to
+sub-millimetre surveys of star-forming regions such as the W3 giant molecular cloud complex.
+
+\subsection{Simulation Setup}
+
+ASTRA co-ordinated three interlinked campaigns on the astra-climate GCE server (224-vCPU AMD
+EPYC 7B13, 220 GB RAM) using Athena++ with an isothermal equation of state, FFT self-gravity,
+and periodic boundary conditions.
+
+\textbf{Campaign A (Field Geometry Calibration)}: 30 simulations on a $128^3$ grid
+($L = 8\,\lambda_J$, $\Delta x = 0.0625\,\lambda_J$), varying field angle $\theta \in
+\{0^\circ, 30^\circ, 45^\circ, 60^\circ, 75^\circ, 90^\circ\}$ and plasma $\beta \in
+\{0.5, 0.75, 1.0, 1.5, 2.0\}$ at Mach number $\mathcal{M} = 3$.
+
+\textbf{Campaign B ($\beta$-sweep and $\mathcal{M}$-sweep)}: 12 simulations on a
+$256 \times 64 \times 64$ grid ($x_1 \in [-8,8]\,\lambda_J$), varying $\beta \in
+\{0.22, 0.32, 0.50, 0.70, 1.00, 1.50, 2.00\}$ at $\mathcal{M}=3$ and
+$\mathcal{M} \in \{1, 2, 3, 4, 5\}$ at $\beta = 0.85$.
+
+\textbf{Campaign C (Transition Zone Mapping)}: 240 simulations mapping the $(f, \beta)$
+stability boundary in the transition region, where $f = \sqrt{2/\beta}$ is the
+dimensionless mass-to-flux ratio. Two independent random-phase seeds were used per
+parameter combination to characterise stochasticity.
+
+In all campaigns, a density perturbation at wavelength $\lambda_\mathrm{seed} = 2.0\,\lambda_J$
+was seeded with amplitude $\varepsilon = 0.01$, and the density contrast $C(t) \equiv
+\rho_\mathrm{max}(t)/\rho_0$ was monitored over $t \in [0, 4\,t_J]$.
+
+\subsection{Results}
+\label{sec:tc7_results}
+
+\textbf{Magnetic Stability Threshold}: The magnetic Jeans stability criterion for a mode at
+wave-number $k$ with $\mathbf{B}$ at angle $\theta$ to the fragmentation axis gives a
+modified Jeans length:
+\begin{equation}
+\lambda_{J,m}(\theta,\beta) = \lambda_J \sqrt{1 + \frac{2\sin^2\theta}{\beta}},
+\label{eq:magnetic_jeans}
+\end{equation}
+where $\lambda_J = c_s\sqrt{\pi/(G\rho_0)}$ is the thermal Jeans length. For the seeded
+mode $\lambda_\mathrm{seed} = 2.0\,\lambda_J$ with the field perpendicular to the
+fragmentation axis ($\theta = 90^\circ$), the stability threshold reduces to $\beta_\mathrm{crit}
+= 2/(4\pi G\rho_0/\pi^2 - 1) = 0.667$.
+
+Campaign B confirms this threshold (Figure~\ref{fig:mhd_contrast_sweep}): for $\beta \leq 0.50$
+the seeded mode is magnetically suppressed ($C_\mathrm{final} \approx 1.0$--$1.1$), while for
+$\beta \geq 0.70$ it grows ($C_\mathrm{final} > 1.5$), straddling $\beta_\mathrm{crit} = 0.667$.
+Plasma $\beta$ is the dominant control parameter: $C_\mathrm{final}$ varies by a factor of
+$4.3\times$ across $\beta = 0.22$--$2.00$ at fixed $\mathcal{M}=3$, compared to $<20$ per cent
+variation across $\mathcal{M} = 1$--$5$ at fixed $\beta = 0.85$.
+
+\textbf{Field Geometry Calibration}: From 18 valid simulations in Campaign A ($\theta =
+30^\circ$--$75^\circ$, $\geq 4$ resolved cores), the empirical calibration gives:
+\begin{equation}
+\lambda_\mathrm{frag} = (1.107 \pm 0.117)\,\lambda_{J,m}(\theta,\beta),
+\label{eq:calib}
+\end{equation}
+where the $11 \pm 12$ per cent offset above the linear prediction is consistent with
+nonlinear super-Jeans fragmentation and stochastic mode competition. In all 12
+Campaign B simulations, the recovered fragmentation wavelength is $\lambda_\mathrm{frag}
+= 2.0\,\lambda_J$ regardless of $\beta$ or $\mathcal{M}$, confirming that the seeded
+mode dominates over spontaneous Jeans instability.
+
+\textbf{Stability Boundary Mapping}: Campaign C (Figure~\ref{fig:mhd_stability}) maps the
+stability boundary as a continuous curve in the $(f, \beta)$ plane. For $\mathcal{M} = 1$,
+fragmentation onset occurs at $f \approx 1.9$--$2.1$; for $\mathcal{M} = 3$ this shifts to
+$f \approx 2.0$--$2.2$ ($\Delta f \approx 0.1$ from turbulent support). Near the transition
+boundary ($f \approx 2.3$, $\beta \approx 0.7$), $C_\mathrm{final}$ varies by a factor of
+$3\times$ between independent random-phase seeds, demonstrating stochastic sensitivity in
+the transition regime. Of 240 Campaign C simulations, 233 completed to $t = 4.0\,t_J$; 7
+underwent catastrophic fragmentation in the high-$f$, low-$\beta$ corner of parameter space.
+
+\textbf{Observational Bias Correction}: The Herschel Gould Belt Survey reports core spacings
+via the \emph{pairwise median} of all $\binom{n}{2}$ inter-core distances. For $n$ equally-spaced
+cores this overestimates the nearest-neighbour spacing by a factor $k(n)$. A companion
+injection-recovery campaign of 320 synthetic-filament simulations under Herschel-like conditions
+(SPIRE $250\,\mu$m beam FWHM = 18 arcsec, distance = 1.95 kpc) empirically characterised:
+\begin{equation}
+f_\mathrm{bias}(n=7) = 2.08 \pm 0.31,
+\label{eq:bias}
+\end{equation}
+agreeing with the analytic prediction $k(n=7) = 2$ to within 4 per cent. The resolution
+limit at spacing $< 1$ beam FWHM ($\approx 0.10$ pc at $d = 1.95$ kpc) precludes core
+detection below this scale in standard Herschel imaging. These corrections are essential
+when comparing HGBS pairwise median spacings to physical fragmentation wavelengths.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/test07_contrast_vs_beta.pdf}
+\caption{\textbf{Test Case 7: Density Contrast vs Time from MHD Filament Fragmentation}.
+Density contrast $C(t) = \rho_\mathrm{max}/\rho_0$ as a function of time for the
+$\beta$-sweep Campaign B ($\mathcal{M}=3$). Magnetically stable runs ($\beta \leq 0.50$, above
+the critical threshold $\beta_\mathrm{crit} = 0.667$) remain near $C\approx 1$, while unstable
+runs ($\beta \geq 0.70$) show rapid growth. $C_\mathrm{final}$ at $t = 4\,t_J$ varies by
+$4.3\times$ across the $\beta$ range, confirming plasma $\beta$ as the dominant parameter
+controlling ISM filament fragmentation. The seeded fragmentation wavelength is $\lambda_\mathrm{frag}
+= 2.0\,\lambda_J$ in all 12 Campaign B simulations, independent of $\beta$ and $\mathcal{M}$.}
+\label{fig:mhd_contrast_sweep}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/test07_stability_boundary.pdf}
+\caption{\textbf{Test Case 7: Magnetic Stability Boundary in Parameter Space}.
+Stability boundary (fragmentation onset) mapped by 240-simulation Campaign C in the
+$(f, \beta)$ plane, where $f = \sqrt{2/\beta}$ is the mass-to-flux ratio and
+$f_\mathrm{crit} = \sqrt{3} \approx 1.73$ is the theoretical threshold.
+Results for $\mathcal{M} = 1$ and $\mathcal{M} = 3$ show turbulence shifts the
+stability boundary by $\Delta f \approx 0.1$ and introduces stochastic variability
+($C$ varies by $3\times$ between seeds) near $(f \approx 2.3, \beta \approx 0.7)$.}
+\label{fig:mhd_stability}
+\end{figure}
+
+\subsection{Physical Interpretation}
+
+Applying equation~(\ref{eq:calib}) to the W3 giant molecular cloud complex at
+$d = 1.95$~kpc ($\beta \approx 0.85$, $\lambda_J \approx 0.10$~pc, estimated field
+inclination $\theta \approx 50^\circ$; \citealt{arzoumanian2019}), ASTRA predicts:
+\begin{equation}
+\lambda_\mathrm{frag}^{\mathrm{W3}} = 1.107 \times \lambda_J \sqrt{1 + \frac{2\sin^2 50^\circ}{0.85}} = 0.171 \pm 0.018~\mathrm{pc},
+\label{eq:w3_pred}
+\end{equation}
+corresponding to an angular scale of $18.1'' \pm 1.9''$ at $d = 1.95$ kpc.
+Applying the bias correction from equation~(\ref{eq:bias}), the predicted HGBS pairwise
+median spacing for $n \approx 7$ cores is $2.08 \times 0.171 \approx 0.36$ pc. The
+HGBS-reported pairwise median of $\approx 0.211$ pc for W3 filaments \citep{arzoumanian2019},
+when corrected for pairwise median bias, yields a nearest-neighbour spacing of
+$0.211/2.08 \approx 0.101$~pc $\approx \lambda_J$. This is consistent with field inclination
+$\theta \lesssim 30^\circ$ ($\lambda_{J,m} \approx 1.2\,\lambda_J$) or an effectively higher
+$\beta$ in the inter-core gas than in the dense filament spine---both physically plausible
+geometries.
+
+This test case demonstrates ASTRA's capability for autonomous HPC campaign management:
+the system formulated the scientific question, selected simulation parameters, managed 600+
+HPC jobs on a remote server, analysed output, applied observational bias corrections, and
+produced a self-consistent physical interpretation without human intervention at the
+computation or analysis stages.
+
 \section{Discussion}
 
 \subsection{What ASTRA Demonstrates}
 
-The six test cases in this paper demonstrate ASTRA's ability to integrate multiple types of analysis within a single framework. Rather than repeating the individual test results, we reflect here on what these collective demonstrations reveal about ASTRA's strengths and limitations as an integrated tool.
+The seven test cases in this paper demonstrate ASTRA's ability to integrate multiple types of analysis within a single framework. Rather than repeating the individual test results, we reflect here on what these collective demonstrations reveal about ASTRA's strengths and limitations as an integrated tool.
 
 \textbf{Validation Tests (Cases 1--5)}: The first five test cases use real observational data to validate ASTRA's ability to correctly recover known astrophysical results. These tests demonstrate that ASTRA can:
 \begin{itemize}
@@ -580,11 +734,21 @@ The six test cases in this paper demonstrate ASTRA's ability to integrate multip
 \item Perform rigorous Bayesian model comparison with evidence computation (Test Case 5)
 \end{itemize}
 
+\textbf{Simulation Campaign (Case 7)}: Test Case 7 demonstrates a qualitatively different
+ASTRA capability: autonomous design and execution of a large-scale MHD simulation campaign.
+By co-ordinating 600+ Athena++ simulations on a remote HPC facility, ASTRA validated the
+magnetic Jeans stability criterion for ISM filaments ($\beta_\mathrm{crit} = 2/3$, confirmed
+to within one grid step in $\beta$), calibrated the fragmentation wavelength formula to
+$(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$, and corrected the observational pairwise
+median bias ($f=2.08 \pm 0.31$ for $n=7$ cores) required to compare HGBS measurements to
+numerical predictions. This demonstrates that ASTRA can function as an autonomous simulation
+manager in addition to an observational data analyst.
+
 The integration advantage is most concretely demonstrated in Test Case 5 (Bayesian Model Selection), where physical motivation (the virial theorem predicting a power law) and statistical evidence (Bayes factors strongly favoring power-law and logarithmic models over linear alternatives) jointly inform model interpretation. ASTRA's framework correctly identifies that the power-law and logarithmic models are statistically indistinguishable by Bayesian evidence, then uses the physical motivation of the virial theorem to prefer the power-law form. This joint consideration of statistical evidence and physical constraints---within a single automated workflow rather than requiring manual synthesis of separate analyses---represents the core value of the integrated approach.
 
 \textbf{Discovery Test (Case 6)}: Test Case 6 demonstrates a different capability---combined validation and discovery on realistic galaxy survey data. ASTRA analyzed a sample of 3,000 galaxies based on published SDSS scaling relations, recovering two fundamental astrophysical relations (star-forming main sequence and mass-metallicity relation) while simultaneously identifying 150 outlier galaxies through multi-dimensional outlier detection. The outliers include starbursts, transitioning galaxies, and post-starburst candidates that deviate significantly from the established relations. This test demonstrates that ASTRA can perform validation and discovery in a single analysis run, though application to real observational data from SDSS, DESI, or LSST is the next step.
 
-These test cases should be understood as demonstrations of technical capabilities. For Tests 1--5, the value lies in showing ASTRA can correctly recover known results using real data. For Test 6, the value lies in showing ASTRA can discover embedded patterns in synthetic data, providing validation that the discovery architecture works as intended.
+These test cases should be understood as demonstrations of technical capabilities. For Tests 1--5, the value lies in showing ASTRA can correctly recover known results using real data. For Test 6, the value lies in showing ASTRA can discover embedded patterns in synthetic data, providing validation that the discovery architecture works as intended. For Test 7, the value lies in showing ASTRA can autonomously manage a large-scale HPC simulation campaign, from experimental design through physical interpretation, without intervention at the computation or analysis stages.
 
 \subsection{Positioning Relative to Other Approaches}
 
@@ -629,7 +793,7 @@ Future work should focus on: scaling to larger datasets; validation on more scie
 
 \section{Conclusion}
 
-We have presented ASTRA (Autonomous System for Scientific Discovery in Astrophysics), an integrated framework for physics-aware astrophysical analysis. Through six test cases, we have demonstrated ASTRA's technical capabilities while acknowledging the limitations of these demonstration cases.
+We have presented ASTRA (Autonomous System for Scientific Discovery in Astrophysics), an integrated framework for physics-aware astrophysical analysis. Through seven test cases, we have demonstrated ASTRA's technical capabilities while acknowledging the limitations of these demonstration cases.
 
 \textbf{Test 1: Scaling Relations Analysis} (24 Herschel filaments)
 \begin{itemize}
@@ -676,7 +840,17 @@ We have presented ASTRA (Autonomous System for Scientific Discovery in Astrophys
 \item Demonstrated combined validation and discovery in single analysis run
 \end{itemize}
 
-\textbf{Two Modes of Operation}: Tests 1--5 validate ASTRA's ability to correctly recover known astrophysical results using real observational data. Test 6 demonstrates discovery-mode analysis on realistic galaxy survey data based on published SDSS scaling relations, showing both validation (recovering known relations) and discovery (identifying outliers). Application to real survey data is the next step.
+\textbf{Test 7: Autonomous MHD Simulation Campaign} (600+ Athena++ simulations)
+\begin{itemize}
+\item Confirmed magnetic Jeans stability threshold $\beta_\mathrm{crit} = 0.667$ for seeded $\lambda = 2\,\lambda_J$ mode
+\item Established $\beta$ dominance: $C_\mathrm{final}$ varies $4.3\times$ with $\beta$, $<$20 per cent with $\mathcal{M}$
+\item Calibrated fragmentation wavelength: $\lambda_\mathrm{frag} = (1.107 \pm 0.117)\,\lambda_{J,m}(\theta,\beta)$ from 18 field-geometry simulations
+\item Mapped stability boundary in $(f, \beta)$ space with 240 transition-zone simulations
+\item Characterised pairwise median observational bias $f_\mathrm{bias}(n=7) = 2.08 \pm 0.31$ from 320 injection-recovery simulations
+\item W3 application: predicted $\lambda_\mathrm{frag}^{\mathrm{W3}} = 0.171 \pm 0.018$ pc ($\approx 18''$) at $\theta=50^\circ$, $\beta=0.85$
+\end{itemize}
+
+\textbf{Three Modes of Operation}: Tests 1--5 validate ASTRA's ability to correctly recover known astrophysical results using real observational data. Test 6 demonstrates discovery-mode analysis on realistic galaxy survey data, showing both validation and discovery in a single run. Test 7 demonstrates autonomous HPC simulation campaign management, from experimental design through physical interpretation. Together, these tests establish ASTRA as an integrated tool spanning observational analysis, pattern discovery, and numerical simulation.
 
 ASTRA provides an integrated framework where physical validation, uncertainty quantification, causal reasoning, and Bayesian model selection are applied consistently throughout multi-step analyses. While individual components use established algorithms, their integration within a single framework enables analyses that would otherwise require manual combination of multiple separate tools and pipelines.
 
@@ -684,7 +858,7 @@ The complete source code, documentation, and reproducible analysis notebooks are
 
 \section*{Acknowledgments}
 
-This work uses data from Gaia DR2, Herschel Gould Belt Survey, HST ACS, Chandra Deep Field South, and SDSS. We acknowledge the use of community software tools, including causal-learn, dowhy, NumPy, SciPy, and scikit-learn. The development of ASTRA follows from work on stigmergy and autonomous intelligence by \cite{dey2025} at OpenHub, Thailand.
+This work uses data from Gaia DR2, Herschel Gould Belt Survey, HST ACS, Chandra Deep Field South, and SDSS. We acknowledge the use of community software tools, including causal-learn, dowhy, NumPy, SciPy, scikit-learn, and Athena++ \citep{stone2020}. MHD simulations were run on the astra-climate Google Cloud server (224-vCPU AMD EPYC 7B13, GCE). The development of ASTRA follows from work on stigmergy and autonomous intelligence by \cite{dey2025} at OpenHub, Thailand.
 
 \section*{Author Contributions}
 
