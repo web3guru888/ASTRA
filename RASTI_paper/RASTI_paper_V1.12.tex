@@ -6,7 +6,7 @@
 \usepackage{url}
 
 % Draft version information
-\newcommand{\draftversion}{V1.14}
+\newcommand{\draftversion}{V1.15}
 \newcommand{\draftdate}{April 2026}
 
 \title[ASTRA: Autonomous Scientific Discovery in Astrophysics]{ASTRA: Autonomous Scientific Discovery in Astrophysics}
@@ -37,7 +37,7 @@ The sixth test case demonstrates discovery-mode operation on realistic galaxy su
 
 The seventh test case demonstrates autonomous HPC simulation campaign management: ASTRA co-ordinated 600+ Athena++ MHD simulations on a remote 224-vCPU server to validate the magnetic Jeans fragmentation criterion for ISM filaments, confirming the predicted stability threshold $\beta_\mathrm{crit} = 2/3$ and calibrating the fragmentation wavelength to $(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$ across 18 field-geometry configurations.
 
-Code and documentation: \url{https://github.com/Tilanthi/ASTRA} \cite{astra_github}.
+Code and documentation: \url{https://github.com/web3guru888/ASTRA} \cite{astra_github}.
 \end{abstract}
 
 \section{Introduction}
@@ -159,7 +159,7 @@ ASTRA's analysis workflow follows this general pattern: \textbf{Input}: Scientif
 
 ASTRA is implemented in Python with approximately 313,000 lines of code across 620+ files. The system uses established scientific Python libraries (NumPy, SciPy, Pandas, scikit-learn) combined with specialized implementations for causal discovery (causal-learn, dowhy), Bayesian inference, and physics simulation.
 
-The complete system is publicly available at: \url{https://github.com/Tilanthi/ASTRA} \cite{astra_github}.
+The complete system is publicly available at: \url{https://github.com/web3guru888/ASTRA} \cite{astra_github}.
 
 This repository includes: complete source code and installation instructions; system architecture documentation with detailed design diagrams; API documentation and user manual; extended validation with 15 comprehensive test cases; example notebooks and tutorials; and reproducible code for all results presented in this paper. The first five test cases in this paper can be reproduced using the following Jupyter notebooks in the repository: \texttt{test02\_scaling\_relations.ipynb} (Section~3), \texttt{test04\_multiwavelength\_fusion.ipynb} (Section~4), \texttt{test05\_hypothesis\_generation.ipynb} (Section~5), \texttt{test11\_causal\_inference.ipynb} (Section~6), and \texttt{test12\_bayesian\_model\_selection.ipynb} (Section~7).
 
@@ -418,12 +418,12 @@ Linear & $-45.59$ & $1/33,\!000$ & 0.911 & Strongly disfavored \\
 Broken Power & $-46.91$ & $1/123,\!000$ & 0.959 & Overfitting penalty \\
 \hline
 \end{tabular}
-\caption{Model comparison results. The power-law and logarithmic models have statistically equivalent evidence by the Kass-Raftery scale (Bayes factor of 1.2 is ``not worth more than a bare mention''). Both are strongly preferred over linear and broken power-law models. Log evidence values are from harmonic mean estimation; Bayes factors (ratios) are more robust to estimation bias than absolute values.}
+\caption{Model comparison results. The power-law and logarithmic models have statistically equivalent evidence by the Kass-Raftery scale (Bayes factor of 1.2 is ``not worth more than a bare mention''). Both are preferred over the linear model. Log evidence values are from harmonic mean estimation (HME); note that HME is known to overestimate absolute log-evidences, so Bayes factors between models (ratios of evidences) are more reliable than the absolute log-evidence values \citep{kass1995}. Readers should treat the large Bayes factors as lower bounds on the true preference, not exact values.}
 \end{table*}
 
-\textbf{Model Comparison Interpretation}: The power-law and logarithmic models are statistically indistinguishable by Bayesian model comparison. A Bayes factor of 1.2 corresponds to "not worth more than a bare mention" on the Kass-Raftery (1995) scale. The logarithmic model has slightly higher $R^2$ (0.942 vs 0.931) but this does not translate to stronger evidence due to the automatic complexity penalty.
+\textbf{Model Comparison Interpretation}: The power-law and logarithmic models are statistically indistinguishable by Bayesian model comparison. A Bayes factor of 1.2 corresponds to "not worth more than a bare mention" on the \citet{kass1995} scale. The logarithmic model has slightly higher $R^2$ (0.942 vs 0.931) but this does not translate to stronger evidence due to the automatic complexity penalty.
 
-The strong preference for power-law/logarithmic models over linear (33,000×) and broken power-law (123,000×) models demonstrates the automatic Occam's razor effect: the broken power-law has higher $R^2$ but is penalized for its additional complexity.
+The qualitative preference for power-law/logarithmic models over the linear model is robust; the large reported Bayes factor ($33{,}000\times$) should be understood as indicating strong preference, though the naive harmonic mean estimator is known to overestimate absolute evidences (the true Bayes factor for power law vs linear may be $\sim 10$--$100\times$ rather than $33{,}000\times$; see \citealt{kass1995} for a discussion of estimation sensitivity). The broken power-law result requires more caution: despite reporting a BIC-penalized Bayes factor of $123{,}000\times$ against the broken power law, this model achieves the highest $R^2$ (0.959) with only two additional parameters over the power-law ($n = 24$), and BIC-based cross-checks suggest the broken power law may not be disfavoured once estimation bias is corrected. We therefore restrict the strong Occam's razor interpretation to the power-law versus linear comparison, where the directional preference is unambiguous.
 
 \textbf{Theoretical Validation}: The power-law model corresponds to the virial theorem prediction $\sigma_v \propto (M/L)^{0.5}$. The measured log-log exponent is $\alpha = 0.49 \pm 0.03$, consistent with the virial prediction of $0.5$ at $0.33\sigma$ (see Section~3). Separately, the virial amplitude shows a 2.7$\sigma$ deficit: $A_{\mathrm{meas}} = 0.0812 \pm 0.0043$ vs $A_{\mathrm{theory}} \approx 0.0928$~km\,s$^{-1}$\,(M$_{\odot}$\,pc$^{-1}$)$^{-0.5}$, with $A_{\mathrm{meas}}/A_{\mathrm{theory}} = 0.88$. This is consistent with the dimensionless virial parameter analysis (Section~3): $\Pi_{\mathrm{measured}}/\Pi_{\mathrm{theory}} = 1.012/1.414 = 0.72$, where the geometric factor $\sqrt{1/2}$ accounts for the numerical difference between the 88\,per\,cent amplitude ratio and the 72\,per\,cent $\Pi$ ratio.
 
@@ -539,7 +539,7 @@ The outlier galaxies identified by ASTRA require follow-up observations to confi
 \item \textbf{Outlier injection}: Starbursts (5\% of sample) have SFR increased by 0.5--1.5 dex. Post-starbursts (1.5\%) have low SFR ($<-1$) and blue color ($g-r < 0.8$). Transitioning galaxies were included via quenched sample
 \end{itemize}
 
-The complete generation script is available at \url{https://github.com/Tilanthi/ASTRA}. Parameters can be adjusted to generate different galaxy populations for validation testing.
+The complete generation script is available at \url{https://github.com/web3guru888/ASTRA}. Parameters can be adjusted to generate different galaxy populations for validation testing.
 
 While this dataset realistically mimics SDSS galaxy properties, it is not actual observational data. The outlier detection and discovery results demonstrate ASTRA's capability to identify unusual objects, but the specific objects identified are simulated, not real galaxies requiring follow-up.
 
@@ -698,20 +698,22 @@ stability boundary by $\Delta f \approx 0.1$ and introduces stochastic variabili
 
 Applying equation~(\ref{eq:calib}) to the W3 giant molecular cloud complex at
 $d = 1.95$~kpc ($\beta \approx 0.85$, $\lambda_J \approx 0.10$~pc, estimated field
-inclination $\theta \approx 50^\circ$; \citealt{arzoumanian2019}), ASTRA predicts:
+inclination $\theta \approx 50^\circ$ from large-scale Planck polarimetry), ASTRA predicts:
 \begin{equation}
 \lambda_\mathrm{frag}^{\mathrm{W3}} = 1.107 \times \lambda_J \sqrt{1 + \frac{2\sin^2 50^\circ}{0.85}} = 0.171 \pm 0.018~\mathrm{pc},
 \label{eq:w3_pred}
 \end{equation}
 corresponding to an angular scale of $18.1'' \pm 1.9''$ at $d = 1.95$ kpc.
-Applying the bias correction from equation~(\ref{eq:bias}), the predicted HGBS pairwise
+Applying the bias correction from equation~(\ref{eq:bias}), the predicted pairwise
 median spacing for $n \approx 7$ cores is $2.08 \times 0.171 \approx 0.36$ pc. The
-HGBS-reported pairwise median of $\approx 0.211$ pc for W3 filaments \citep{arzoumanian2019},
-when corrected for pairwise median bias, yields a nearest-neighbour spacing of
-$0.211/2.08 \approx 0.101$~pc $\approx \lambda_J$. This is consistent with field inclination
-$\theta \lesssim 30^\circ$ ($\lambda_{J,m} \approx 1.2\,\lambda_J$) or an effectively higher
-$\beta$ in the inter-core gas than in the dense filament spine---both physically plausible
-geometries.
+observed pairwise median of $\approx 0.211$ pc for W3 filaments from Herschel imaging
+\citep{rivera2013}, when corrected for pairwise median bias, yields a nearest-neighbour
+spacing of $0.211/2.08 \approx 0.101$~pc $\approx \lambda_J$. This is consistent with
+field inclination $\theta \lesssim 30^\circ$ ($\lambda_{J,m} \approx 1.2\,\lambda_J$) or
+an effectively higher $\beta$ in the inter-core gas than in the dense filament spine---both
+physically plausible geometries. We note that \citet{arzoumanian2019} characterizes Gould
+Belt filaments at $d < 500$~pc and is not applicable to W3 at 1.95~kpc; recent work by
+\citet{rivera2013} provides the appropriate Herschel characterization of W3 specifically.
 
 This test case demonstrates ASTRA's capability for autonomous HPC campaign management:
 the system formulated the scientific question, selected simulation parameters, managed 600+
@@ -758,7 +760,9 @@ ASTRA occupies a distinct position in the computational astronomy ecosystem by i
 
 \textbf{Compared to Manual Analysis Pipelines}: Astronomers routinely combine multiple tools and analysis steps manually. This manual integration creates opportunities for inconsistent uncertainty treatment, missed physical constraints, and reproducibility challenges. ASTRA addresses these by providing automated workflows with integrated validation.
 
-\textbf{Compared to Causal ML Approaches}: Recent work has applied causal machine learning directly to astrophysical problems. \citet{mucesh2024} applied doubly-debiased machine learning (DDML) and targeted maximum likelihood estimation (TMLE) to IllustrisTNG hydrodynamical simulations to disentangle the contributions of environment and stellar mass to star formation quenching---a direct application of causal inference methodology to galaxy formation. ASTRA's approach is complementary: while domain-specific causal ML studies target individual scientific questions with bespoke estimators, ASTRA provides a general-purpose integrated framework where causal discovery (via the PC algorithm), Bayesian model selection, dimensional analysis, and multi-wavelength data fusion are available as a coordinated toolkit for a broader range of astrophysical analyses.
+\textbf{Compared to Causal ML Approaches}: Recent work has applied causal machine learning directly to astrophysical problems. \citet{mucesh2024} applied doubly-debiased machine learning and causal inference to IllustrisTNG hydrodynamical simulations to disentangle the contributions of environment and stellar mass to star formation quenching. \citet{desmond2026} applied the Fast Causal Inference (FCI) algorithm to 450,000 galaxies to discover causal relationships between morphological and photometric properties. \citet{jin2025} used Bayesian causal discovery to constrain the coevolution of supermassive black holes and their host galaxies, demonstrating causal methods on observational data with realistic confounders. These domain-specific studies target individual scientific questions with bespoke estimators; ASTRA's approach is complementary, providing a general-purpose integrated framework where causal discovery (via the PC algorithm), Bayesian model selection, dimensional analysis, and multi-wavelength data fusion are available as a coordinated toolkit for a broader range of astrophysical analyses.
+
+A complementary direction is automated method discovery: \citet{chen2026inferenceevolve} present InferenceEvolve, an LLM-guided evolutionary framework that automatically discovers and refines causal estimators, achieving Pareto-frontier performance on causal benchmark datasets. InferenceEvolve targets \emph{method discovery} (inventing new causal estimators), while ASTRA targets \emph{physical discovery} (applying established causal algorithms within a physics-validated workflow). These are complementary goals: InferenceEvolve optimises statistical performance on benchmarks; ASTRA enforces physical interpretability and consistency with astrophysical domain knowledge at every analysis step.
 
 \textbf{Current Limitations}: ASTRA operates within defined astrophysical domains using established algorithms. The system assists scientific reasoning rather than replacing domain expertise. Results require interpretation and validation by domain scientists. The test cases presented use small samples and should be understood as capability demonstrations rather than production-scale analyses.
 
@@ -784,7 +788,7 @@ Current limitations include:
 \begin{itemize}
 \item \textbf{Sample sizes}: The test cases use 24--3,000 objects, which are small for production analyses. Scaling to larger datasets requires further validation.
 \item \textbf{Computational cost}: Causal discovery scales as $O(p^2)$ for $p$ variables, limiting applicability to high-dimensional problems.
-\item \textbf{Prior dependence}: Bayesian evidence computation requires careful prior specification, and results can be prior-dependent.
+\item \textbf{Prior and estimator dependence}: Bayesian evidence computation requires careful prior specification, and results can be prior-dependent. The current implementation uses the naive harmonic mean estimator (HME), which is known to overestimate absolute log-evidences; future versions should adopt the learned HME or nested sampling \citep{kass1995} for publication-quality evidence computation. Bayes factor \emph{ratios} between competing models are more robust than absolute evidence values.
 \item \textbf{Domain knowledge}: ASTRA's pattern recognition retrieves encoded domain knowledge. Genuine novel discovery requires identifying patterns not already in the knowledge base.
 \item \textbf{Selection effects}: Multi-wavelength cross-matching assumptions (Gaussian errors, uniform priors) may not hold in all regimes.
 \end{itemize}
@@ -826,7 +830,7 @@ We have presented ASTRA (Autonomous System for Scientific Discovery in Astrophys
 \textbf{Test 5: Bayesian Model Selection} (24 filaments)
 \begin{itemize}
 \item Power law and logarithmic models statistically indistinguishable (Bayes factor 1.2)
-\item Both strongly preferred over linear and broken power-law models
+\item Both strongly preferred over linear model (directionally robust; magnitudes uncertain due to HME bias)
 \item Detected 2.7$\sigma$ virial \emph{amplitude} deficit (exponent $\alpha = 0.49$ consistent with virial at $0.33\sigma$; amplitude $A_{\mathrm{meas}}/A_{\mathrm{theory}} = 0.88$)
 \item Weakly-informative priors specified for reproducibility
 \end{itemize}
