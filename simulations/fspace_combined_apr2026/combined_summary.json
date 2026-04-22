@@ -1,0 +1,67 @@
+{
+  "campaigns": {
+    "dense": {
+      "n_sims": 126,
+      "frag_rate": 1.0,
+      "f_range": [
+        1.5,
+        3.0
+      ],
+      "beta_range": [
+        0.3,
+        2.0
+      ],
+      "mach_range": [
+        1.0,
+        3.0
+      ]
+    },
+    "nearcrit": {
+      "n_sims": 108,
+      "frag_rate": 1.0,
+      "f_range": [
+        1.1,
+        1.3
+      ]
+    },
+    "highbeta": {
+      "n_sims": 84,
+      "frag_rate": 1.0,
+      "beta_range": [
+        3.0,
+        5.0
+      ]
+    },
+    "lowmach": {
+      "n_sims": 84,
+      "frag_rate": 1.0,
+      "mach": 0.5
+    }
+  },
+  "total_new_sims": 402,
+  "tfrag_all_mean": 0.30805164980199323,
+  "tfrag_all_std": 0.04231680845273626,
+  "direct_lw_measurement": false,
+  "reason_no_direct_lw": "Radial collapse dominates at f>=1.1: std(rho_x1)/mean < 2e-4",
+  "theory_lw_by_beta": {
+    "0.3": 3.7000000000000006,
+    "0.5": 3.7000000000000006,
+    "0.7": 3.7000000000000006,
+    "1.0": 3.7000000000000006,
+    "1.5": 3.7000000000000006,
+    "2.0": 3.7000000000000006,
+    "3.0": 3.7000000000000006,
+    "5.0": 3.7000000000000006
+  },
+  "W3_prediction": {
+    "f": 2.0,
+    "beta": 0.85,
+    "mach": 1.5,
+    "lambda_J_pc": 0.1,
+    "theory_lw": 3.7000000000000006,
+    "lambda_frag_pc": 0.11100000000000002,
+    "angular_arcsec": 11.741238461538464,
+    "distance_kpc": 1.95,
+    "t_frag_tJ": 0.2962192584867319
+  }
+}
