@@ -1,4 +1,9 @@
-% ASTRA RASTI Paper V1.16 — 2026-04-22
+% ASTRA RASTI Paper V1.17 — 2026-04-23
+% Changes: Architecture diagram (P0), Table 1 extended to TC6+TC7 (P0),
+%          TC7 figures to figure* (P1), bias char. fig added (P1),
+%          test06_genuine_discovery.png added (P1), Kumar+2025 W3 B-field (TC7 PI),
+%          LtU-ILI/FluxMC/StarWhisper added to Related Work (P1).
+%          '15 test cases' overclaim fixed. Arch. fig cross-ref added.
 % P0 fixes: bib errors (jin2025 DOI/author/title, desmond2026 coauthor/algorithm/DOI),
 %            itemize→description, table captions above tabular, table 2 label added,
 %            running head shortened, "lower bounds"→"upper bounds", "BIC-penalized"→"HME-estimated",
@@ -126,36 +131,45 @@ ASTRA integrates sixteen distinct analytical capabilities that work together to 
 
 These capabilities are not independent modules but integrated components that work together. For example, discovering a scaling relation (capability~2) involves dimensional analysis (capability~12), physical validation (capability~16), and uncertainty quantification (capability~6). Similarly, multi-wavelength fusion (capability~5) requires coordinate calculations, astrometric error propagation, and physical classification criteria.
 
-\textbf{Capability Demonstrations in This Paper}: Table~\ref{tab:capabilities} summarizes which of the 16 capabilities are demonstrated in each of the first five test cases presented in this paper. Capabilities not demonstrated here (temporal reasoning, instrument-aware analysis, analogical reasoning, counterfactual analysis, ensemble prediction) are available in the system but demonstrated in extended test cases available in the GitHub repository.
+\textbf{Capability Demonstrations in This Paper}: Table~\ref{tab:capabilities} summarizes which of the 16 capabilities are demonstrated in each of the seven test cases. Capabilities not demonstrated in TCs~1--7 (temporal reasoning, instrument-aware analysis, analogical reasoning, counterfactual analysis, ensemble prediction) are available in ASTRA and demonstrated in extended test cases in the GitHub repository. TC7 additionally demonstrates a seventeenth capability (HPC simulation management) not listed in the 16-capability inventory.
 
 \begin{table*}
-\caption{Capabilities demonstrated in each test case. X indicates the capability is explicitly demonstrated in that test case; -- indicates the capability is not applicable or not demonstrated in that test case. Capabilities marked with -- in this table (temporal reasoning, instrument-aware analysis, analogical reasoning, counterfactual analysis, ensemble prediction) are available in ASTRA and demonstrated in extended test cases documented in the GitHub repository.}
+\caption{Capabilities demonstrated in each test case. X~=~explicitly demonstrated; --~=~not demonstrated or not applicable. Temporal reasoning, instrument-aware analysis, analogical reasoning, counterfactual analysis, and ensemble prediction are available in ASTRA but demonstrated only in extended test cases on GitHub. TC7 additionally demonstrates HPC Simulation Management (row~17), a qualitatively distinct capability.}
 \label{tab:capabilities}
 \centering
-\begin{tabular}{lccccc}
+\begin{tabular}{lccccccl}
 \hline
-Capability & Test 1 & Test 2 & Test 3 & Test 4 & Test 5 \\
-& (Scaling) & (Multi-$\lambda$) & (Pattern) & (Causal) & (Bayesian) \\
+Capability & TC1 & TC2 & TC3 & TC4 & TC5 & TC6 & TC7 \\
+& (Scaling) & (Multi-$\lambda$) & (Pattern) & (Causal) & (Bayesian) & (Discovery) & (HPC MHD) \\
 \hline
-Bias Detection & -- & X & -- & X & -- \\
-Scaling Relations & X & -- & X & -- & X \\
-Causal Inference & -- & -- & -- & X & -- \\
-Model Selection & -- & -- & -- & -- & X \\
-Multi-Wavelength Fusion & -- & X & -- & -- & -- \\
-Uncertainty Quantification & X & X & X & -- & X \\
-Temporal Reasoning & -- & -- & -- & -- & -- \\
-Instrument-Aware Analysis & -- & -- & -- & -- & -- \\
-Hypothesis Generation & -- & -- & X & -- & -- \\
-Analogical Reasoning & -- & -- & -- & -- & -- \\
-Counterfactual Analysis & -- & -- & -- & -- & -- \\
-Physical Model Discovery & X & -- & -- & -- & X \\
-Meta-Cognitive Evaluation & X & X & X & X & X \\
-Anomaly Detection & -- & -- & X & -- & -- \\
-Ensemble Prediction & -- & -- & -- & -- & -- \\
-Physical Validation & X & X & X & X & X \\
+Bias Detection              & -- & X  & -- & X  & -- & -- & X  \\
+Scaling Relations           & X  & -- & X  & -- & X  & X  & X  \\
+Causal Inference            & -- & -- & -- & X  & -- & -- & -- \\
+Model Selection             & -- & -- & -- & -- & X  & -- & -- \\
+Multi-Wavelength Fusion     & -- & X  & -- & -- & -- & -- & -- \\
+Uncertainty Quantification  & X  & X  & X  & -- & X  & X  & X  \\
+Temporal Reasoning          & -- & -- & -- & -- & -- & -- & -- \\
+Instrument-Aware Analysis   & -- & -- & -- & -- & -- & -- & X  \\
+Hypothesis Generation       & -- & -- & X  & -- & -- & X  & X  \\
+Analogical Reasoning        & -- & -- & -- & -- & -- & -- & -- \\
+Counterfactual Analysis     & -- & -- & -- & -- & -- & -- & -- \\
+Physical Model Discovery    & X  & -- & -- & -- & X  & -- & X  \\
+Meta-Cognitive Evaluation   & X  & X  & X  & X  & X  & X  & X  \\
+Anomaly Detection           & -- & -- & X  & -- & -- & X  & -- \\
+Ensemble Prediction         & -- & -- & -- & -- & -- & -- & -- \\
+Physical Validation         & X  & X  & X  & X  & X  & X  & X  \\
+\hline
+HPC Simulation Management   & -- & -- & -- & -- & -- & -- & X  \\
 \hline
 \end{tabular}
 \end{table*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig00_architecture.pdf}
+\caption{\textbf{ASTRA System Architecture}. The six core components (Physics Engine, Causal Module, Bayesian Engine, Domain Knowledge, Data Processing Pipeline, HPC Simulation Manager) are co-ordinated through a Meta-Cognitive Orchestration layer that routes natural-language queries and observational data inputs to appropriate analytical modules. Output includes physical interpretations, quantified uncertainties, testable hypotheses, and reproducible workflows. Arrows indicate primary data flow; all components exchange validation signals with the Physics Engine throughout analysis. TC7 (Section~\ref{sec:tc7}) exercises the HPC Simulation Manager. The full 16-capability inventory is summarised in Table~\ref{tab:capabilities}.}
+\label{fig:architecture}
+\end{figure*}
 
 \subsection{Workflow for Scientific Analysis}
 
@@ -167,7 +181,7 @@ ASTRA is implemented in Python with approximately 313,000 lines of code across 6
 
 The complete system is publicly available at: \url{https://github.com/web3guru888/ASTRA} \citep{astra_github}.
 
-This repository includes: complete source code and installation instructions; system architecture documentation with detailed design diagrams; API documentation and user manual; extended validation with 15 comprehensive test cases; example notebooks and tutorials; and reproducible code for all results presented in this paper. The first five test cases in this paper can be reproduced using the following Jupyter notebooks in the repository: \texttt{test02\_scaling\_relations.ipynb} (Section~3), \texttt{test04\_multiwavelength\_fusion.ipynb} (Section~4), \texttt{test05\_hypothesis\_generation.ipynb} (Section~5), \texttt{test11\_causal\_inference.ipynb} (Section~6), and \texttt{test12\_bayesian\_model\_selection.ipynb} (Section~7).
+This repository includes: complete source code and installation instructions; system architecture documentation with detailed design diagrams (see also Figure~\ref{fig:architecture}); API documentation and user manual; extended validation test cases and example notebooks; and reproducible code for all results presented in this paper. The first five test cases in this paper can be reproduced using the following Jupyter notebooks in the repository: \texttt{test02\_scaling\_relations.ipynb} (Section~3), \texttt{test04\_multiwavelength\_fusion.ipynb} (Section~4), \texttt{test05\_hypothesis\_generation.ipynb} (Section~5), \texttt{test11\_causal\_inference.ipynb} (Section~6), and \texttt{test12\_bayesian\_model\_selection.ipynb} (Section~7).
 
 \subsection{Positioning Relative to Other Approaches}
 
@@ -573,6 +587,13 @@ While this dataset realistically mimics SDSS galaxy properties, it is not actual
 \label{fig:test06c}
 \end{figure*}
 
+\begin{figure*}
+\centering
+\includegraphics[width=0.95\textwidth]{figures/test06_genuine_discovery.png}
+\caption{\textbf{Test Case 6: Discovery-Mode Causal Structure}. ASTRA's autonomous causal analysis of the star formation threshold problem in the synthetic galaxy sample. The panels show (top left) column density $N(\mathrm{H_2})$ vs star formation rate surface density, revealing a threshold at $N(\mathrm{H_2}) \approx 10^{21.5}$~cm$^{-2}$ above which star formation efficiency rises sharply (consistent with the Kennicutt--Schmidt relation); (top right) Jeans mass distribution of identified star-forming regions; (bottom left) inferred magnetic field correlation with dense-gas fraction; and (bottom right) the causal graph discovered by the PC algorithm without human intervention, showing the inferred causal ordering of physical drivers. This figure demonstrates ASTRA's discovery-mode capability: the threshold, the causal graph, and the associated observational predictions were generated autonomously.}
+\label{fig:test06d}
+\end{figure*}
+
 
 \section{Test Case 7: Autonomous MHD Simulation Campaign for ISM Filament Fragmentation}
 \label{sec:tc7}
@@ -669,14 +690,14 @@ injection-recovery campaign of 320 synthetic-filament simulations under Herschel
 f_\mathrm{bias}(n=7) = 2.08 \pm 0.31,
 \label{eq:bias}
 \end{equation}
-agreeing with the analytic prediction $k(n=7) = 2$ to within 4 per cent. The resolution
+agreeing with the analytic prediction $k(n=7) = 2$ to within 4 per cent (Figure~\ref{fig:mhd_bias}). The resolution
 limit at spacing $< 1$ beam FWHM ($\approx 0.10$ pc at $d = 1.95$ kpc) precludes core
 detection below this scale in standard Herschel imaging. These corrections are essential
 when comparing HGBS pairwise median spacings to physical fragmentation wavelengths.
 
-\begin{figure}
+\begin{figure*}
 \centering
-\includegraphics[width=0.95\columnwidth]{figures/test07_contrast_vs_beta.pdf}
+\includegraphics[width=0.90\textwidth]{figures/test07_contrast_vs_beta.pdf}
 \caption{\textbf{Test Case 7: Density Contrast vs Time from MHD Filament Fragmentation}.
 Density contrast $C(t) = \rho_\mathrm{max}/\rho_0$ as a function of time for the
 $\beta$-sweep Campaign B ($\mathcal{M}=3$). Magnetically stable runs ($\beta \leq 0.50$, above
@@ -686,11 +707,11 @@ $4.3\times$ across the $\beta$ range, confirming plasma $\beta$ as the dominant 
 controlling ISM filament fragmentation. The seeded fragmentation wavelength is $\lambda_\mathrm{frag}
 = 2.0\,\lambda_J$ in all 12 Campaign B simulations, independent of $\beta$ and $\mathcal{M}$.}
 \label{fig:mhd_contrast_sweep}
-\end{figure}
+\end{figure*}
 
-\begin{figure}
+\begin{figure*}
 \centering
-\includegraphics[width=0.95\columnwidth]{figures/test07_stability_boundary.pdf}
+\includegraphics[width=0.90\textwidth]{figures/test07_stability_boundary.pdf}
 \caption{\textbf{Test Case 7: Magnetic Stability Boundary in Parameter Space}.
 Stability boundary (fragmentation onset) mapped by 240-simulation Campaign C in the
 $(f, \beta)$ plane, where $f = \sqrt{2/\beta}$ is the mass-to-flux ratio and
@@ -699,7 +720,22 @@ Results for $\mathcal{M} = 1$ and $\mathcal{M} = 3$ show turbulence shifts the
 stability boundary by $\Delta f \approx 0.1$ and introduces stochastic variability
 ($C$ varies by $3\times$ between seeds) near $(f \approx 2.3, \beta \approx 0.7)$.}
 \label{fig:mhd_stability}
-\end{figure}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.90\textwidth]{figures/test07_bias_characterization.pdf}
+\caption{\textbf{Test Case 7: Injection-Recovery Bias Characterisation}.
+Pairwise median bias factor $f_\mathrm{bias} = \lambda_\mathrm{meas}/\lambda_\mathrm{true}$
+as a function of (A)~core spacing, (B)~number of cores, (C)~noise level, and (D)~background
+structure, from 320 injection-recovery simulations under Herschel-like conditions
+(SPIRE $250\,\mu$m beam FWHM = 18 arcsec, $d = 1.95$~kpc). For $n = 7$ cores,
+$f_\mathrm{bias} = 2.08 \pm 0.31$ with minimal dependence on noise level or background
+structure, confirming that the bias correction is robust across realistic observational
+conditions. The result agrees with the analytic prediction $k(n=7) = 2$ to within 4~per\,cent,
+validating the analytical framework.}
+\label{fig:mhd_bias}
+\end{figure*}
 
 \subsection{Physical Interpretation}
 
@@ -719,8 +755,16 @@ spacing of $0.211/2.08 \approx 0.101$~pc $\approx \lambda_J$. This is consistent
 field inclination $\theta \lesssim 30^\circ$ ($\lambda_{J,m} \approx 1.2\,\lambda_J$) or
 an effectively higher $\beta$ in the inter-core gas than in the dense filament spine---both
 physically plausible geometries. We note that \citet{arzoumanian2019} characterizes Gould
-Belt filaments at $d < 500$~pc and is not applicable to W3 at 1.95~kpc; recent work by
-\citet{rivera2013} provides the appropriate Herschel characterization of W3 specifically.
+Belt filaments at $d < 500$~pc and is not applicable to W3 at 1.95~kpc; \citet{rivera2013}
+provides the appropriate Herschel characterization of W3 specifically. We note that
+\citet{kumar2025w3bfield} recently demonstrated through JCMT/POL-2 dust polarimetry that
+W3 Main's magnetic field geometry is significantly modified by its compact \ion{H}{ii} region
+feedback, with the B-field realigning along HII cavity walls at evolved evolutionary stages.
+This feedback-altered B-field geometry reinforces the physical motivation for our
+field-geometry calibration (equation~\ref{eq:calib}): the effective field inclination
+$\theta$ in the inter-core gas may differ substantially from large-scale Planck-polarimetry
+estimates, consistent with the $\theta \lesssim 30^\circ$ interpretation of the observed
+W3 pairwise median spacing.
 
 This test case demonstrates ASTRA's capability for autonomous HPC campaign management:
 the system formulated the scientific question, selected simulation parameters, managed 600+
@@ -771,7 +815,9 @@ ASTRA occupies a distinct position in the computational astronomy ecosystem by i
 
 A complementary direction is automated method discovery: \citet{chen2026inferenceevolve} present InferenceEvolve, an LLM-guided evolutionary framework that automatically discovers and refines causal estimators, achieving Pareto-frontier performance on causal benchmark datasets. InferenceEvolve targets \emph{method discovery} (inventing new causal estimators), while ASTRA targets \emph{physical discovery} (applying established causal algorithms within a physics-validated workflow). These are complementary goals: InferenceEvolve optimises statistical performance on benchmarks; ASTRA enforces physical interpretability and consistency with astrophysical domain knowledge at every analysis step.
 
-\textbf{Compared to Autonomous Analysis Agents}: \citet{moss2025aicosmologist} present the AI Cosmologist, an agentic pipeline combining multi-specialist LLM agents (planning, coding, execution, analysis, synthesis) for automated cosmological data analysis. The AI Cosmologist targets single-domain (cosmology) autonomous analysis with AutoML-driven code generation. ASTRA differs in scope (multi-domain: filaments, AGN, galaxies, stellar, simulation), methodology (integrated physics validation and causal reasoning rather than code generation), and operation mode (coordinated toolkit enforcing dimensional consistency and conservation laws at every step).
+\textbf{Compared to Autonomous Analysis Agents}: \citet{moss2025aicosmologist} present the AI Cosmologist, an agentic pipeline combining multi-specialist LLM agents (planning, coding, execution, analysis, synthesis) for automated cosmological data analysis. The AI Cosmologist targets single-domain (cosmology) autonomous analysis with AutoML-driven code generation. ASTRA differs in scope (multi-domain: filaments, AGN, galaxies, stellar, simulation), methodology (integrated physics validation and causal reasoning rather than code generation), and operation mode (coordinated toolkit enforcing dimensional consistency and conservation laws at every step). \citet{wang2025starwhisper} present StarWhisper Telescope, an LLM-based agentic framework for end-to-end telescope scheduling, real-time transient detection, and autonomous follow-up proposals, deployed on the Nearby Galaxy Supernovae Survey network. StarWhisper targets observational control; it does not include physics validation, causal discovery, or Bayesian model comparison.
+
+\textbf{Compared to Simulation-Based Inference Frameworks}: Several recent frameworks address the challenge of likelihood-free Bayesian inference in astrophysics. \citet{cranmer2024ltu} present LtU-ILI (Learning the Universe Implicit Likelihood Inference), a unified pipeline supporting multiple simulation-based inference (SBI) backends (SNPE, SNLE, SNRE, NPE, NLE, NRE) with applications in cosmology and astrophysics; it focuses on posterior estimation rather than causal discovery or physical model selection. \citet{liang2026fluxmc} present FluxMC, a flow-matching MCMC sampler for gravitational-wave parameter estimation; it addresses Bayesian posterior sampling efficiency but is domain-specific (GW astronomy) and does not include causal reasoning or multi-domain integration. These frameworks represent state-of-the-art Bayesian inference pipelines; ASTRA's Bayesian Engine offers complementary functionality within an integrated physics-aware toolkit.
 
 \textbf{Current Limitations}: ASTRA operates within defined astrophysical domains using established algorithms. The system assists scientific reasoning rather than replacing domain expertise. Results require interpretation and validation by domain scientists. The test cases presented use small samples and should be understood as capability demonstrations rather than production-scale analyses.
 

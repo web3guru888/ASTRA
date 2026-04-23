@@ -57,6 +57,11 @@ Brinchmann J.,  Charlot S.,  White S. D.~M.,  Tremonti C.,  Kauffmann G.,
   et~al.}{2026}]{chen2026inferenceevolve}
 Chen Y.,  et~al., 2026, arXiv preprint
 
+\bibitem[\protect\citeauthoryear{Cranmer et~al.}{Cranmer
+  et~al.}{2024}]{cranmer2024ltu}
+Cranmer M.,  et~al., 2024, \mn@doi [Open J. Astrophys.]
+  {10.21105/astro.2402.05137}, 7
+
 \bibitem[\protect\citeauthoryear{Desmond}{Desmond}{2026}]{desmond2026}
 Desmond H.,  2026, \mn@doi [Open J.\ Astrophys.] {10.33232/001c.159080}, 9
 
@@ -102,6 +107,15 @@ Kass R.~E.,  Raftery A.~E.,  1995, \mn@doi [J.\ Am.\ Stat.\ Assoc.]
 Kauffmann G.,  Heckman T.~M.,  White S. D.~M.,  Charlot S.,  Tremonti C.,
   Brinchmann J.,  Brinkmann J.,   Peng C.~Y.,  2003, \mn@doi [MNRAS]
   {10.1046/j.1365-8711.2003.06291.x}, 341, 33
+
+\bibitem[\protect\citeauthoryear{Kumar et~al.}{Kumar
+  et~al.}{2025}]{kumar2025w3bfield}
+Kumar M. S.~N.,  et~al., 2025, \mn@doi [A\&A] {10.1051/0004-6361/202453027},
+  703, A74
+
+\bibitem[\protect\citeauthoryear{Liang et~al.}{Liang
+  et~al.}{2026}]{liang2026fluxmc}
+Liang J.,  et~al., 2026, arXiv preprint
 
 \bibitem[\protect\citeauthoryear{Lotz, Jonsson, Cox  \& Primack}{Lotz
   et~al.}{2011}]{lotz2011}
@@ -168,6 +182,11 @@ Sutherland W.,  Saunders W.,  1992, \mn@doi [MNRAS] {10.1093/mnras/259.3.413},
   et~al.}{2004}]{tremonti2004}
 Tremonti C.~A.,  Heckman T.~M.,  Kauffmann G.,   et~al., 2004, \mn@doi [ApJ]
   {10.1086/423264}, 613, 898
+
+\bibitem[\protect\citeauthoryear{Wang, Zhang, Li  et~al.}{Wang
+  et~al.}{2025}]{wang2025starwhisper}
+Wang Y.,  Zhang H.,  Li X.,   et~al., 2025, \mn@doi [Commun.\ Eng.]
+  {10.1038/s44172-025-00520-4}, 4, 184
 
 \bibitem[\protect\citeauthoryear{White}{White}{2026}]{astra_github}
 White G.~J.,  2026, {ASTRA: Autonomous System for Scientific Discovery in
