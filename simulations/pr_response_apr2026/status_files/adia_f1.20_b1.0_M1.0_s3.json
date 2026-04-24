@@ -1,0 +1,19 @@
+{
+  "sim_id": "adia_f1.20_b1.0_M1.0_s3",
+  "phase": 4,
+  "f": 1.2,
+  "beta": 1.0,
+  "mach": 1.0,
+  "seed": 3,
+  "eos": "adiabatic",
+  "bfield": "longitudinal",
+  "theta": 0.0,
+  "status": "TIMEOUT",
+  "t_frag": null,
+  "dt_min": 0.0001024252215662923,
+  "rho_c_max": 0.0,
+  "wall_seconds": 18004.16561627388,
+  "hdf5_outputs": 664,
+  "longitudinal_peaks": null,
+  "lambda_frag": null
+}

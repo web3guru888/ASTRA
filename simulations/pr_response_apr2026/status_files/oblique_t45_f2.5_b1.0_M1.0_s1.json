@@ -1,0 +1,19 @@
+{
+  "sim_id": "oblique_t45_f2.5_b1.0_M1.0_s1",
+  "phase": 3,
+  "f": 2.5,
+  "beta": 1.0,
+  "mach": 1.0,
+  "seed": 1,
+  "eos": "isothermal",
+  "bfield": "oblique",
+  "theta": 45.0,
+  "status": "FRAG",
+  "t_frag": 0.4746159628315081,
+  "dt_min": 9.100753042277833e-16,
+  "rho_c_max": 1.97176e-13,
+  "wall_seconds": 532.4414350986481,
+  "hdf5_outputs": 10,
+  "longitudinal_peaks": null,
+  "lambda_frag": null
+}

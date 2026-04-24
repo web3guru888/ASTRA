@@ -1,0 +1,19 @@
+{
+  "sim_id": "nc_f1.10_b0.3_M2.0_s2",
+  "phase": 1,
+  "f": 1.1,
+  "beta": 0.3,
+  "mach": 2.0,
+  "seed": 2,
+  "eos": "isothermal",
+  "bfield": "longitudinal",
+  "theta": 0.0,
+  "status": "FRAG",
+  "t_frag": 1.3661212988771223,
+  "dt_min": 1.1178434380434194e-20,
+  "rho_c_max": 4.31044e-14,
+  "wall_seconds": 180.88110041618347,
+  "hdf5_outputs": 28,
+  "longitudinal_peaks": null,
+  "lambda_frag": null
+}

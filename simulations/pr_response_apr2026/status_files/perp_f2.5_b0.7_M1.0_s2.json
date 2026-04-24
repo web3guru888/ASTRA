@@ -1,0 +1,19 @@
+{
+  "sim_id": "perp_f2.5_b0.7_M1.0_s2",
+  "phase": 2,
+  "f": 2.5,
+  "beta": 0.7,
+  "mach": 1.0,
+  "seed": 2,
+  "eos": "isothermal",
+  "bfield": "perpendicular",
+  "theta": 90.0,
+  "status": "FRAG",
+  "t_frag": 0.33055855946652646,
+  "dt_min": 1.3206039304558069e-18,
+  "rho_c_max": 1.27898e-13,
+  "wall_seconds": 90.4740207195282,
+  "hdf5_outputs": 7,
+  "longitudinal_peaks": null,
+  "lambda_frag": null
+}
