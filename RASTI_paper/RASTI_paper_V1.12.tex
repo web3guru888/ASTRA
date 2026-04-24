@@ -45,7 +45,7 @@ We demonstrate capabilities through seven test cases. The first five use real ob
 
 The sixth test case demonstrates discovery-mode operation on realistic galaxy survey data (3,000 galaxies based on SDSS scaling relations). ASTRA recovers the star-forming main sequence and mass-metallicity relation, then applies multi-dimensional outlier detection to identify starbursts, post-starbursts, and transitioning galaxies.
 
-The seventh test case demonstrates autonomous HPC simulation campaign management: ASTRA co-ordinated 600+ Athena++ MHD simulations on a remote 224-vCPU server to validate the magnetic Jeans fragmentation criterion for ISM filaments, confirming the predicted stability threshold $\beta_\mathrm{crit} = 2/3$ and calibrating the fragmentation wavelength to $(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$ across 18 field-geometry configurations.
+The seventh test case demonstrates autonomous HPC simulation campaign management: ASTRA co-ordinated over 700 Athena++ MHD simulations on a remote 224-vCPU server to validate the magnetic Jeans fragmentation criterion for ISM filaments, confirming the predicted stability threshold $\beta_\mathrm{crit} = 2/3$ and calibrating the fragmentation wavelength to $(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$ across 18 field-geometry configurations.
 
 Code and documentation: \url{https://github.com/web3guru888/ASTRA} \citep{astra_github}.
 \end{abstract}
@@ -603,10 +603,11 @@ While this dataset realistically mimics SDSS galaxy properties, it is not actual
 Test Cases 1--6 demonstrate ASTRA capabilities on observational and synthetic astronomical data.
 Test Case 7 demonstrates a qualitatively different capability: the autonomous design, execution,
 and interpretation of a large-scale numerical simulation campaign on a remote high-performance
-computing (HPC) facility. ASTRA co-ordinated 600+ Athena++ \citep{stone2020} magnetohydrodynamic
-(MHD) simulations to validate the magnetic Jeans fragmentation criterion for ISM molecular cloud
-filaments, including an injection-recovery campaign to characterise the observational bias
-relevant to Herschel survey data.
+computing (HPC) facility. ASTRA co-ordinated over 700 Athena++ \citep{stone2020} magnetohydrodynamic
+(MHD) simulations across four interlinked campaigns to validate the magnetic Jeans fragmentation
+criterion for ISM molecular cloud filaments, characterise the observational bias relevant to
+Herschel survey data, and demonstrate robustness across field geometry, near-critical
+line-mass, and boundary condition variations.
 
 The physical question addressed is: \emph{how do magnetic field geometry and plasma
 $\beta$ (= $2\rho c_s^2 / B^2$) control gravitational fragmentation of a molecular filament?}
@@ -615,9 +616,9 @@ sub-millimetre surveys of star-forming regions such as the W3 giant molecular cl
 
 \subsection{Simulation Setup}
 
-ASTRA co-ordinated three interlinked campaigns on the astra-climate GCE server (224-vCPU AMD
+ASTRA co-ordinated four interlinked campaigns on the astra-climate GCE server (224-vCPU AMD
 EPYC 7B13, 220 GB RAM) using Athena++ with an isothermal equation of state, FFT self-gravity,
-and periodic boundary conditions.
+and periodic boundary conditions (outflow BCs in robustness tests).
 
 \textbf{Campaign A (Field Geometry Calibration)}: 30 simulations on a $128^3$ grid
 ($L = 8\,\lambda_J$, $\Delta x = 0.0625\,\lambda_J$), varying field angle $\theta \in
@@ -633,6 +634,13 @@ $\mathcal{M} \in \{1, 2, 3, 4, 5\}$ at $\beta = 0.85$.
 stability boundary in the transition region, where $f = \sqrt{2/\beta}$ is the
 dimensionless mass-to-flux ratio. Two independent random-phase seeds were used per
 parameter combination to characterise stochasticity.
+
+\textbf{Campaign D (Robustness Validation)}: 89 simulations assessing near-critical
+fragmentation ($f \in \{1.00, 1.05\}$, 36 sims), non-longitudinal field geometry ($\theta
+= 30^\circ$--$90^\circ$, 40 sims), and numerical sensitivity (domain size, outflow BCs,
+full 3D Kolmogorov turbulence, 13 sims). All used King-profile initial conditions with
+$\rho_\mathrm{bg} = 1.0$ to suppress near-vacuum Alfv\'{e}n singularities at near-critical
+line masses.
 
 In all campaigns, a density perturbation at wavelength $\lambda_\mathrm{seed} = 2.0\,\lambda_J$
 was seeded with amplitude $\varepsilon = 0.01$, and the density contrast $C(t) \equiv
@@ -737,6 +745,77 @@ validating the analytical framework.}
 \label{fig:mhd_bias}
 \end{figure*}
 
+\subsection{Robustness and Field Geometry Validation}
+\label{sec:tc7_robust}
+
+To assess robustness and generality, ASTRA co-ordinated an additional 89 Athena++ MHD
+simulations in three categories: near-critical fragmentation (36 sims), field geometry
+sensitivity (40 sims), and numerical robustness checks (13 sims). All 89 simulations
+fragmented (100\% fragmentation rate), confirming the universality of gravitational
+fragmentation in thermally supercritical filaments across a wide range of conditions.
+
+\textbf{Field Geometry Sensitivity}: We ran 40 additional simulations with perpendicular
+($\theta = 90^\circ$) and oblique ($\theta = 30^\circ$, $45^\circ$, $60^\circ$) field
+orientations at $f \in \{1.5, 2.0\}$ and $\beta \in \{0.3, 0.5, 0.7, 1.0, 1.5, 2.0\}$.
+All 40 simulations fragmented. For perpendicular fields, the mean fragmentation timescale
+is $\langle t_\mathrm{frag}^\perp \rangle = 0.428 \pm 0.045\,t_J$, a factor of
+$\sim 1.4\times$ longer than the longitudinal case at the same $(f,\beta)$. Notably, the
+angle dependence is non-monotonic: $t_\mathrm{frag}$ peaks at $\theta \approx 30^\circ$
+(Figure~\ref{fig:tc7_angle}) rather than at $\theta = 90^\circ$. This arises because
+oblique fields provide maximum Alfv\'{e}n tension along the filament axis, resisting
+longitudinal collapse, while purely perpendicular fields provide only hoop stress. The
+result is broadly consistent with analytical models of magnetically threaded filaments
+\citep{nagasawa1987,tomisaka2014}. Crucially, the longitudinal-field assumption used
+in the main DTC campaign gives the \emph{shortest} fragmentation times: real ISM fields
+with oblique or disordered orientations would produce similar or longer timescales,
+confirming that the DTC stability boundary is conservative.
+
+\textbf{Near-Critical Fragmentation}: 36 simulations at $f \in \{1.00, 1.05\}$,
+$\beta \in \{0.3, 0.5, 0.7, 1.0, 1.5, 2.0\}$, and $\mathcal{M} = 1$ confirm that
+fragmentation persists even in near-critical filaments (Figure~\ref{fig:tc7_nearcrit}).
+Fragmentation timescales extend to $t_\mathrm{frag} \approx 0.88$--$1.63\,t_J$ at
+$\beta = 0.3$--$2.0$, a factor of $\sim 5\times$ longer than at $f = 2.0$. The
+$t_\mathrm{frag}$ increases by $\sim 1.8\times$ from $\beta = 2.0$ to $\beta = 0.3$,
+demonstrating that near-critical filaments are especially sensitive to magnetic support.
+These timescales are physically realistic: for $t_J \approx 1.5$--$2.5$~Myr in molecular
+clouds, fragmentation occurs within $1.3$--$4.1$~Myr even at $f = 1.00$, consistent with
+observed star-formation timescales in thermally near-critical filaments.
+
+\textbf{Numerical Robustness}: Four simulations with $L = 12\,\lambda_J$ (vs standard
+$4\,\lambda_J$), three simulations with outflow (open) boundary conditions, and six
+simulations with full 3D Kolmogorov turbulence (vs the 1D prescription used in the main
+campaign) all confirm fragmentation with $t_\mathrm{frag}$ within $15$--$20$ per\,cent
+of the standard-domain values. Outflow BCs and realistic 3D turbulence yield slightly
+longer $t_\mathrm{frag}$, consistent with reduced effective self-gravity and additional
+transverse support, respectively; both effects are conservative relative to the periodic
+isothermal main campaign.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.90\textwidth]{figures/test07_angle_dependence.pdf}
+\caption{\textbf{Test Case 7: Fragmentation Timescale vs Field Inclination Angle}.
+Fragmentation timescale $t_\mathrm{frag}/t_J$ as a function of field inclination angle
+$\theta$ (longitudinal $0^\circ$ through perpendicular $90^\circ$) at $f = 1.5$,
+$\beta = 1.0$, $\mathcal{M} = 1$ from 40 additional simulations. The non-monotonic
+dependence peaks at $\theta \approx 30^\circ$, where Alfv\'{e}n tension along the
+filament axis is maximised. The longitudinal case ($\theta = 0^\circ$) gives the
+shortest $t_\mathrm{frag}$, confirming that the DTC campaign assumption is conservative.}
+\label{fig:tc7_angle}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.90\textwidth]{figures/test07_nearcrit_tfrag.pdf}
+\caption{\textbf{Test Case 7: Near-Critical Fragmentation Timescales}.
+Fragmentation timescale $t_\mathrm{frag}/t_J$ vs line-mass fraction $f = M_\mathrm{line}/M_\mathrm{crit}$
+from 36 near-critical simulations ($f = 1.00$--$1.05$, longitudinal B) and the DTC main
+campaign ($f = 1.0$--$3.0$). All 36 near-critical simulations fragmented. $t_\mathrm{frag}$
+rises steeply near $f = 1.0$ (increasing by $\sim 1.8\times$ from $\beta = 2.0$ to
+$\beta = 0.3$), demonstrating that no stability boundary exists in the simulation grid at
+$\beta \leq 2.0$, and that the DTC fragmentation criterion is physically robust.}
+\label{fig:tc7_nearcrit}
+\end{figure*}
+
 \subsection{Physical Interpretation}
 
 Applying equation~(\ref{eq:calib}) to the W3 giant molecular cloud complex at
@@ -767,7 +846,7 @@ estimates, consistent with the $\theta \lesssim 30^\circ$ interpretation of the 
 W3 pairwise median spacing.
 
 This test case demonstrates ASTRA's capability for autonomous HPC campaign management:
-the system formulated the scientific question, selected simulation parameters, managed 600+
+the system formulated the scientific question, selected simulation parameters, managed over 700
 HPC jobs on a remote server, analysed output, applied observational bias corrections, and
 produced a self-consistent physical interpretation without human intervention at the
 computation or analysis stages.
@@ -789,13 +868,18 @@ The seven test cases in this paper demonstrate ASTRA's ability to integrate mult
 
 \textbf{Simulation Campaign (Case 7)}: Test Case 7 demonstrates a qualitatively different
 ASTRA capability: autonomous design and execution of a large-scale MHD simulation campaign.
-By co-ordinating 600+ Athena++ simulations on a remote HPC facility, ASTRA validated the
+By co-ordinating over 700 Athena++ simulations on a remote HPC facility, ASTRA validated the
 magnetic Jeans stability criterion for ISM filaments ($\beta_\mathrm{crit} = 2/3$, confirmed
 to within one grid step in $\beta$), calibrated the fragmentation wavelength formula to
 $(1.11 \pm 0.12)\,\lambda_{J,m}(\theta,\beta)$, and corrected the observational pairwise
 median bias ($f=2.08 \pm 0.31$ for $n=7$ cores) required to compare HGBS measurements to
-numerical predictions. This demonstrates that ASTRA can function as an autonomous simulation
-manager in addition to an observational data analyst.
+numerical predictions. A subsequent peer review robustness campaign of 89 simulations
+confirmed that the main DTC results are robust to field geometry (non-longitudinal angles
+delay but do not prevent fragmentation), near-critical line-mass ($f = 1.00$--$1.05$
+filaments all fragment, albeit on longer timescales of $0.88$--$1.63\,t_J$), domain size,
+boundary conditions, and turbulence prescription. This demonstrates that ASTRA can function
+as an autonomous simulation manager capable of designing and executing multi-campaign
+robustness validation without human intervention.
 
 The integration advantage is most concretely demonstrated in Test Case 5 (Bayesian Model Selection), where physical motivation (the virial theorem predicting a power law) and statistical evidence (Bayes factors strongly favoring power-law and logarithmic models over linear alternatives) jointly inform model interpretation. ASTRA's framework correctly identifies that the power-law and logarithmic models are statistically indistinguishable by Bayesian evidence, then uses the physical motivation of the virial theorem to prefer the power-law form. This joint consideration of statistical evidence and physical constraints---within a single automated workflow rather than requiring manual synthesis of separate analyses---represents the core value of the integrated approach.
 
@@ -899,7 +983,7 @@ We have presented ASTRA (Autonomous System for Scientific Discovery in Astrophys
 \item Demonstrated combined validation and discovery in single analysis run
 \end{description}
 
-\textbf{Test 7: Autonomous MHD Simulation Campaign} (600+ Athena++ simulations)
+\textbf{Test 7: Autonomous MHD Simulation Campaign} (over 700 Athena++ simulations)
 \begin{description}
 \item Confirmed magnetic Jeans stability threshold $\beta_\mathrm{crit} = 0.667$ for seeded $\lambda = 2\,\lambda_J$ mode
 \item Established $\beta$ dominance: $C_\mathrm{final}$ varies $4.3\times$ with $\beta$, $<$20 per cent with $\mathcal{M}$
