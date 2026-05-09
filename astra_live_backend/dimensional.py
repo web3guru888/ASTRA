@@ -20,6 +20,7 @@ and validating physical relationships.
 As described in White & Dey (2026), Section 2.3 and Test Case 1.
 """
 import numpy as np
+from scipy import stats  # fix: was missing, caused NameError at line 246
 from itertools import combinations
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass, asdict
