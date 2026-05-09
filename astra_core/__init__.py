@@ -1,17 +1,3 @@
-# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 STAN-CORE V4.0: Unified AGI System - All Capabilities Integrated
 ================================================================
@@ -67,7 +53,6 @@ Version: 4.0.0 (Unified Architecture with V4 Causal Extensions + Phase 2-4 Enhan
 Date: March 19, 2026
 """
 
-from __future__ import annotations  # defer annotation evaluation
 __version__ = "4.0.0"
 
 # =============================================================================
@@ -336,3 +321,142 @@ except ImportError:
     create_publication_pdf_from_markdown = None
     REPORTLAB_AVAILABLE = False
     FPDF_AVAILABLE = False
+
+# =============================================================================
+# V6.0 Theoretical Discovery System (NEW)
+# =============================================================================
+# Major enhancement: Theoretical discovery capabilities beyond empirical analysis
+try:
+    from .theoretical_discovery import (
+        # Main theoretical discovery system
+        V6TheoreticalDiscovery,
+        create_v6_theoretical_system,
+        DiscoveryMode,
+        DiscoveryResult,
+        TheoreticalProblem,
+        # Component modules
+        SymbolicTheoreticEngine,
+        TheorySpaceMapper,
+        TheoryRefutationEngine,
+        LiteratureTheorySynthesizer,
+        ComputationalTheoreticalBridge,
+        # Supporting classes
+        PhysicsDomain,
+        PhysicalConstraint,
+        ScalingRelation,
+        TheoryFramework,
+        TheoryConnection,
+        TheoryType,
+        TheoryRelation,
+        Equation,
+        TheoreticalInsight,
+        InsightType,
+        SimulationDesign,
+        SimulationResult,
+        SimulationInsight,
+        InsightCategory,
+        ConstraintViolation,
+        Severity,
+    )
+except ImportError:
+    V6TheoreticalDiscovery = None
+    create_v6_theoretical_system = None
+    DiscoveryMode = None
+    DiscoveryResult = None
+    TheoreticalProblem = None
+    SymbolicTheoreticEngine = None
+    TheorySpaceMapper = None
+    TheoryRefutationEngine = None
+    LiteratureTheorySynthesizer = None
+    ComputationalTheoreticalBridge = None
+    PhysicsDomain = None
+    PhysicalConstraint = None
+    ScalingRelation = None
+    TheoryFramework = None
+    TheoryConnection = None
+    TheoryType = None
+    TheoryRelation = None
+    Equation = None
+    TheoreticalInsight = None
+    InsightType = None
+    SimulationDesign = None
+    SimulationResult = None
+    SimulationInsight = None
+    InsightCategory = None
+    ConstraintViolation = None
+    Severity = None
+
+# =============================================================================
+# V7.0 Autonomous Research Scientist (NEW)
+# =============================================================================
+# Transformative enhancement: Full autonomous research cycle capability
+try:
+    from .autonomous_research import (
+        # Main autonomous scientist system
+        V7AutonomousScientist,
+        create_v7_scientist,
+        ResearchCycle,
+        ResearchQuestion,
+        Hypothesis,
+        Experiment,
+        ResearchResult,
+        Publication,
+        # Engines
+        QuestionGenerator,
+        QuestionType,
+        QuestionImportance,
+        HypothesisFormulator,
+        HypothesisType as V7HypothesisType,
+        HypothesisStatus,
+        ExperimentDesigner,
+        ExperimentType,
+        DesignParameters,
+        ExperimentExecutor,
+        ExecutionResult as V7ExecutionResult,
+        DataSource,
+        PredictionEngine,
+        PredictionType,
+        PredictionConfidence,
+        AnalysisEngine,
+        AnalysisType,
+        CausalInferenceResult,
+        TheoryRevisionEngine,
+        RevisionType,
+        TheoryStatus,
+        PublicationEngine,
+        PaperStructure,
+        FigureType,
+    )
+except ImportError:
+    V7AutonomousScientist = None
+    create_v7_scientist = None
+    ResearchCycle = None
+    ResearchQuestion = None
+    Hypothesis = None
+    Experiment = None
+    ResearchResult = None
+    Publication = None
+    QuestionGenerator = None
+    QuestionType = None
+    QuestionImportance = None
+    HypothesisFormulator = None
+    V7HypothesisType = None
+    HypothesisStatus = None
+    ExperimentDesigner = None
+    ExperimentType = None
+    DesignParameters = None
+    ExperimentExecutor = None
+    V7ExecutionResult = None
+    DataSource = None
+    PredictionEngine = None
+    PredictionType = None
+    PredictionConfidence = None
+    AnalysisEngine = None
+    AnalysisType = None
+    CausalInferenceResult = None
+    TheoryRevisionEngine = None
+    RevisionType = None
+    TheoryStatus = None
+    PublicationEngine = None
+    PaperStructure = None
+    FigureType = None
