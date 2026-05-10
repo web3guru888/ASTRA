@@ -206,10 +206,15 @@ class CognitiveCore:
         This is where the cognitive work happens - integrating perception,
         knowledge, reasoning, and self-monitoring.
         """
-        if perception_id >= len(self.perceptions):
+        # perception_id is a string like "perception_0" — extract integer index
+        try:
+            idx = int(perception_id.split('_')[-1])
+        except (ValueError, IndexError):
+            return []
+        if idx >= len(self.perceptions):
             return []
 
-        perception = self.perceptions[perception_id]
+        perception = self.perceptions[idx]
 
         # Update cognitive state
         self.current_mode = reasoning_mode
