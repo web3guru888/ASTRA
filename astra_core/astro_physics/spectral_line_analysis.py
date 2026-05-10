@@ -1,19 +1,5 @@
-# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
 """
+
 Pattern Discovery Module
 ========================
 
@@ -27,6 +13,7 @@ Key Functions:
 - wavelet_transform: Multi-scale frequency analysis
 - detect_patterns_wavelet: Automatic pattern detection
 - validate_pattern: Statistical significance testing
+
 
 Spectral Line Analysis Module for STAN V43
 
@@ -48,7 +35,6 @@ All calculations in CGS units. Frequencies in Hz, velocities in cm/s.
 Author: STAN V43 Astrophysics Module
 """
 
-from __future__ import annotations  # defer annotation evaluation
 import math
 from dataclasses import dataclass, field
 from enum import Enum, auto
@@ -1329,18 +1315,5 @@ def detect_multiscale_patterns(signal, scales=None, wavelet='morl'):
         signal: Input signal (1D array)
         scales: List of scales to analyze (None for automatic)
         wavelet: Type of wavelet ('morl' = Morlet, 'mexh' = Mexican hat)
-
-    Returns:
-        Dictionary containing detected patterns and their scales
     """
-    import numpy as np
-
-    if scales is None:
-        scales = [1, 2, 4, 8, 16]
-
-    patterns = {}
-    for scale in scales:
-        # Simple implementation - in practice would use pywt
-        patterns[scale] = np.std(signal[:min(len(signal), scale * 10)])
-
-    return patterns
+    pass  # truncated

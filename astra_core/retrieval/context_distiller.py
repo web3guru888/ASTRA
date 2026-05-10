@@ -1,17 +1,3 @@
-# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 Parallel Context Pre-processing (Priority 2)
 ============================================
@@ -37,7 +23,6 @@ Example Use:
     # 90% token reduction, higher accuracy, faster generation
 """
 
-from __future__ import annotations  # defer annotation evaluation
 import time
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional, Callable
@@ -258,30 +243,4 @@ class ContextDistiller:
             future_to_doc = {
                 executor.submit(self.checker.check_relevance, query, doc): doc
                 for doc in documents
-            }
-
-            # Collect results
-            for future in as_completed(future_to_doc):
-                doc = future_to_doc[future]
-                try:
-                    is_relevant, explanation = future.result(timeout=5)
-                    if is_relevant:
-                        relevant_docs.append(doc)
-                    else:
-                        filtered_docs.append(doc)
-                    explanations.append((doc, explanation))
-                except Exception as e:
-                    # On error, keep doc
-                    relevant_docs.append(doc)
-                    explanations.append((doc, f"Error: {e}"))
-
-        distill_time = time.time() - distill_start
-
-        return DistillationResult(
-            query=query,
-            relevant_documents=relevant_docs,
-            filtered_documents=filtered_docs,
-            explanations=explanations,
-            distillation_time=distill_time,
-            total_time=time.time() - start_time
-        )
+}

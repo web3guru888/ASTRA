@@ -1,17 +1,3 @@
-# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 Redundant Execution for Fault Tolerance (Priority 5)
 ====================================================
@@ -38,7 +24,6 @@ Example Use:
     # Success: 80% vs 60% for single execution
 """
 
-from __future__ import annotations  # defer annotation evaluation
 import time
 import random
 from dataclasses import dataclass, field
@@ -163,29 +148,4 @@ class RedundantExecutor:
             # Submit all copies
             futures = [
                 executor.submit(func, *args, **kwargs)
-                for _ in range(self.num_copies)
-            ]
-
-            # Wait for first success
-            for future in as_completed(futures):
-                try:
-                    result = future.result(timeout=self.timeout_per_copy)
-                    all_results.append(result)
-                    # Return first successful result
-                    return ExecutionResult(
-                        success=True,
-                        result=result,
-                        execution_time=time.time() - start_time,
-                        num_copies_used=len(all_results)
-                    )
-                except Exception as e:
-                    all_errors.append(e)
-
-        # If all failed, return last error
-        return ExecutionResult(
-            success=False,
-            result=None,
-            execution_time=time.time() - start_time,
-            num_copies_used=len(all_errors),
-            error=all_errors[-1] if all_errors else "Unknown error"
-        )
+]

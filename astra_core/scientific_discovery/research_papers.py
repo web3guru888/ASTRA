@@ -1,17 +1,3 @@
-# Copyright 2024-2026 Glenn J. White (The Open University / RAL Space)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 Research Papers - PDF Processing and Literature Mining
 ======================================================
@@ -36,7 +22,6 @@ Version: 1.0.0
 Date: 2025-12-27
 """
 
-from __future__ import annotations  # defer annotation evaluation
 import re
 import json
 import logging
@@ -183,57 +168,4 @@ class PDFProcessor:
             pdf_path: Path to PDF file
 
         Returns:
-            Extracted text content
-        """
-        if not self.has_pdf_support:
-            return ""
-
-        try:
-            if HAS_PDFPLUMBER:
-                import pdfplumber
-                with pdfplumber.open(pdf_path) as pdf:
-                    text = ""
-                    for page in pdf.pages:
-                        text += page.extract_text() or ""
-                    return text
-            elif HAS_PYPDF2:
-                from PyPDF2 import PdfReader
-                reader = PdfReader(pdf_path)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text() or ""
-                return text
-        except Exception as e:
-            logger.error(f"Error extracting text from PDF: {e}")
-            return ""
-
-
-# =============================================================================
-# Compatibility stubs for names referenced in __init__.py
-# (full implementations planned in future development cycles)
-# =============================================================================
-
-class LiteratureMiner:
-    """Extract key findings and hypotheses from literature (stub)."""
-    def __init__(self, *args, **kwargs):
-        pass
-    def mine(self, papers):
-        return []
-
-
-class PaperAnalyzer:
-    """Analyse paper content and extract structured information (stub)."""
-    def __init__(self, *args, **kwargs):
-        pass
-    def analyze(self, paper):
-        return {}
-
-
-def extract_paper_metadata(text: str) -> dict:
-    """Extract metadata fields from paper text (stub)."""
-    return {}
-
-
-def build_citation_network(papers: list) -> CitationGraph:
-    """Build a citation graph from a list of Paper objects (stub)."""
-    return CitationGraph(num_nodes=len(papers))
+"""
