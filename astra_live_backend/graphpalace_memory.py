@@ -663,10 +663,23 @@ class GraphPalaceMemory:
     def get_strong_discoveries(
         self,
         min_strength: float = 0.5,
+        max_age_cycles: int = 50,
+        current_cycle: int = 0,
         limit: int = 100
     ) -> List[DiscoveryRecord]:
-        """Get discoveries above strength threshold."""
-        return [d for d in self.discoveries if d.strength >= min_strength][:limit]
+        """Get discoveries above strength threshold, optionally filtered by age."""
+        results = []
+        for d in self.discoveries:
+            if d.strength >= min_strength:
+                if current_cycle > 0 and hasattr(d, 'cycle'):
+                    age = current_cycle - d.cycle
+                    if age > max_age_cycles:
+                        continue
+                if hasattr(d, 'follow_ups_generated') and d.follow_ups_generated >= 3:
+                    continue
+                results.append(d)
+        results.sort(key=lambda d: d.strength, reverse=True)
+        return results[:limit]
 
     def get_unexplored_variable_pairs(
         self,
